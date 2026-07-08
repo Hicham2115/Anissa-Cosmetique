@@ -48,6 +48,6 @@ export default function Home() {
         <ContactForm />
       </main>
       <Footer />
-    </ErrorBoundary>
+    </ErrorBoundary> 
   );
 }
