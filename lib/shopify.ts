@@ -107,7 +107,7 @@ function toProduct(node: ShopifyProductNode) {
   };
 }
 
-export async function fetchShopifyProducts(first = 12) {
+export async function fetchShopifyProducts(first = 50) {
   const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first });
   return data.products.edges.map(({ node }) => toProduct(node));
 }
