@@ -101,7 +101,7 @@ export function Hero() {
             className="object-cover object-top"
           />
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#efe3d6] via-[#efe3d6]/60 to-transparent" />
+        {/* <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#efe3d6] via-[#efe3d6]/60 to-transparent" /> */}
 
         <div
           ref={mobileTextRef}
