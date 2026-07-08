@@ -19,7 +19,7 @@ const INITIAL_STATE: FormState = { name: "", email: "", message: "" };
 
 const CONTACT_INFO = [
   { icon: Mail, label: "bonjour@anissacosmetics.ma" },
-  { icon: Phone, label: "+212 5 22 00 00 00" },
+  { icon: Phone, label: "+212 6 61 93 34 16" },
   { icon: MapPin, label: "Casablanca, Maroc" },
 ];
 
