@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingBag } from "lucide-react";
+import { toast } from "sonner";
 import type { Product } from "@/lib/validations";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,6 +43,7 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={(e) => {
             e.preventDefault();
             toggleWishlist({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
+            toast(isLiked ? "Retiré des favoris" : "Ajouté aux favoris", { description: product.name });
           }}
           className={`absolute top-3 right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-cream transition-transform duration-200 hover:scale-110 active:scale-95 ${
             isLiked ? "text-brown" : "text-ink"
@@ -55,6 +57,7 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={(e) => {
             e.preventDefault();
             addItem({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
+            toast("Ajouté au panier", { description: product.name });
           }}
           className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-brown transition-transform duration-200 hover:scale-110 active:scale-95"
         >

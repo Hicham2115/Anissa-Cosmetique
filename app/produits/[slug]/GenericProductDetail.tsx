@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Check, Heart, Minus, Plus, ShieldCheck, ShoppingBag, Truck, Undo2 } from "lucide-react";
+import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { queryKeys } from "@/lib/queryKeys";
 import { productSchema, productListSchema, type Product } from "@/lib/validations";
@@ -116,6 +117,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     }
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
+    toast("Ajouté au panier", { description: product.name });
   };
 
   const relatedProducts: Product[] = (allProducts ?? []).filter((p) => p.id !== product.id).slice(0, 4);
@@ -162,15 +164,18 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               <button
                 type="button"
                 aria-label={isLiked ? "Retirer des favoris" : "Ajouter aux favoris"}
-                onClick={() =>
+                onClick={() => {
                   toggleWishlist({
                     productId: product.id,
                     slug: product.slotId,
                     name: product.name,
                     price: product.price,
                     image: product.image ?? null,
-                  })
-                }
+                  });
+                  toast(isLiked ? "Retiré des favoris" : "Ajouté aux favoris", {
+                    description: product.name,
+                  });
+                }}
                 className={`flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 ${
                   isLiked ? "border-brown text-brown" : "border-border-sand hover:border-brown hover:text-brown"
                 }`}

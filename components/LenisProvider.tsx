@@ -2,10 +2,13 @@
 
 import Lenis from "lenis";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
-import { setLenisInstance } from "@/lib/lenis";
+import { getLenisInstance, setLenisInstance } from "@/lib/lenis";
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   useEffect(() => {
     const lenis = new Lenis();
     setLenisInstance(lenis);
@@ -18,5 +21,15 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       gsap.ticker.remove(tick);
     };
   }, []);
+
+  useEffect(() => {
+    // Lenis measures scroll height from the viewport-sized <html> element, which
+    // doesn't fire its own ResizeObserver when only the scrollable content changes,
+    // so a route change to a page with different content height leaves it stuck
+    // using the previous page's (shorter) scroll limit unless we resize it manually.
+    const raf = requestAnimationFrame(() => getLenisInstance()?.resize());
+    return () => cancelAnimationFrame(raf);
+  }, [pathname]);
+
   return <>{children}</>;
 }

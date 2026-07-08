@@ -23,7 +23,11 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/" },
-  openGraph: pageOpenGraph({ title: OG_TITLE, description: DESCRIPTION, url: "/" }),
+  openGraph: pageOpenGraph({
+    title: OG_TITLE,
+    description: DESCRIPTION,
+    url: "/",
+  }),
   twitter: pageTwitter({ title: OG_TITLE, description: DESCRIPTION }),
 };
 
@@ -39,7 +43,7 @@ export default function Home() {
         <ValueProps />
         <FeaturedBanner />
         <Testimonials />
-        <InstagramGallery />
+        {/* <InstagramGallery /> */}
         <Newsletter />
         <ContactForm />
       </main>

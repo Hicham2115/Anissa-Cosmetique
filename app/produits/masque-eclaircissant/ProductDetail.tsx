@@ -14,6 +14,7 @@ import {
   Truck,
   Undo2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -123,6 +124,7 @@ export function ProductDetail() {
     });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
+    toast("Ajouté au panier", { description: "Masque Éclaircissant — Nila & Niacinamide" });
   };
 
   return (
@@ -168,15 +170,18 @@ export function ProductDetail() {
               <button
                 type="button"
                 aria-label={isLiked ? "Retirer des favoris" : "Ajouter aux favoris"}
-                onClick={() =>
+                onClick={() => {
                   toggleWishlist({
                     productId: "masque-eclaircissant",
                     slug: "masque-eclaircissant",
                     name: "Masque Éclaircissant — Nila & Niacinamide",
                     price: "390 MAD",
                     image: null,
-                  })
-                }
+                  });
+                  toast(isLiked ? "Retiré des favoris" : "Ajouté aux favoris", {
+                    description: "Masque Éclaircissant — Nila & Niacinamide",
+                  });
+                }}
                 className={`flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 ${
                   isLiked ? "border-brown text-brown" : "border-border-sand hover:border-brown hover:text-brown"
                 }`}
