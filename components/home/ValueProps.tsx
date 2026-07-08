@@ -1,0 +1,54 @@
+import { HeartHandshake, Leaf, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+
+const VALUES = [
+  { icon: HeartHandshake, label: "Non testé sur les animaux" },
+  { icon: Leaf, label: "Ingrédients naturels" },
+  { icon: MapPin, label: "Fabriqué au Maroc" },
+];
+
+export function ValueProps() {
+  return (
+    <div id="value-props" className="mt-16 scroll-mt-24 bg-cream sm:mt-24">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-22 md:grid-cols-2 md:gap-16">
+        <div className="group relative aspect-square overflow-hidden rounded-2xl md:aspect-4/5">
+          <ImagePlaceholder
+            label="Studio Anissa"
+            className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+
+        <div>
+          <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Notre Promesse</div>
+          <h2 className="mb-6 font-serif text-[32px] leading-tight font-semibold text-ink sm:text-[40px]">
+            Des formules propres, faites avec soin au Maroc
+          </h2>
+          <p className="mb-8 max-w-md text-[15px] leading-relaxed text-[#5c534a]">
+            Chaque formule Anissa n&rsquo;est jamais testée sur les animaux et repose sur des
+            ingrédients botaniques sourcés, sans rien de synthétique par facilité. Nous
+            formulons et produisons chaque lot nous-mêmes à Casablanca, pour garder la
+            main sur la qualité.
+          </p>
+
+          <div className="mb-9 flex flex-wrap gap-6">
+            {VALUES.map(({ icon: Icon, label }) => (
+              <div key={label} className="group flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sand-light transition-transform duration-300 group-hover:scale-110">
+                  <Icon className="h-4 w-4 text-brown" strokeWidth={1.5} aria-hidden="true" />
+                </div>
+                <span className="text-[13px] text-ink transition-colors duration-200 group-hover:text-brown">
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <Button className="rounded-lg transition-transform duration-200 hover:scale-105 active:scale-95">
+            En savoir plus
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
