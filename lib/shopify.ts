@@ -95,9 +95,8 @@ function formatPrice(amount: string, currencyCode: string): string {
   return `${value} ${currencyCode}`;
 }
 
-export async function fetchShopifyProducts(first = 12) {
-  const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first });
-  return data.products.edges.map(({ node }) => ({
+function toProduct(node: ShopifyProductNode) {
+  return {
     id: node.id,
     slotId: node.handle,
     name: node.title,
@@ -105,5 +104,41 @@ export async function fetchShopifyProducts(first = 12) {
     price: formatPrice(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode),
     badge: badgeFromTags(node.tags),
     image: node.featuredImage?.url ?? null,
-  }));
+  };
+}
+
+export async function fetchShopifyProducts(first = 12) {
+  const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first });
+  return data.products.edges.map(({ node }) => toProduct(node));
+}
+
+const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
+  query ProductByHandle($handle: String!) {
+    productByHandle(handle: $handle) {
+      id
+      handle
+      title
+      description
+      tags
+      featuredImage {
+        url
+        altText
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+`;
+
+interface ProductByHandleQueryResult {
+  productByHandle: ShopifyProductNode | null;
+}
+
+export async function fetchShopifyProductByHandle(handle: string) {
+  const data = await shopifyFetch<ProductByHandleQueryResult>(PRODUCT_BY_HANDLE_QUERY, { handle });
+  return data.productByHandle ? toProduct(data.productByHandle) : null;
 }

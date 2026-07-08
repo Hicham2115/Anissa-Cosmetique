@@ -6,6 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useUiStore } from "@/store/uiStore";
 import { scrollToSection } from "@/lib/lenis";
 import logo from "@/app/assets/logo.png";
 
@@ -70,6 +72,9 @@ function NavAnchor({
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const cartCount = useCartStore((s) => s.count());
+  const wishlistCount = useWishlistStore((s) => s.count());
+  const openCart = useUiStore((s) => s.openCart);
+  const openWishlist = useUiStore((s) => s.openWishlist);
 
   return (
     <div className="border-b border-border-sand bg-cream/92 backdrop-blur-md">
@@ -120,18 +125,27 @@ export function Navbar() {
           </nav>
           <div className="flex items-center gap-3 sm:gap-4">
             <button
+              type="button"
               aria-label="Liste de souhaits"
-              className="hidden transition-transform duration-200 hover:scale-110 sm:inline-flex"
+              onClick={openWishlist}
+              className="relative hidden cursor-pointer transition-transform duration-200 hover:scale-110 sm:inline-flex"
             >
               <Heart
                 className="h-[18px] w-[18px] text-ink"
                 strokeWidth={1.6}
                 aria-hidden="true"
               />
+              {wishlistCount > 0 && (
+                <span className="absolute -right-2 -top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full bg-brown text-[9px] text-cream">
+                  {wishlistCount}
+                </span>
+              )}
             </button>
             <button
+              type="button"
               aria-label="Panier"
-              className="relative transition-transform duration-200 hover:scale-110"
+              onClick={openCart}
+              className="relative cursor-pointer transition-transform duration-200 hover:scale-110"
             >
               <ShoppingBag
                 className="h-[19px] w-[19px] text-ink"

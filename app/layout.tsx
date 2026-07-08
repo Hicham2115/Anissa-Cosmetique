@@ -3,6 +3,9 @@ import { Urbanist, Mukta_Mahee, Josefin_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { PromoPopup } from "@/components/PromoPopup";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import { WishlistDrawer } from "@/components/wishlist/WishlistDrawer";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, OG_IMAGE } from "@/lib/site";
 
 // Brand type spec calls for Roden (headings) and Lavender (slogan), which
@@ -79,6 +82,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-cream font-sans text-ink">
         <Providers>{children}</Providers>
         <PromoPopup />
+        <CartDrawer />
+        <WishlistDrawer />
+        <ScrollToTop />
       </body>
     </html>
   );

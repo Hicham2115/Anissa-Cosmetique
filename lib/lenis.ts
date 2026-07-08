@@ -13,3 +13,11 @@ export function scrollToSection(target: string, offset = -96) {
   }
   document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
 }
+
+export function scrollToTop() {
+  if (instance) {
+    instance.scrollTo(0);
+    return;
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}

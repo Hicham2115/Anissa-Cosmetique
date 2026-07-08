@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import productMain from "@/app/assets/product-masque-eclaircissant.png";
 import productLifestyle from "@/app/assets/hero-lifestyle.png";
@@ -91,6 +92,8 @@ export function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [expanded, setExpanded] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
+  const toggleWishlist = useWishlistStore((s) => s.toggleItem);
+  const isLiked = useWishlistStore((s) => s.isLiked("masque-eclaircissant"));
   const [added, setAdded] = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
@@ -111,7 +114,13 @@ export function ProductDetail() {
   );
 
   const handleAddToCart = () => {
-    addItem({ productId: "masque-eclaircissant", name: "Masque Éclaircissant — Nila & Niacinamide", price: "390 MAD" });
+    addItem({
+      productId: "masque-eclaircissant",
+      slug: "masque-eclaircissant",
+      name: "Masque Éclaircissant — Nila & Niacinamide",
+      price: "390 MAD",
+      image: null,
+    });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
   };
@@ -158,10 +167,21 @@ export function ProductDetail() {
               <div className="text-xs tracking-[0.2em] text-brown uppercase">Anissa Cosmetics</div>
               <button
                 type="button"
-                aria-label="Ajouter aux favoris"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-sand transition-all duration-200 hover:border-brown hover:text-brown"
+                aria-label={isLiked ? "Retirer des favoris" : "Ajouter aux favoris"}
+                onClick={() =>
+                  toggleWishlist({
+                    productId: "masque-eclaircissant",
+                    slug: "masque-eclaircissant",
+                    name: "Masque Éclaircissant — Nila & Niacinamide",
+                    price: "390 MAD",
+                    image: null,
+                  })
+                }
+                className={`flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 ${
+                  isLiked ? "border-brown text-brown" : "border-border-sand hover:border-brown hover:text-brown"
+                }`}
               >
-                <Heart className="h-4 w-4" aria-hidden="true" />
+                <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} aria-hidden="true" />
               </button>
             </div>
 
