@@ -21,7 +21,7 @@ export default function BoutiquePage() {
   return (
     <ErrorBoundary>
       <SiteHeader />
-      <main className="mx-auto max-w-[1320px] px-4 py-16 sm:px-6 sm:py-20">
+      <main className="mx-auto w-full max-w-[1320px] px-4 py-16 sm:px-6 sm:py-20">
         <div className="mb-10 text-xs tracking-[0.2em] text-brown uppercase">Boutique</div>
         <h1 className="mb-12 font-serif text-4xl font-semibold text-ink sm:text-5xl">Toute la collection</h1>
         <BoutiqueGrid />

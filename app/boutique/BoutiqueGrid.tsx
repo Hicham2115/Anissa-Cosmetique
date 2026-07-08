@@ -21,8 +21,8 @@ export function BoutiqueGrid() {
   return (
     <>
       {isError && <ErrorState message={(error as Error).message ?? "Impossible de charger les produits."} />}
-      <div className="grid grid-cols-2 gap-4 sm:gap-5.5 lg:grid-cols-4">
-        {isLoading && Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
+      <div className="grid grid-cols-2 gap-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3">
+        {isLoading && Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)}
         {data?.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
     </>

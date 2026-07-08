@@ -55,7 +55,7 @@ export default function ConditionsGeneralesPage() {
   return (
     <ErrorBoundary>
       <SiteHeader />
-      <main className="mx-auto max-w-[860px] px-4 py-16 sm:px-6 sm:py-20">
+      <main className="mx-auto w-full max-w-[860px] px-4 py-16 sm:px-6 sm:py-20">
         <div className="mb-10 text-xs tracking-[0.2em] text-brown uppercase">
           Informations légales
         </div>
