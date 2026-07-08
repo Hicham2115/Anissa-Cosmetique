@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUiStore } from "@/store/uiStore";
 import heroLifestyle from "@/app/assets/hero-lifestyle.png";
+import heroMobile from "@/app/assets/hero-mobile.png";
 
 const MARQUEE = [
   "Formules Propres",
@@ -27,6 +28,8 @@ export function Hero() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const mobileImageRef = useRef<HTMLDivElement>(null);
+  const mobileTextRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -39,6 +42,22 @@ export function Hero() {
         paragraphRef.current,
         ctaRef.current,
       ];
+
+      const mobileTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      mobileTl
+        .set(mobileImageRef.current, { opacity: 0, scale: 1.06 })
+        .set(mobileTextRef.current, { opacity: 0, y: 20 })
+        .to(mobileImageRef.current, {
+          opacity: 1,
+          scale: 1,
+          duration: 1.3,
+          ease: "power2.out",
+        })
+        .to(
+          mobileTextRef.current,
+          { opacity: 1, y: 0, duration: 0.7 },
+          "-=0.8",
+        );
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
@@ -71,7 +90,54 @@ export function Hero() {
 
   return (
     <div className="relative overflow-hidden bg-[#EFE3D6]">
-      <div className="relative h-[560px] sm:h-[600px] md:h-[660px] lg:h-[720px]">
+      <div className="relative block h-160 sm:h-180 md:hidden">
+        <div ref={mobileImageRef} className="absolute inset-0">
+          <Image
+            src={heroMobile}
+            alt="Masque Anti-Âge et Gel Exfoliant Anissa Cosmetics"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-top"
+          />
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#efe3d6] via-[#efe3d6]/60 to-transparent" />
+
+        <div
+          ref={mobileTextRef}
+          className="absolute inset-x-0 bottom-0 px-4 pb-10 sm:px-6"
+        >
+          {/* <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">
+            // Soins de la peau
+          </div> */}
+          <h2 className="font-serif text-[38px] leading-[0.98] font-semibold text-ink">
+            Là où <span className="text-brown">la peau</span>
+            <br />
+            <span className="italic">rayonne</span>
+          </h2>
+          <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#5c534a]">
+            Découvrez une sélection de soins et cosmétiques à formules propres,
+            pensés pour un éclat au quotidien.
+          </p>
+          <div className="mt-7 flex flex-wrap items-center gap-4">
+            <Button className="group transition-transform duration-200 hover:scale-105 active:scale-95">
+              Acheter
+              <ArrowRight
+                className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </Button>
+            <a
+              href="/boutique"
+              className="inline-flex cursor-pointer items-center rounded-full border border-ink/20 px-8 py-4 text-xs tracking-wider text-ink uppercase transition-all duration-200 hover:scale-105 hover:border-ink active:scale-95"
+            >
+              Tout Explorer
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative hidden h-165 md:block lg:h-180">
         <div ref={imageRef} className="absolute inset-0">
           <Image
             src={heroLifestyle}
@@ -79,7 +145,7 @@ export function Hero() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[70%_center] md:object-[62%_center]"
+            className="object-cover object-[85%_center] sm:object-[75%_center] md:object-[62%_center]"
           />
         </div>
 

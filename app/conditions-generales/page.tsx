@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { AnnouncementBar } from "@/components/home/AnnouncementBar";
-import { Navbar } from "@/components/home/Navbar";
+import { SiteHeader } from "@/components/home/SiteHeader";
 import { Footer } from "@/components/home/Footer";
+import { SITE_NAME, pageOpenGraph, pageTwitter } from "@/lib/site";
+
+const TITLE = "Conditions Générales";
+const DESCRIPTION = "Conditions générales de vente et d'utilisation du site Anissa Cosmetics.";
+const OG_TITLE = `${TITLE} | ${SITE_NAME}`;
 
 export const metadata: Metadata = {
-  title: "Conditions Générales",
-  description:
-    "Conditions générales de vente et d'utilisation du site Anissa Cosmetics.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/conditions-generales" },
+  openGraph: pageOpenGraph({ title: OG_TITLE, description: DESCRIPTION, url: "/conditions-generales" }),
+  twitter: pageTwitter({ title: OG_TITLE, description: DESCRIPTION }),
 };
 
 const SECTIONS = [
@@ -48,8 +54,7 @@ const SECTIONS = [
 export default function ConditionsGeneralesPage() {
   return (
     <ErrorBoundary>
-      <AnnouncementBar />
-      <Navbar />
+      <SiteHeader />
       <main className="mx-auto max-w-[860px] px-4 py-16 sm:px-6 sm:py-20">
         <div className="mb-10 text-xs tracking-[0.2em] text-brown uppercase">
           Informations légales

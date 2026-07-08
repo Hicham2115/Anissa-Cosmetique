@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { AnnouncementBar } from "@/components/home/AnnouncementBar";
-import { Navbar } from "@/components/home/Navbar";
+import { SiteHeader } from "@/components/home/SiteHeader";
 import { Footer } from "@/components/home/Footer";
+import { SITE_NAME, pageOpenGraph, pageTwitter } from "@/lib/site";
+
+const TITLE = "Politique de Confidentialité";
+const DESCRIPTION = "Comment Anissa Cosmetics collecte, utilise et protège les données personnelles de ses clients.";
+const OG_TITLE = `${TITLE} | ${SITE_NAME}`;
 
 export const metadata: Metadata = {
-  title: "Politique de Confidentialité",
-  description:
-    "Comment Anissa Cosmetics collecte, utilise et protège les données personnelles de ses clients.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/politique-de-confidentialite" },
+  openGraph: pageOpenGraph({ title: OG_TITLE, description: DESCRIPTION, url: "/politique-de-confidentialite" }),
+  twitter: pageTwitter({ title: OG_TITLE, description: DESCRIPTION }),
 };
 
 const SECTIONS = [
@@ -48,8 +54,7 @@ const SECTIONS = [
 export default function PolitiqueDeConfidentialitePage() {
   return (
     <ErrorBoundary>
-      <AnnouncementBar />
-      <Navbar />
+      <SiteHeader />
       <main className="mx-auto max-w-[860px] px-4 py-16 sm:px-6 sm:py-20">
         <div className="mb-10 text-xs tracking-[0.2em] text-brown uppercase">
           Informations légales

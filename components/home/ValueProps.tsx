@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { HeartHandshake, Leaf, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import productLaitCorporel from "@/app/assets/product-lait-corporel-editorial.png";
 
 const VALUES = [
   { icon: HeartHandshake, label: "Non testé sur les animaux" },
@@ -17,10 +18,13 @@ export function ValueProps() {
   return (
     <div id="value-props" ref={scopeRef} className="mt-16 scroll-mt-24 bg-cream sm:mt-24">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-22 md:grid-cols-2 md:gap-16">
-        <div data-reveal className="group relative aspect-square overflow-hidden rounded-2xl md:aspect-4/5">
-          <ImagePlaceholder
-            label="Studio Anissa"
-            className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
+        <div data-reveal className="group relative aspect-square overflow-hidden rounded-2xl bg-sand-light md:aspect-4/5">
+          <Image
+            src={productLaitCorporel}
+            alt="Lait Corporel Argan Anissa"
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 

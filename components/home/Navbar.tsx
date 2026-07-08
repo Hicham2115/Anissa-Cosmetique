@@ -72,7 +72,7 @@ export function Navbar() {
   const cartCount = useCartStore((s) => s.count());
 
   return (
-    <div className="sticky top-0 z-50 border-b border-border-sand bg-cream/92 backdrop-blur-md">
+    <div className="border-b border-border-sand bg-cream/92 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-4 px-4  sm:px-6">
         <nav className="hidden flex-1 items-center gap-9 lg:flex">
           {LEFT_LINKS.map((link) => (
