@@ -19,6 +19,7 @@ export function BestSellers() {
     queryFn: fetchProducts,
   });
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
+  const bestSellers = data?.slice(0, 4);
 
   return (
     <div id="best-sellers" ref={scopeRef} className="mx-auto max-w-[1320px] scroll-mt-24 px-4 pt-16 pb-5 sm:px-6 sm:pt-24">
@@ -37,7 +38,7 @@ export function BestSellers() {
 
       <div className="grid grid-cols-2 gap-4 sm:gap-5.5 lg:grid-cols-4">
         {isLoading && Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)}
-        {data?.map((p) => <ProductCard key={p.id} product={p} />)}
+        {bestSellers?.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
     </div>
   );
