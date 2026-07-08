@@ -6,6 +6,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { productListSchema } from "@/lib/validations";
 import { ErrorState } from "@/components/ui/error-state";
 import { ProductCard, ProductCardSkeleton } from "@/components/home/ProductCard";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function fetchProducts() {
   const { data } = await api.get("/products");
@@ -17,10 +18,11 @@ export function BestSellers() {
     queryKey: queryKeys.products(),
     queryFn: fetchProducts,
   });
+  const scopeRef = useScrollReveal<HTMLDivElement>([data]);
 
   return (
-    <div id="best-sellers" className="mx-auto max-w-[1320px] scroll-mt-24 px-4 pt-16 pb-5 sm:px-6 sm:pt-24">
-      <div className="mb-10 flex items-baseline justify-between">
+    <div id="best-sellers" ref={scopeRef} className="mx-auto max-w-[1320px] scroll-mt-24 px-4 pt-16 pb-5 sm:px-6 sm:pt-24">
+      <div data-reveal className="mb-10 flex items-baseline justify-between">
         <h2 className="font-serif text-[28px] font-semibold text-ink sm:text-[34px]">Meilleures Ventes</h2>
         <a
           href="/boutique"

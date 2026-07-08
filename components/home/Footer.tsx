@@ -5,10 +5,11 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Mail, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { api } from "@/lib/axios";
 import { newsletterSchema } from "@/lib/validations";
 import logo from "@/app/assets/logo.png";
+import { FacebookIcon, InstagramIcon, TwitterIcon } from "@/components/icons/SocialIcons";
 
 const FOOTER_COLUMNS = [
   {
@@ -27,9 +28,9 @@ const FOOTER_COLUMNS = [
 ];
 
 const SOCIAL_LINKS = [
-  { icon: Sparkles, label: "@anissacosmetics", href: "#" },
-  { icon: MessageCircle, label: "WhatsApp", href: "#" },
-  { icon: Mail, label: "Nous écrire", href: "#footer-contact" },
+  { icon: FacebookIcon, label: "Facebook", href: "#" },
+  { icon: InstagramIcon, label: "Instagram", href: "#" },
+  { icon: TwitterIcon, label: "Twitter", href: "#" },
 ];
 
 async function subscribe(email: string) {

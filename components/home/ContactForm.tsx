@@ -7,6 +7,7 @@ import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { api } from "@/lib/axios";
 import { contactSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 interface FormState {
   name: string;
@@ -33,6 +34,7 @@ const inlineField =
 export function ContactForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
   const [fieldError, setFieldError] = useState<string | null>(null);
+  const scopeRef = useScrollReveal<HTMLDivElement>();
 
   const mutation = useMutation({
     mutationFn: sendMessage,
@@ -65,14 +67,14 @@ export function ContactForm() {
     <div id="footer-contact" className="relative scroll-mt-24 overflow-hidden bg-cream px-4 py-16 sm:px-6 sm:py-24">
       <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 -translate-y-1/3 translate-x-1/3 rounded-full bg-gold/10 blur-3xl" />
 
-      <div className="relative mx-auto max-w-4xl">
-        <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">/ Contact</div>
-        <h2 className="mb-14 font-serif text-[34px] leading-tight font-bold text-ink sm:text-[48px]">
+      <div ref={scopeRef} className="relative mx-auto max-w-4xl">
+        <div data-reveal className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">/ Contact</div>
+        <h2 data-reveal className="mb-14 font-serif text-[34px] leading-tight font-bold text-ink sm:text-[48px]">
           Une question ? Écrivez-nous
         </h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-wrap items-end gap-x-3 gap-y-2 text-lg text-ink sm:text-xl">
+          <div data-reveal className="flex flex-wrap items-end gap-x-3 gap-y-2 text-lg text-ink sm:text-xl">
             <span className="pb-1">Bonjour, je m&rsquo;appelle</span>
             <input
               type="text"
@@ -84,7 +86,7 @@ export function ContactForm() {
             />
           </div>
 
-          <div className="mt-6 flex flex-wrap items-end gap-x-3 gap-y-2 text-lg text-ink sm:text-xl">
+          <div data-reveal className="mt-6 flex flex-wrap items-end gap-x-3 gap-y-2 text-lg text-ink sm:text-xl">
             <span className="pb-1">Vous pouvez me joindre à</span>
             <input
               type="email"
@@ -97,7 +99,7 @@ export function ContactForm() {
             <span className="pb-1">!</span>
           </div>
 
-          <div className="mt-10">
+          <div data-reveal className="mt-10">
             <label className="mb-2 block text-[11px] tracking-[0.15em] text-brown uppercase">
               Mon message
             </label>
@@ -116,6 +118,7 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={mutation.isPending}
+            data-reveal
             className="group mt-9 inline-flex cursor-pointer items-center gap-2 rounded-full bg-ink px-8 py-3.5 text-xs tracking-wider text-cream uppercase transition-all duration-200 hover:scale-105 hover:bg-brown active:scale-95 disabled:opacity-50"
           >
             {mutation.isPending ? "Envoi..." : "Envoyer"}
@@ -137,7 +140,7 @@ export function ContactForm() {
 
         <div className="mt-16 flex flex-wrap gap-x-10 gap-y-5 border-t border-border-sand pt-10">
           {CONTACT_INFO.map(({ icon: Icon, label }) => (
-            <div key={label} className="group flex items-center gap-3.5">
+            <div key={label} data-reveal className="group flex items-center gap-3.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:scale-110">
                 <Icon className="h-4 w-4 text-brown" strokeWidth={1.5} aria-hidden="true" />
               </div>

@@ -7,6 +7,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { reviewListSchema } from "@/lib/validations";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function fetchReviews() {
   const { data } = await api.get("/reviews");
@@ -48,13 +49,14 @@ export function Testimonials() {
     queryKey: queryKeys.reviews(),
     queryFn: fetchReviews,
   });
+  const scopeRef = useScrollReveal<HTMLDivElement>([data]);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
-      <h2 className="mb-1 font-serif text-[28px] font-semibold text-ink sm:text-3xl">Avis</h2>
+    <div ref={scopeRef} className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+      <h2 data-reveal className="mb-1 font-serif text-[28px] font-semibold text-ink sm:text-3xl">Avis</h2>
       <div className="mb-8 border-b border-border-sand pt-4" />
 
-      <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10">
+      <div data-reveal className="flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10">
         <div className="flex shrink-0 flex-col items-center gap-1 sm:border-r sm:border-border-sand sm:pr-10">
           <div className="font-serif text-5xl text-ink">4.3</div>
           <StarRow stars={4} />
@@ -82,6 +84,7 @@ export function Testimonials() {
         {CATEGORY_SCORES.map((cat) => (
           <div
             key={cat.label}
+            data-reveal
             className="rounded-full border border-border-sand bg-sand-light px-4 py-2 text-xs text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-brown hover:shadow-sm"
           >
             <span className="font-semibold text-brown">{cat.score}</span> {cat.label}
@@ -109,7 +112,7 @@ export function Testimonials() {
           ))}
 
         {data?.map((r) => (
-          <div key={r.id} className="group border-b border-border-sand py-6 transition-colors duration-200 last:border-b-0 hover:bg-sand-light/40">
+          <div key={r.id} data-reveal className="group border-b border-border-sand py-6 transition-colors duration-200 last:border-b-0 hover:bg-sand-light/40">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-sand-light font-serif text-sm text-brown transition-transform duration-300 group-hover:scale-110">

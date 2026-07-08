@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: Product }) {
   const addItem = useCartStore((s) => s.addItem);
 
   return (
-    <div className="group flex flex-col">
+    <div data-reveal className="group flex flex-col">
       <div className="relative aspect-square overflow-hidden rounded-lg bg-sand transition-shadow duration-300 hover:shadow-[0_12px_28px_rgba(126,88,54,0.16)]">
         {product.image ? (
           <Image

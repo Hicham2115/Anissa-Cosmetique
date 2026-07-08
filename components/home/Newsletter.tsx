@@ -6,6 +6,7 @@ import axios from "axios";
 import { ArrowRight } from "lucide-react";
 import { api } from "@/lib/axios";
 import { newsletterSchema } from "@/lib/validations";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function subscribe(email: string) {
   const { data } = await api.post("/newsletter", { email });
@@ -15,6 +16,7 @@ async function subscribe(email: string) {
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [fieldError, setFieldError] = useState<string | null>(null);
+  const scopeRef = useScrollReveal<HTMLDivElement>();
 
   const mutation = useMutation({
     mutationFn: subscribe,
@@ -46,14 +48,15 @@ export function Newsletter() {
   };
 
   return (
-    <div id="newsletter" className="scroll-mt-24 bg-brown px-4 py-20 text-center sm:px-6">
+    <div id="newsletter" ref={scopeRef} className="scroll-mt-24 bg-brown px-4 py-20 text-center sm:px-6">
       <div className="mx-auto max-w-md">
-        <div className="mb-3 font-serif text-3xl text-cream sm:text-4xl">Rejoignez le cercle Anissa</div>
-        <div className="mb-9 text-sm text-sand-light">
+        <div data-reveal className="mb-3 font-serif text-3xl text-cream sm:text-4xl">Rejoignez le cercle Anissa</div>
+        <div data-reveal className="mb-9 text-sm text-sand-light">
           Accès anticipé aux nouvelles formules, et un cadeau à l&rsquo;occasion.
         </div>
 
         <form
+          data-reveal
           onSubmit={handleSubmit}
           className="mx-auto flex max-w-sm items-center gap-2 border-b border-cream/40 pb-3 transition-colors duration-200 focus-within:border-cream"
         >

@@ -7,6 +7,7 @@ import { categoryListSchema } from "@/lib/validations";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function fetchCategories() {
   const { data } = await api.get("/categories");
@@ -18,15 +19,17 @@ export function Categories() {
     queryKey: queryKeys.categories(),
     queryFn: fetchCategories,
   });
+  const scopeRef = useScrollReveal<HTMLDivElement>([data]);
 
   return (
     <div
       id="categories"
+      ref={scopeRef}
       className="mx-auto grid max-w-[1320px] scroll-mt-24 gap-10 px-4 pt-16 pb-5 sm:px-6 sm:pt-24 md:grid-cols-[0.85fr_1.15fr] md:items-center"
     >
       <div>
-        <div className="mb-3.5 text-xs tracking-[0.2em] text-brown uppercase">Catégories</div>
-        <h2 className="mb-9 font-serif text-3xl font-semibold text-ink">Acheter par catégorie</h2>
+        <div data-reveal className="mb-3.5 text-xs tracking-[0.2em] text-brown uppercase">Catégories</div>
+        <h2 data-reveal className="mb-9 font-serif text-3xl font-semibold text-ink">Acheter par catégorie</h2>
 
         {isError && <ErrorState message={(error as Error).message ?? "Impossible de charger les catégories."} />}
 
@@ -46,6 +49,7 @@ export function Categories() {
             {data.map((c) => (
               <div
                 key={c.num}
+                data-reveal
                 className="group flex cursor-pointer items-center justify-between border-t border-border-sand py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-brown"
               >
                 <div className="flex items-baseline gap-4.5">
@@ -61,7 +65,7 @@ export function Categories() {
           </>
         )}
       </div>
-      <div className="group relative aspect-4/3 overflow-hidden rounded-xl">
+      <div data-reveal className="group relative aspect-4/3 overflow-hidden rounded-xl">
         <ImagePlaceholder
           label="Image éditoriale de catégorie"
           className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"

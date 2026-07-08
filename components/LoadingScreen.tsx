@@ -5,6 +5,7 @@ import gsap from "gsap";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import logo from "@/app/assets/logo.png";
+import { useUiStore } from "@/store/uiStore";
 
 export function LoadingScreen() {
   const [mounted, setMounted] = useState(true);
@@ -28,7 +29,10 @@ export function LoadingScreen() {
         scale: 1.04,
         duration: 0.7,
         ease: "power2.inOut",
-        onComplete: () => setMounted(false),
+        onComplete: () => {
+          useUiStore.getState().setLoaded();
+          setMounted(false);
+        },
       });
   }, []);
 

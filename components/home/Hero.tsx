@@ -1,6 +1,13 @@
+"use client";
+
+import { useRef } from "react";
+import Image from "next/image";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { useUiStore } from "@/store/uiStore";
+import heroLifestyle from "@/app/assets/hero-lifestyle.png";
 
 const MARQUEE = [
   "Formules Propres",
@@ -11,60 +18,120 @@ const MARQUEE = [
 
 export function Hero() {
   const loop = [...MARQUEE, ...MARQUEE];
+  const isLoading = useUiStore((s) => s.isLoading);
+
+  const eyebrowRef = useRef<HTMLDivElement>(null);
+  const line1Ref = useRef<HTMLSpanElement>(null);
+  const line2Ref = useRef<HTMLSpanElement>(null);
+  const paragraphRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (isLoading) return;
+
+      const textEls = [
+        eyebrowRef.current,
+        line1Ref.current,
+        line2Ref.current,
+        paragraphRef.current,
+        ctaRef.current,
+      ];
+
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.set(imageRef.current, { opacity: 0, scale: 1.06 })
+        .set(textEls, { opacity: 0, y: 20 })
+        .set(marqueeRef.current, { opacity: 0, y: 12 })
+        .to(imageRef.current, {
+          opacity: 1,
+          scale: 1,
+          duration: 1.3,
+          ease: "power2.out",
+        })
+        .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.8")
+        .to(
+          line1Ref.current,
+          { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
+          "-=0.3",
+        )
+        .to(
+          line2Ref.current,
+          { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
+          "-=0.6",
+        )
+        .to(paragraphRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
+        .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.35")
+        .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.2");
+    },
+    { dependencies: [isLoading] },
+  );
+
   return (
-    <div className="relative overflow-hidden bg-[#FDFCFA] px-4 pt-12 sm:px-6 sm:pt-16">
-      <div className="mx-auto grid max-w-[1320px] items-center gap-10 md:grid-cols-2">
-        <div>
-          <div className="mb-5 text-xs tracking-[0.2em] text-brown uppercase">
-            // Soins de la peau
-          </div>
-          <h1 className="font-serif text-[44px] leading-[0.98] font-semibold text-ink sm:text-[64px] md:text-[76px] lg:text-[88px] lg:leading-[0.96]">
-            Là où <span className="text-brown">la peau</span>
-            <br />
-            <span className="italic">rayonne</span>
-          </h1>
-          <p className="mt-8 max-w-sm text-[15px] leading-relaxed text-[#5c534a]">
-            Découvrez une sélection de soins et cosmétiques à formules propres,
-            pensés pour un éclat au quotidien.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-5">
-            <Button className="group transition-transform duration-200 hover:scale-105 active:scale-95">
-              Acheter
-              <ArrowRight
-                className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
-                aria-hidden="true"
-              />
-            </Button>
-            <a
-              href="#"
-              className="group relative border-b border-ink pb-0.5 text-xs tracking-wider text-ink uppercase transition-colors duration-200 hover:text-brown"
-            >
-              Tout Explorer
-            </a>
-          </div>
+    <div className="relative overflow-hidden bg-[#EFE3D6]">
+      <div className="relative h-[560px] sm:h-[600px] md:h-[660px] lg:h-[720px]">
+        <div ref={imageRef} className="absolute inset-0">
+          <Image
+            src={heroLifestyle}
+            alt="Coffret de soins Anissa Cosmetics, masque anti-âge et gel exfoliant"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[70%_center] md:object-[62%_center]"
+          />
         </div>
 
-        <div className="relative mt-6 md:mt-0">
-          <div className="group relative aspect-[4/5] overflow-hidden rounded-xl bg-white">
-            <ImagePlaceholder
-              label="Masque Éclaircissant Anissa"
-              className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
-            />
-          </div>
-          <div className="absolute -top-5 -right-5 flex h-14 w-14 items-center justify-center rounded-full bg-brown text-2xl font-light text-cream transition-transform duration-300 hover:rotate-90">
-            +
-          </div>
-          <div className="absolute -bottom-7 -left-7 flex h-[130px] w-[130px] flex-col items-center justify-center rounded-full border border-border-sand bg-white text-center shadow-[0_20px_40px_rgba(42,36,32,0.1)] transition-transform duration-300 hover:-translate-y-1 sm:h-[150px] sm:w-[150px]">
-            <div className="font-serif text-2xl text-ink sm:text-3xl">10K+</div>
-            <div className="mt-1 max-w-[100px] text-[10px] tracking-wider text-[#8a7c6c] uppercase">
-              Clientes conquises
+        <div className="relative mx-auto flex h-full max-w-[1320px] items-center px-4 sm:px-6">
+          <div className="max-w-md">
+            <div
+              ref={eyebrowRef}
+              className="mb-5 text-xs tracking-[0.2em] text-brown uppercase"
+            >
+              // Soins de la peau
+            </div>
+            <h1 className="font-serif text-[42px] leading-[0.98] font-semibold text-ink sm:text-[56px] md:text-[64px] lg:text-[74px] lg:leading-[0.96]">
+              <span ref={line1Ref} className="block">
+                Là où <span className="text-brown">la peau</span>
+              </span>
+              <span ref={line2Ref} className="block italic">
+                rayonne
+              </span>
+            </h1>
+            <p
+              ref={paragraphRef}
+              className="mt-7 max-w-sm text-[15px] leading-relaxed text-[#5c534a]"
+            >
+              Découvrez une sélection de soins et cosmétiques à formules
+              propres, pensés pour un éclat au quotidien.
+            </p>
+            <div
+              ref={ctaRef}
+              className="mt-9 flex flex-wrap items-center gap-4"
+            >
+              <Button className="group transition-transform duration-200 hover:scale-105 active:scale-95">
+                Acheter
+                <ArrowRight
+                  className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Button>
+              <a
+                href="/boutique"
+                className="inline-flex cursor-pointer items-center rounded-full border border-ink/20 px-8 py-4 text-xs tracking-wider text-ink uppercase transition-all duration-200 hover:scale-105 hover:border-ink active:scale-95"
+              >
+                Tout Explorer
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="h-14 sm:h-[70px]" />
-      <div className="overflow-hidden border-t border-b border-border-sand py-4 whitespace-nowrap">
+      <div
+        ref={marqueeRef}
+        className="overflow-hidden border-t border-b border-border-sand bg-cream py-4 whitespace-nowrap"
+      >
         <div className="animate-marquee inline-block font-serif text-lg text-ink sm:text-xl">
           {loop.map((msg, i) => (
             <span key={i} className="mx-6">
