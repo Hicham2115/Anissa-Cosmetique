@@ -43,47 +43,44 @@ export function Hero() {
         ctaRef.current,
       ];
 
+      // Absolute positions keep everything moving while the loading overlay
+      // is still fading out (0.7s), so the entrance reads as one seamless
+      // handoff rather than a pause then a second animation.
       const mobileTl = gsap.timeline({ defaults: { ease: "power3.out" } });
       mobileTl
         .set(mobileImageRef.current, { opacity: 0, scale: 1.06 })
         .set(mobileTextRef.current, { opacity: 0, y: 20 })
-        .to(mobileImageRef.current, {
-          opacity: 1,
-          scale: 1,
-          duration: 1.3,
-          ease: "power2.out",
-        })
         .to(
-          mobileTextRef.current,
-          { opacity: 1, y: 0, duration: 0.7 },
-          "-=0.8",
-        );
+          mobileImageRef.current,
+          { opacity: 1, scale: 1, duration: 1.3, ease: "power2.out" },
+          0,
+        )
+        .to(mobileTextRef.current, { opacity: 1, y: 0, duration: 0.7 }, 0.2);
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.set(imageRef.current, { opacity: 0, scale: 1.06 })
         .set(textEls, { opacity: 0, y: 20 })
         .set(marqueeRef.current, { opacity: 0, y: 12 })
-        .to(imageRef.current, {
-          opacity: 1,
-          scale: 1,
-          duration: 1.3,
-          ease: "power2.out",
-        })
-        .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.8")
+        .to(
+          imageRef.current,
+          { opacity: 1, scale: 1, duration: 1.3, ease: "power2.out" },
+          0,
+        )
+        .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.1)
         .to(
           line1Ref.current,
           { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
-          "-=0.3",
+          0.25,
         )
         .to(
           line2Ref.current,
           { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
-          "-=0.6",
+          0.4,
         )
-        .to(paragraphRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
-        .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.35")
-        .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, "-=0.2");
+        .to(paragraphRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.6)
+        .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.75)
+        .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.9);
     },
     { dependencies: [isLoading] },
   );
@@ -101,7 +98,7 @@ export function Hero() {
             className="object-cover object-top"
           />
         </div>
-        {/* <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#efe3d6] via-[#efe3d6]/60 to-transparent" /> */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#efe3d6] via-[#efe3d6]/70 to-transparent" />
 
         <div
           ref={mobileTextRef}

@@ -29,10 +29,10 @@ export function LoadingScreen() {
         scale: 1.04,
         duration: 0.7,
         ease: "power2.inOut",
-        onComplete: () => {
-          useUiStore.getState().setLoaded();
-          setMounted(false);
-        },
+        // Release the hero as soon as the fade-out begins so its entrance
+        // plays underneath the dissolving overlay instead of after it.
+        onStart: () => useUiStore.getState().setLoaded(),
+        onComplete: () => setMounted(false),
       });
   }, []);
 
