@@ -1,5 +1,5 @@
 const MESSAGES = [
-  "Livraison gratuite dès 500 MAD",
+  "Livraison gratuite dès 250 MAD",
   "Nouveau Sérum À La Rose disponible",
   "Retours sous 30 jours, toujours",
 ];

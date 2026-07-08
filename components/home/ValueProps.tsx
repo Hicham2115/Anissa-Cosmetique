@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { HeartHandshake, Leaf, MapPin } from "lucide-react";
+import Link from "next/link";
+import { Leaf, Lightbulb, HeartHandshake, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import productLaitCorporel from "@/app/assets/product-lait-corporel-editorial.png";
 
 const VALUES = [
-  { icon: HeartHandshake, label: "Non testé sur les animaux" },
-  { icon: Leaf, label: "Ingrédients naturels" },
-  { icon: MapPin, label: "Fabriqué au Maroc" },
+  { icon: Leaf, label: "Authenticité", description: "L'héritage ancestral marocain, dans chaque formule." },
+  { icon: Lightbulb, label: "Innovation", description: "La recherche au service de l'argan et du naturel." },
+  { icon: HeartHandshake, label: "Éthique", description: "Une chaîne d'approvisionnement transparente et responsable." },
+  { icon: ShieldCheck, label: "Qualité", description: "Certifié ISO 22716, contrôlé à chaque lot." },
 ];
 
 export function ValueProps() {
@@ -29,33 +31,43 @@ export function ValueProps() {
         </div>
 
         <div>
-          <div data-reveal className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Notre Promesse</div>
+          <div data-reveal className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Notre Histoire</div>
           <h2 data-reveal className="mb-6 font-serif text-[32px] leading-tight font-semibold text-ink sm:text-[40px]">
-            Des formules propres, faites avec soin au Maroc
+            Le savoir scientifique au service de la nature
           </h2>
+          <p data-reveal className="mb-4 max-w-md text-[15px] leading-relaxed text-[#5c534a]">
+            Anissa est née de la vision d&rsquo;un couple maroco-belge — une conseillère
+            dermatologique et un chimiste — revenus au Maroc avec une ambition commune :
+            mettre leur savoir scientifique au service de la nature.
+          </p>
           <p data-reveal className="mb-8 max-w-md text-[15px] leading-relaxed text-[#5c534a]">
-            Chaque formule Anissa n&rsquo;est jamais testée sur les animaux et repose sur des
-            ingrédients botaniques sourcés, sans rien de synthétique par facilité. Nous
-            formulons et produisons chaque lot nous-mêmes à Casablanca, pour garder la
-            main sur la qualité.
+            Nous croyons au pouvoir de l&rsquo;argan et à la force transformatrice de la nature,
+            pour offrir aux femmes les clés d&rsquo;une beauté durable et d&rsquo;une jeunesse
+            éternelle — à travers des soins nourrissants, protecteurs et régénérants qui
+            allient science et nature.
           </p>
 
-          <div className="mb-9 flex flex-wrap gap-6">
-            {VALUES.map(({ icon: Icon, label }) => (
-              <div key={label} data-reveal className="group flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sand-light transition-transform duration-300 group-hover:scale-110">
+          <div className="mb-9 grid grid-cols-2 gap-x-6 gap-y-6">
+            {VALUES.map(({ icon: Icon, label, description }) => (
+              <div key={label} data-reveal className="group flex items-start gap-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sand-light transition-transform duration-300 group-hover:scale-110">
                   <Icon className="h-4 w-4 text-brown" strokeWidth={1.5} aria-hidden="true" />
                 </div>
-                <span className="text-[13px] text-ink transition-colors duration-200 group-hover:text-brown">
-                  {label}
-                </span>
+                <div>
+                  <div className="text-[13px] font-semibold text-ink transition-colors duration-200 group-hover:text-brown">
+                    {label}
+                  </div>
+                  <div className="mt-0.5 text-xs leading-snug text-[#8a7c6c]">{description}</div>
+                </div>
               </div>
             ))}
           </div>
 
-          <Button data-reveal className="rounded-lg transition-transform duration-200 hover:scale-105 active:scale-95">
-            En savoir plus
-          </Button>
+          <Link href="/boutique">
+            <Button data-reveal className="rounded-lg transition-transform duration-200 hover:scale-105 active:scale-95">
+              Découvrir nos soins
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

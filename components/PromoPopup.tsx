@@ -10,7 +10,7 @@ import { scrollToSection } from "@/lib/lenis";
 const MESSAGES = [
   {
     icon: Truck,
-    text: "Livraison gratuite dès 500 MAD sur toute la boutique.",
+    text: "Livraison gratuite dès 250 MAD sur toute la boutique.",
     cta: "Découvrir",
     href: "/boutique",
   },

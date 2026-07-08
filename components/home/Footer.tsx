@@ -9,7 +9,7 @@ import { ArrowRight } from "lucide-react";
 import { api } from "@/lib/axios";
 import { newsletterSchema } from "@/lib/validations";
 import logo from "@/app/assets/logo.png";
-import { FacebookIcon, InstagramIcon, TwitterIcon } from "@/components/icons/SocialIcons";
+import { FacebookIcon, InstagramIcon } from "@/components/icons/SocialIcons";
 
 const FOOTER_COLUMNS = [
   {
@@ -28,9 +28,16 @@ const FOOTER_COLUMNS = [
 ];
 
 const SOCIAL_LINKS = [
-  { icon: FacebookIcon, label: "Facebook", href: "#" },
-  { icon: InstagramIcon, label: "Instagram", href: "#" },
-  { icon: TwitterIcon, label: "Twitter", href: "#" },
+  {
+    icon: FacebookIcon,
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61575226775162",
+  },
+  {
+    icon: InstagramIcon,
+    label: "Instagram",
+    href: "https://www.instagram.com/anissacosmeticsofficiel/",
+  },
 ];
 
 async function subscribe(email: string) {
@@ -89,6 +96,8 @@ export function Footer() {
               <a
                 key={label}
                 href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={label}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/15 text-cream/70 transition-all duration-300 hover:border-gold hover:bg-gold hover:text-ink"
               >

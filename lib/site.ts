@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.anissacosmetics.com";
 export const SITE_NAME = "Anissa Cosmetics";
+export const SITE_TAGLINE = "Nature et innovation pour une jeunesse sans âge";
 export const SITE_DESCRIPTION =
   "Anissa Cosmetics — soins et cosmétiques de luxe discret, formulés à Casablanca, Maroc. Formules propres, ingrédients naturels, fabriqués au Maroc.";
 export const OG_IMAGE = "/og-image.jpg";
+export const SOCIAL_PROFILES = [
+  "https://www.facebook.com/profile.php?id=61575226775162",
+  "https://www.instagram.com/anissacosmeticsofficiel/",
+];
 
 // Next.js does not deep-merge `openGraph`/`twitter` between layout and page
 // metadata — a page-level object replaces the parent's entirely. Spread

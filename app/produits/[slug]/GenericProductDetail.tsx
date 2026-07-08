@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Check, Heart, Minus, Plus, ShoppingBag, Truck, Undo2 } from "lucide-react";
+import { Check, Heart, Minus, Plus, ShieldCheck, ShoppingBag, Truck, Undo2 } from "lucide-react";
 import { api } from "@/lib/axios";
 import { queryKeys } from "@/lib/queryKeys";
 import { productSchema, productListSchema, type Product } from "@/lib/validations";
@@ -22,10 +23,38 @@ const TRUST_BADGES = [
   { icon: ShoppingBag, label: "Paiement à la livraison", sub: "Disponible" },
 ];
 
-const GUARANTEE_ITEMS = [
-  "Satisfait ou remboursé sous 14 jours.",
-  "Retours gratuits, sans justificatif.",
-  "Assistance 7j/7 par le formulaire de contact.",
+const SPECS = [
+  { label: "Référence", value: (p: Product) => p.slotId },
+  { label: "Description", value: (p: Product) => p.subtitle },
+  { label: "Fabriqué à", value: () => "Casablanca, Maroc" },
+];
+
+const INFO_CARDS = [
+  {
+    icon: Truck,
+    title: "Livraison",
+    accent: "border-l-brown",
+    iconBg: "bg-brown/10 text-brown",
+    items: ["Livraison 24–48h partout au Maroc.", "Suivi de commande par SMS et email."],
+  },
+  {
+    icon: Undo2,
+    title: "Garantie & Retours",
+    accent: "border-l-gold",
+    iconBg: "bg-gold/15 text-brown",
+    items: [
+      "Satisfait ou remboursé sous 14 jours.",
+      "Retours gratuits, sans justificatif.",
+      "Assistance 7j/7 par le formulaire de contact.",
+    ],
+  },
+  {
+    icon: ShieldCheck,
+    title: "Paiement",
+    accent: "border-l-ink",
+    iconBg: "bg-ink/10 text-ink",
+    items: ["Paiement à la livraison disponible.", "Paiement par carte 100% sécurisé."],
+  },
 ];
 
 async function fetchProduct(slug: string) {
@@ -95,12 +124,19 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     <div>
       <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-8 text-xs text-[#8a7c6c]">
-          Accueil <span className="mx-1.5">/</span> Boutique <span className="mx-1.5">/</span>{" "}
+          <Link href="/" className="transition-colors duration-200 hover:text-brown">
+            Accueil
+          </Link>
+          <span className="mx-1.5">/</span>
+          <Link href="/boutique" className="transition-colors duration-200 hover:text-brown">
+            Boutique
+          </Link>
+          <span className="mx-1.5">/</span>
           <span className="text-ink">{product.name}</span>
         </div>
 
         <div className="grid gap-10 md:grid-cols-2 md:gap-14">
-          <div className="relative aspect-square overflow-hidden rounded-2xl bg-white">
+          <div className="group relative aspect-square overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border-sand">
             {product.image ? (
               <Image
                 src={product.image}
@@ -108,10 +144,15 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 priority
-                className="object-cover"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
             ) : (
               <ImagePlaceholder label={product.name} className="absolute inset-0 h-full w-full" />
+            )}
+            {product.badge && (
+              <span className="absolute top-4 left-4 rounded-full bg-brown px-2.5 py-0.5 text-[10px] tracking-wider text-cream uppercase">
+                {product.badge}
+              </span>
             )}
           </div>
 
@@ -138,15 +179,9 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               </button>
             </div>
 
-            <h1 className="mb-3 font-serif text-[32px] leading-tight font-semibold text-ink sm:text-[40px]">
+            <h1 className="mb-6 font-serif text-[32px] leading-tight font-semibold text-ink sm:text-[40px]">
               {product.name}
             </h1>
-
-            {product.badge && (
-              <span className="mb-4 inline-block rounded-full bg-brown px-2.5 py-0.5 text-[10px] tracking-wider text-cream uppercase">
-                {product.badge}
-              </span>
-            )}
 
             <div className="mb-6 rounded-2xl border border-border-sand bg-sand-light px-6 py-5">
               <div className="font-serif text-3xl text-ink">{product.price}</div>
@@ -210,36 +245,55 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         </div>
       </div>
 
-      <div ref={specsRef} className="mx-auto max-w-[1320px] px-4 py-16 sm:px-6 sm:py-20">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div data-reveal className="rounded-2xl border border-border-sand border-l-4 border-l-brown p-6">
-            <h3 className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Détails du produit</h3>
-            <dl className="flex flex-col gap-3">
-              <div className="flex items-center justify-between gap-3 text-sm">
-                <dt className="text-[#8a7c6c]">Référence</dt>
-                <dd className="text-right font-medium text-ink">{product.slotId}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-3 text-sm">
-                <dt className="text-[#8a7c6c]">Description</dt>
-                <dd className="text-right font-medium text-ink">{product.subtitle}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-3 text-sm">
-                <dt className="text-[#8a7c6c]">Fabriqué à</dt>
-                <dd className="text-right font-medium text-ink">Casablanca, Maroc</dd>
-              </div>
-            </dl>
+      <div ref={specsRef} className="border-t border-border-sand">
+        <div className="mx-auto grid max-w-[1320px] gap-8 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[280px_1fr] md:gap-16">
+          <div data-reveal>
+            <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">Fiche technique</div>
+            <h2 className="font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
+              Caractéris­tiques
+            </h2>
           </div>
+          <div data-reveal className="flex flex-col">
+            {SPECS.map(({ label, value }) => (
+              <div
+                key={label}
+                className="flex items-center justify-between gap-6 border-b border-border-sand py-4 first:pt-0 last:border-b-0"
+              >
+                <dt className="text-sm font-semibold text-ink">{label}</dt>
+                <dd className="text-right text-sm text-[#8a7c6c]">{value(product)}</dd>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          <div data-reveal className="rounded-2xl border border-border-sand border-l-4 border-l-ink p-6">
-            <h3 className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Garantie &amp; Retours</h3>
-            <ul className="flex flex-col gap-3">
-              {GUARANTEE_ITEMS.map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-[#5c534a]">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-brown" aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+        <div className="mx-auto max-w-[1320px] px-4 pb-16 sm:px-6 sm:pb-20">
+          <div data-reveal className="mb-9">
+            <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">À savoir</div>
+            <h2 className="font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">Infos pratiques</h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {INFO_CARDS.map(({ icon: Icon, title, accent, iconBg, items }) => (
+              <div
+                key={title}
+                data-reveal
+                className={`rounded-2xl border border-border-sand border-l-4 ${accent} bg-white p-6`}
+              >
+                <div className="mb-5 flex items-center gap-3 border-b border-border-sand pb-4">
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
+                    <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-ink">{title}</h3>
+                </div>
+                <ul className="flex flex-col gap-3">
+                  {items.map((item) => (
+                    <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a]">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brown" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -258,6 +312,30 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
         </div>
       )}
+
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border-sand bg-cream px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] sm:hidden">
+        <div className="min-w-0">
+          <div className="truncate text-xs font-medium text-ink">{product.name}</div>
+          <div className="font-serif text-lg text-ink">{product.price}</div>
+        </div>
+        <Button
+          onClick={handleAddToCart}
+          className="group shrink-0 transition-transform duration-200 active:scale-95"
+        >
+          {added ? (
+            <>
+              <Check className="h-[13px] w-[13px]" aria-hidden="true" />
+              Ajouté
+            </>
+          ) : (
+            <>
+              <ShoppingBag className="h-[13px] w-[13px]" aria-hidden="true" />
+              Ajouter
+            </>
+          )}
+        </Button>
+      </div>
+      <div className="h-20 sm:hidden" aria-hidden="true" />
     </div>
   );
 }

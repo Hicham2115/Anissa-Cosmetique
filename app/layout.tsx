@@ -6,7 +6,7 @@ import { PromoPopup } from "@/components/PromoPopup";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WishlistDrawer } from "@/components/wishlist/WishlistDrawer";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, OG_IMAGE } from "@/lib/site";
+import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, OG_IMAGE, SOCIAL_PROFILES } from "@/lib/site";
 
 // Brand type spec calls for Roden (headings) and Lavender (slogan), which
 // aren't distributed on Google Fonts — Urbanist and Josefin Sans stand in
@@ -39,6 +39,9 @@ export const metadata: Metadata = {
     "Anissa Cosmetics",
     "ingrédients naturels Maroc",
     "boutique cosmétiques en ligne",
+    "nature et innovation",
+    "jeunesse sans âge",
+    "soins anti-âge Maroc",
   ],
   openGraph: {
     type: "website",
@@ -69,6 +72,16 @@ export const metadata: Metadata = {
   },
 };
 
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: SITE_URL,
+  slogan: SITE_TAGLINE,
+  logo: `${SITE_URL}/og-image.jpg`,
+  sameAs: SOCIAL_PROFILES,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -80,6 +93,10 @@ export default function RootLayout({
       className={`${urbanist.variable} ${muktaMahee.variable} ${josefinSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream font-sans text-ink">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
+        />
         <Providers>{children}</Providers>
         <PromoPopup />
         <CartDrawer />
