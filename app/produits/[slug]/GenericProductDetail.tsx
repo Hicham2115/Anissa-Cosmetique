@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import { ProductCard, ProductCardSkeleton } from "@/components/home/ProductCard"
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import { getLenisInstance } from "@/lib/lenis";
 
 const TRUST_BADGES = [
   { icon: Truck, label: "Livraison 24–48h", sub: "Partout au Maroc" },
@@ -86,6 +87,14 @@ export function GenericProductDetail({ slug }: { slug: string }) {
   const isLiked = useWishlistStore((s) => (product ? s.isLiked(product.id) : false));
   const specsRef = useScrollReveal<HTMLDivElement>([product]);
   const relatedRef = useScrollReveal<HTMLDivElement>([allProducts]);
+
+  useEffect(() => {
+    // The related-products grid and skeleton→content swap both change the
+    // page height after Lenis has already measured it, so without this its
+    // scroll limit stays stuck at the shorter pre-data height.
+    const raf = requestAnimationFrame(() => getLenisInstance()?.resize());
+    return () => cancelAnimationFrame(raf);
+  }, [product, allProducts]);
 
   if (isLoading) {
     return (
