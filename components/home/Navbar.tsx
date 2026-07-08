@@ -15,9 +15,9 @@ type NavLink =
 
 const LEFT_LINKS: NavLink[] = [
   { label: "Boutique", type: "route", href: "/boutique" },
+  { label: "Catégories", type: "scroll", target: "#categories" },
   { label: "Meilleures Ventes", type: "scroll", target: "#best-sellers" },
-  { label: "Soins", type: "scroll", target: "#categories" },
-  { label: "Maquillage", type: "scroll", target: "#categories" },
+  { label: "Avis", type: "scroll", target: "#avis" },
 ];
 
 const RIGHT_LINKS: NavLink[] = [

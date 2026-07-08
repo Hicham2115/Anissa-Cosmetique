@@ -2,8 +2,10 @@ import { create } from "zustand";
 
 interface CartItem {
   productId: string;
+  slug: string;
   name: string;
   price: string;
+  image: string | null;
   quantity: number;
 }
 
@@ -11,6 +13,8 @@ interface CartState {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  clear: () => void;
   count: () => number;
 }
 
@@ -30,5 +34,13 @@ export const useCartStore = create<CartState>((set, get) => ({
     }),
   removeItem: (productId) =>
     set((state) => ({ items: state.items.filter((i) => i.productId !== productId) })),
+  updateQuantity: (productId, quantity) =>
+    set((state) => ({
+      items:
+        quantity < 1
+          ? state.items.filter((i) => i.productId !== productId)
+          : state.items.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+    })),
+  clear: () => set({ items: [] }),
   count: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
 }));

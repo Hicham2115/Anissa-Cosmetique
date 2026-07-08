@@ -52,7 +52,7 @@ export function Testimonials() {
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
 
   return (
-    <div ref={scopeRef} className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+    <div id="avis" ref={scopeRef} className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24">
       <h2 data-reveal className="mb-1 font-serif text-[28px] font-semibold text-ink sm:text-3xl">Avis</h2>
       <div className="mb-8 border-b border-border-sand pt-4" />
 
