@@ -4,16 +4,32 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Check, Heart, Minus, Plus, ShieldCheck, ShoppingBag, Truck, Undo2 } from "lucide-react";
+import {
+  Check,
+  Heart,
+  Minus,
+  Plus,
+  ShieldCheck,
+  ShoppingBag,
+  Truck,
+  Undo2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { queryKeys } from "@/lib/queryKeys";
-import { productSchema, productListSchema, type Product } from "@/lib/validations";
+import {
+  productSchema,
+  productListSchema,
+  type Product,
+} from "@/lib/validations";
 import { ErrorState } from "@/components/ui/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Button } from "@/components/ui/button";
-import { ProductCard, ProductCardSkeleton } from "@/components/home/ProductCard";
+import {
+  ProductCard,
+  ProductCardSkeleton,
+} from "@/components/home/ProductCard";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
@@ -37,7 +53,10 @@ const INFO_CARDS = [
     title: "Livraison",
     accent: "border-l-brown",
     iconBg: "bg-brown/10 text-brown",
-    items: ["Livraison 24–48h partout au Maroc.", "Suivi de commande par SMS et email."],
+    items: [
+      "Livraison 24–48h partout au Maroc.",
+      "Suivi de commande par SMS et email.",
+    ],
   },
   {
     icon: Undo2,
@@ -55,7 +74,10 @@ const INFO_CARDS = [
     title: "Paiement",
     accent: "border-l-ink",
     iconBg: "bg-ink/10 text-ink",
-    items: ["Paiement à la livraison disponible.", "Paiement par carte 100% sécurisé."],
+    items: [
+      "Paiement à la livraison disponible.",
+      "Paiement par carte 100% sécurisé.",
+    ],
   },
 ];
 
@@ -70,7 +92,12 @@ async function fetchProducts() {
 }
 
 export function GenericProductDetail({ slug }: { slug: string }) {
-  const { data: product, isLoading, isError, error } = useQuery({
+  const {
+    data: product,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: queryKeys.product(slug),
     queryFn: () => fetchProduct(slug),
   });
@@ -82,9 +109,23 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  const [activeImageProductId, setActiveImageProductId] = useState(product?.id);
+  const [imageRatio, setImageRatio] = useState<number | null>(null);
+  const [thumbRatios, setThumbRatios] = useState<Record<number, number>>({});
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  const [isZooming, setIsZooming] = useState(false);
+  if (product?.id !== activeImageProductId) {
+    setActiveImageProductId(product?.id);
+    setActiveImage(0);
+    setImageRatio(null);
+    setThumbRatios({});
+  }
   const addItem = useCartStore((s) => s.addItem);
   const toggleWishlist = useWishlistStore((s) => s.toggleItem);
-  const isLiked = useWishlistStore((s) => (product ? s.isLiked(product.id) : false));
+  const isLiked = useWishlistStore((s) =>
+    product ? s.isLiked(product.id) : false,
+  );
   const specsRef = useScrollReveal<HTMLDivElement>([product]);
   const relatedRef = useScrollReveal<HTMLDivElement>([allProducts]);
 
@@ -115,31 +156,61 @@ export function GenericProductDetail({ slug }: { slug: string }) {
   if (isError || !product) {
     return (
       <div className="mx-auto max-w-[1320px] px-4 py-14 sm:px-6">
-        <ErrorState message={(error as Error)?.message ?? "Impossible de charger ce produit."} />
+        <ErrorState
+          message={
+            (error as Error)?.message ?? "Impossible de charger ce produit."
+          }
+        />
       </div>
     );
   }
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
+      addItem({
+        productId: product.id,
+        slug: product.slotId,
+        name: product.name,
+        price: product.price,
+        image: product.image ?? null,
+      });
     }
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
-    toast("Ajouté au panier", { description: product.name });
+    toast("Ajouté au panier", {
+      description: product.name,
+      icon: (
+        <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+      ),
+    });
   };
 
-  const relatedProducts: Product[] = (allProducts ?? []).filter((p) => p.id !== product.id).slice(0, 4);
+  const relatedProducts: Product[] = (allProducts ?? [])
+    .filter((p) => p.id !== product.id)
+    .slice(0, 4);
+
+  const gallery =
+    product.images && product.images.length > 0
+      ? product.images
+      : product.image
+        ? [product.image]
+        : [];
 
   return (
     <div>
       <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-8 text-xs text-[#8a7c6c]">
-          <Link href="/" className="transition-colors duration-200 hover:text-brown">
+          <Link
+            href="/"
+            className="transition-colors duration-200 hover:text-brown"
+          >
             Accueil
           </Link>
           <span className="mx-1.5">/</span>
-          <Link href="/boutique" className="transition-colors duration-200 hover:text-brown">
+          <Link
+            href="/boutique"
+            className="transition-colors duration-200 hover:text-brown"
+          >
             Boutique
           </Link>
           <span className="mx-1.5">/</span>
@@ -147,32 +218,98 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         </div>
 
         <div className="grid gap-10 md:grid-cols-2 md:gap-14">
-          <div className="group relative aspect-square overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border-sand">
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                priority
-                className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-              />
-            ) : (
-              <ImagePlaceholder label={product.name} className="absolute inset-0 h-full w-full" />
+          <div className="flex gap-4">
+            {gallery.length > 1 && (
+              <div className="flex shrink-0 flex-col gap-3">
+                {gallery.map((src, i) => (
+                  <button
+                    key={src}
+                    type="button"
+                    onClick={() => {
+                      setActiveImage(i);
+                      setImageRatio(null);
+                    }}
+                    aria-label={`Voir l'image ${i + 1}`}
+                    style={{ aspectRatio: thumbRatios[i] ?? 1 }}
+                    className={`relative w-20 overflow-hidden rounded-xl bg-transparent transition-all duration-200 sm:w-24 ${
+                      activeImage === i
+                        ? "ring-2 ring-brown"
+                        : "ring-1 ring-border-sand hover:ring-brown/50"
+                    }`}
+                  >
+                    <Image
+                      src={src}
+                      alt={`${product.name} — vue ${i + 1}`}
+                      fill
+                      sizes="96px"
+                      className="object-contain"
+                      onLoad={(e) => {
+                        const img = e.currentTarget;
+                        setThumbRatios((prev) => ({ ...prev, [i]: img.naturalWidth / img.naturalHeight }));
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
             )}
-            {product.badge && (
-              <span className="absolute top-4 left-4 rounded-full bg-brown px-2.5 py-0.5 text-[10px] tracking-wider text-cream uppercase">
-                {product.badge}
-              </span>
-            )}
+
+            <div
+              className={`relative flex-1 overflow-hidden rounded-2xl bg-transparent shadow-sm ring-1 ring-border-sand ${
+                gallery.length > 0 ? "cursor-zoom-in" : ""
+              }`}
+              style={{ aspectRatio: Math.min(1.4, Math.max(0.75, imageRatio ?? 1)) }}
+              onMouseEnter={() => setIsZooming(true)}
+              onMouseLeave={() => setIsZooming(false)}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                setZoomPos({
+                  x: ((e.clientX - rect.left) / rect.width) * 100,
+                  y: ((e.clientY - rect.top) / rect.height) * 100,
+                });
+              }}
+            >
+              {gallery.length > 0 ? (
+                <Image
+                  src={gallery[activeImage]}
+                  alt={product.name}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  priority
+                  className="object-contain transition-transform duration-200 ease-out"
+                  style={
+                    isZooming
+                      ? { transform: "scale(2)", transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` }
+                      : undefined
+                  }
+                  onLoad={(e) => {
+                    const img = e.currentTarget;
+                    setImageRatio(img.naturalWidth / img.naturalHeight);
+                  }}
+                />
+              ) : (
+                <ImagePlaceholder
+                  label={product.name}
+                  className="absolute inset-0 h-full w-full"
+                />
+              )}
+              {product.badge && (
+                <span className="absolute top-4 left-4 rounded-full bg-brown px-2.5 py-0.5 text-[10px] tracking-wider text-cream uppercase">
+                  {product.badge}
+                </span>
+              )}
+            </div>
           </div>
 
           <div>
             <div className="mb-2 flex items-start justify-between gap-4">
-              <div className="text-xs tracking-[0.2em] text-brown uppercase">Anissa Cosmetics</div>
+              <div className="text-xs tracking-[0.2em] text-brown uppercase">
+                Anissa Cosmetics
+              </div>
               <button
                 type="button"
-                aria-label={isLiked ? "Retirer des favoris" : "Ajouter aux favoris"}
+                aria-label={
+                  isLiked ? "Retirer des favoris" : "Ajouter aux favoris"
+                }
                 onClick={() => {
                   toggleWishlist({
                     productId: product.id,
@@ -186,10 +323,16 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                   });
                 }}
                 className={`flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 ${
-                  isLiked ? "border-brown text-brown" : "border-border-sand hover:border-brown hover:text-brown"
+                  isLiked
+                    ? "border-brown text-brown"
+                    : "border-border-sand hover:border-brown hover:text-brown"
                 }`}
               >
-                <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} aria-hidden="true" />
+                <Heart
+                  className="h-4 w-4"
+                  fill={isLiked ? "currentColor" : "none"}
+                  aria-hidden="true"
+                />
               </button>
             </div>
 
@@ -198,11 +341,17 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </h1>
 
             <div className="mb-6 rounded-2xl border border-border-sand bg-sand-light px-6 py-5">
-              <div className="font-serif text-3xl text-ink">{product.price}</div>
-              <div className="mt-2 text-xs text-[#8a7c6c]">Paiement à la livraison disponible</div>
+              <div className="font-serif text-3xl text-ink">
+                {product.price}
+              </div>
+              <div className="mt-2 text-xs text-[#8a7c6c]">
+                Paiement à la livraison disponible
+              </div>
             </div>
 
-            <p className="text-[15px] leading-relaxed text-[#5c534a]">{product.subtitle}</p>
+            <p className="text-[15px] leading-relaxed text-[#5c534a]">
+              {product.subtitle}
+            </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <div className="flex items-center rounded-full border border-border-sand">
@@ -214,7 +363,9 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 >
                   <Minus className="h-4 w-4" aria-hidden="true" />
                 </button>
-                <span className="w-8 text-center text-sm font-semibold text-ink">{quantity}</span>
+                <span className="w-8 text-center text-sm font-semibold text-ink">
+                  {quantity}
+                </span>
                 <button
                   type="button"
                   aria-label="Augmenter la quantité"
@@ -236,7 +387,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                   </>
                 ) : (
                   <>
-                    <ShoppingBag className="h-[13px] w-[13px]" aria-hidden="true" />
+                    <ShoppingBag
+                      className="h-[13px] w-[13px]"
+                      aria-hidden="true"
+                    />
                     Ajouter au panier
                   </>
                 )}
@@ -249,9 +403,17 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                   key={label}
                   className="flex flex-col items-center gap-2 rounded-xl border border-border-sand px-2 py-4 text-center"
                 >
-                  <Icon className="h-4 w-4 text-brown" strokeWidth={1.5} aria-hidden="true" />
-                  <div className="text-[11px] leading-tight text-ink">{label}</div>
-                  <div className="text-[10px] leading-tight text-[#8a7c6c]">{sub}</div>
+                  <Icon
+                    className="h-4 w-4 text-brown"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
+                  <div className="text-[11px] leading-tight text-ink">
+                    {label}
+                  </div>
+                  <div className="text-[10px] leading-tight text-[#8a7c6c]">
+                    {sub}
+                  </div>
                 </div>
               ))}
             </div>
@@ -262,7 +424,9 @@ export function GenericProductDetail({ slug }: { slug: string }) {
       <div ref={specsRef} className="border-t border-border-sand">
         <div className="mx-auto grid max-w-[1320px] gap-8 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[280px_1fr] md:gap-16">
           <div data-reveal>
-            <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">Fiche technique</div>
+            <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">
+              Fiche technique
+            </div>
             <h2 className="font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
               Caractéris­tiques
             </h2>
@@ -274,7 +438,9 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 className="flex items-center justify-between gap-6 border-b border-border-sand py-4 first:pt-0 last:border-b-0"
               >
                 <dt className="text-sm font-semibold text-ink">{label}</dt>
-                <dd className="text-right text-sm text-[#8a7c6c]">{value(product)}</dd>
+                <dd className="text-right text-sm text-[#8a7c6c]">
+                  {value(product)}
+                </dd>
               </div>
             ))}
           </div>
@@ -282,8 +448,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
         <div className="mx-auto max-w-[1320px] px-4 pb-16 sm:px-6 sm:pb-20">
           <div data-reveal className="mb-9">
-            <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">À savoir</div>
-            <h2 className="font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">Infos pratiques</h2>
+            <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">
+              À savoir
+            </div>
+            <h2 className="font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
+              Infos pratiques
+            </h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {INFO_CARDS.map(({ icon: Icon, title, accent, iconBg, items }) => (
@@ -293,15 +463,27 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 className={`rounded-2xl border border-border-sand border-l-4 ${accent} bg-white p-6`}
               >
                 <div className="mb-5 flex items-center gap-3 border-b border-border-sand pb-4">
-                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
-                    <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  <div
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBg}`}
+                  >
+                    <Icon
+                      className="h-4 w-4"
+                      strokeWidth={1.75}
+                      aria-hidden="true"
+                    />
                   </div>
                   <h3 className="text-sm font-semibold text-ink">{title}</h3>
                 </div>
                 <ul className="flex flex-col gap-3">
                   {items.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a]">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brown" aria-hidden="true" />
+                    <li
+                      key={item}
+                      className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a]"
+                    >
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0 text-brown"
+                        aria-hidden="true"
+                      />
                       {item}
                     </li>
                   ))}
@@ -313,11 +495,21 @@ export function GenericProductDetail({ slug }: { slug: string }) {
       </div>
 
       {(!allProducts || relatedProducts.length > 0) && (
-        <div ref={relatedRef} className="mx-auto max-w-[1320px] px-4 pb-20 sm:px-6">
-          <div data-reveal className="mb-9 text-xs tracking-[0.2em] text-brown uppercase">Vous aimerez aussi</div>
+        <div
+          ref={relatedRef}
+          className="mx-auto max-w-[1320px] px-4 pb-20 sm:px-6"
+        >
+          <div
+            data-reveal
+            className="mb-9 text-xs tracking-[0.2em] text-brown uppercase"
+          >
+            Vous aimerez aussi
+          </div>
           <div className="grid grid-cols-2 gap-4 sm:gap-5.5 lg:grid-cols-4">
             {!allProducts
-              ? Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))
               : relatedProducts.map((p) => (
                   <div key={p.id} data-reveal>
                     <ProductCard product={p} />
@@ -329,7 +521,9 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border-sand bg-cream px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] sm:hidden">
         <div className="min-w-0">
-          <div className="truncate text-xs font-medium text-ink">{product.name}</div>
+          <div className="truncate text-xs font-medium text-ink">
+            {product.name}
+          </div>
           <div className="font-serif text-lg text-ink">{product.price}</div>
         </div>
         <Button

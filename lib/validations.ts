@@ -51,6 +51,7 @@ export const productSchema = z.object({
   price: z.string(),
   badge: z.string().nullable(),
   image: z.string().nullable().optional(),
+  images: z.array(z.string()).optional(),
 });
 export type Product = z.infer<typeof productSchema>;
 export const productListSchema = z.array(productSchema);
@@ -72,3 +73,15 @@ export const reviewSchema = z.object({
 });
 export type Review = z.infer<typeof reviewSchema>;
 export const reviewListSchema = z.array(reviewSchema);
+
+export const checkoutSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        handle: z.string().trim().min(1, "Le produit est requis"),
+        quantity: z.number().int().positive().max(20),
+      })
+    )
+    .min(1, "Le panier est vide"),
+});
+export type CheckoutInput = z.infer<typeof checkoutSchema>;

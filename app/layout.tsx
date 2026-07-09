@@ -98,12 +98,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
         />
-        <Providers>{children}</Providers>
-        <PromoPopup />
-        <CartDrawer />
-        <WishlistDrawer />
-        <WhatsappButton />
-        <ScrollToTop />
+        <Providers>
+          {children}
+          <PromoPopup />
+          <CartDrawer />
+          <WishlistDrawer />
+          <WhatsappButton />
+          <ScrollToTop />
+        </Providers>
       </body>
     </html>
   );

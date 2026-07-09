@@ -56,6 +56,14 @@ const PRODUCTS_QUERY = /* GraphQL */ `
             url
             altText
           }
+          images(first: 10) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
           priceRange {
             minVariantPrice {
               amount
@@ -75,6 +83,7 @@ interface ShopifyProductNode {
   description: string;
   tags: string[];
   featuredImage: { url: string; altText: string | null } | null;
+  images: { edges: { node: { url: string; altText: string | null } }[] };
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
 }
 
@@ -96,6 +105,7 @@ function formatPrice(amount: string, currencyCode: string): string {
 }
 
 function toProduct(node: ShopifyProductNode) {
+  const images = node.images.edges.map(({ node: img }) => img.url);
   return {
     id: node.id,
     slotId: node.handle,
@@ -103,7 +113,8 @@ function toProduct(node: ShopifyProductNode) {
     subtitle: node.description.slice(0, 60) || node.title,
     price: formatPrice(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode),
     badge: badgeFromTags(node.tags),
-    image: node.featuredImage?.url ?? null,
+    image: node.featuredImage?.url ?? images[0] ?? null,
+    images,
   };
 }
 
@@ -124,6 +135,14 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
         url
         altText
       }
+      images(first: 10) {
+        edges {
+          node {
+            url
+            altText
+          }
+        }
+      }
       priceRange {
         minVariantPrice {
           amount
@@ -141,4 +160,82 @@ interface ProductByHandleQueryResult {
 export async function fetchShopifyProductByHandle(handle: string) {
   const data = await shopifyFetch<ProductByHandleQueryResult>(PRODUCT_BY_HANDLE_QUERY, { handle });
   return data.productByHandle ? toProduct(data.productByHandle) : null;
+}
+
+const PRODUCT_VARIANT_QUERY = /* GraphQL */ `
+  query ProductVariantByHandle($handle: String!) {
+    productByHandle(handle: $handle) {
+      variants(first: 1) {
+        edges {
+          node {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
+interface ProductVariantQueryResult {
+  productByHandle: { variants: { edges: { node: { id: string } }[] } } | null;
+}
+
+const CART_CREATE_MUTATION = /* GraphQL */ `
+  mutation CartCreate($lines: [CartLineInput!]!) {
+    cartCreate(input: { lines: $lines }) {
+      cart {
+        id
+        checkoutUrl
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+interface CartCreateResult {
+  cartCreate: {
+    cart: { id: string; checkoutUrl: string } | null;
+    userErrors: { field: string[]; message: string }[];
+  };
+}
+
+export interface CheckoutLineItem {
+  handle: string;
+  quantity: number;
+}
+
+// Creates a fresh Shopify cart for one or more product handles and returns
+// the hosted checkoutUrl, so the site can send shoppers straight to
+// Shopify's own checkout without building payments/order logic here.
+export async function createCheckoutUrlForItems(items: CheckoutLineItem[]): Promise<string> {
+  if (items.length === 0) {
+    throw new Error("Le panier est vide.");
+  }
+
+  const variantIds = await Promise.all(
+    items.map(async ({ handle }) => {
+      const variantData = await shopifyFetch<ProductVariantQueryResult>(PRODUCT_VARIANT_QUERY, { handle });
+      const variantId = variantData.productByHandle?.variants.edges[0]?.node.id;
+      if (!variantId) {
+        throw new Error(`Aucune variante trouvée pour le produit "${handle}".`);
+      }
+      return variantId;
+    })
+  );
+
+  const cartData = await shopifyFetch<CartCreateResult>(CART_CREATE_MUTATION, {
+    lines: items.map(({ quantity }, i) => ({ merchandiseId: variantIds[i], quantity })),
+  });
+
+  if (cartData.cartCreate.userErrors.length) {
+    throw new Error(cartData.cartCreate.userErrors.map((e) => e.message).join(", "));
+  }
+  if (!cartData.cartCreate.cart) {
+    throw new Error("Impossible de créer le panier Shopify.");
+  }
+
+  return cartData.cartCreate.cart.checkoutUrl;
 }

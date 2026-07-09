@@ -124,7 +124,10 @@ export function ProductDetail() {
     });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
-    toast("Ajouté au panier", { description: "Masque Éclaircissant — Nila & Niacinamide" });
+    toast("Ajouté au panier", {
+      description: "Masque Éclaircissant — Nila & Niacinamide",
+      icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
+    });
   };
 
   return (

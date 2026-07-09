@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
 import { api } from "@/lib/axios";
 import { newsletterSchema } from "@/lib/validations";
@@ -21,7 +22,11 @@ export function Newsletter() {
   const mutation = useMutation({
     mutationFn: subscribe,
     onError: (err) => {
-      console.error("Newsletter subscription failed:", err);
+      toast.error(
+        axios.isAxiosError(err)
+          ? (err.response?.data?.message ?? "Échec de l'inscription. Veuillez réessayer.")
+          : "Échec de l'inscription. Veuillez réessayer."
+      );
     },
   });
 

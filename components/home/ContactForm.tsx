@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "sonner";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
 import { api } from "@/lib/axios";
 import { contactSchema } from "@/lib/validations";
@@ -38,7 +39,12 @@ export function ContactForm() {
 
   const mutation = useMutation({
     mutationFn: sendMessage,
-    onError: (err) => console.error("Contact form submission failed:", err),
+    onError: (err) =>
+      toast.error(
+        axios.isAxiosError(err)
+          ? (err.response?.data?.message ?? "Échec de l'envoi. Veuillez réessayer.")
+          : "Échec de l'envoi. Veuillez réessayer."
+      ),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

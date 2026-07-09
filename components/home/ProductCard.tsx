@@ -57,7 +57,10 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={(e) => {
             e.preventDefault();
             addItem({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
-            toast("Ajouté au panier", { description: product.name });
+            toast("Ajouté au panier", {
+              description: product.name,
+              icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
+            });
           }}
           className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-brown transition-transform duration-200 hover:scale-110 active:scale-95"
         >

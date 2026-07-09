@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -50,7 +51,12 @@ export function Footer() {
   const [fieldError, setFieldError] = useState<string | null>(null);
   const mutation = useMutation({
     mutationFn: subscribe,
-    onError: (err) => console.error("Newsletter subscription failed:", err),
+    onError: (err) =>
+      toast.error(
+        axios.isAxiosError(err)
+          ? (err.response?.data?.message ?? "Échec de l'inscription. Veuillez réessayer.")
+          : "Échec de l'inscription. Veuillez réessayer."
+      ),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

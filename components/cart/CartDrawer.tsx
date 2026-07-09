@@ -5,12 +5,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { api } from "@/lib/axios";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Button } from "@/components/ui/button";
 import { formatMad, parsePriceAmount } from "@/lib/utils";
+
+async function createCheckout(items: { handle: string; quantity: number }[]) {
+  const { data } = await api.post("/checkout", { items });
+  return data as { checkoutUrl: string };
+}
 
 export function CartDrawer() {
   const isOpen = useUiStore((s) => s.isCartOpen);
@@ -39,6 +47,16 @@ export function CartDrawer() {
   const FREE_SHIPPING_THRESHOLD = 250;
   const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
   const shippingProgress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+
+  const checkoutMutation = useMutation({
+    mutationFn: () => createCheckout(items.map((i) => ({ handle: i.slug, quantity: i.quantity }))),
+    onSuccess: (data) => {
+      window.location.href = data.checkoutUrl;
+    },
+    onError: () => {
+      toast.error("Impossible de démarrer le paiement. Réessayez.");
+    },
+  });
 
   return (
     <div className={isOpen ? "fixed inset-0 z-[60]" : "pointer-events-none fixed inset-0 z-[60]"}>
@@ -169,9 +187,13 @@ export function CartDrawer() {
               <span className="text-[#8a7c6c]">Sous-total</span>
               <span className="font-serif text-xl text-ink">{formatMad(subtotal)}</span>
             </div>
-            <Link href="/boutique" onClick={closeCart}>
-              <Button className="w-full">Passer la commande</Button>
-            </Link>
+            <Button
+              className="w-full"
+              onClick={() => checkoutMutation.mutate()}
+              disabled={checkoutMutation.isPending}
+            >
+              {checkoutMutation.isPending ? "Chargement…" : "Passer la commande"}
+            </Button>
           </div>
         )}
       </div>
