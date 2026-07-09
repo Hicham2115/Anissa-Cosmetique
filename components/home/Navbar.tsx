@@ -128,7 +128,7 @@ export function Navbar() {
               type="button"
               aria-label="Liste de souhaits"
               onClick={openWishlist}
-              className="relative hidden cursor-pointer transition-transform duration-200 hover:scale-110 sm:inline-flex"
+              className="relative inline-flex cursor-pointer transition-transform duration-200 hover:scale-110"
             >
               <Heart
                 className="h-[18px] w-[18px] text-ink"

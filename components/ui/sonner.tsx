@@ -6,6 +6,7 @@ export function Toaster(props: ToasterProps) {
   return (
     <Sonner
       position="bottom-right"
+      closeButton
       toastOptions={{
         unstyled: false,
         classNames: {
@@ -16,6 +17,8 @@ export function Toaster(props: ToasterProps) {
           description: "!mt-0.5 !text-[13px] !text-[#8a7c6c]",
           actionButton: "!bg-brown !text-cream !rounded-full",
           cancelButton: "!bg-sand !text-ink !rounded-full",
+          closeButton:
+            "!bg-cream !border !border-border-sand !text-ink hover:!bg-sand-light",
         },
       }}
       {...props}
