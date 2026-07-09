@@ -2,10 +2,12 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { useUiStore } from "@/store/uiStore";
 import heroLifestyle from "@/app/assets/hero-lifestyle.png";
 import heroMobile from "@/app/assets/hero-mobile.png";
@@ -117,13 +119,19 @@ export function Hero() {
             pensés pour un éclat au quotidien.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-4">
-            <Button className="group transition-transform duration-200 hover:scale-105 active:scale-95">
+            <Link
+              href="/boutique"
+              className={cn(
+                buttonVariants(),
+                "group transition-transform duration-200 hover:scale-105 active:scale-95",
+              )}
+            >
               Acheter
               <ArrowRight
                 className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
                 aria-hidden="true"
               />
-            </Button>
+            </Link>
             <a
               href="/boutique"
               className="inline-flex cursor-pointer items-center rounded-full border border-ink/20 px-8 py-4 text-xs tracking-wider text-ink uppercase transition-all duration-200 hover:scale-105 hover:border-ink active:scale-95"
@@ -173,13 +181,19 @@ export function Hero() {
               ref={ctaRef}
               className="mt-9 flex flex-wrap items-center gap-4"
             >
-              <Button className="group transition-transform duration-200 hover:scale-105 active:scale-95">
+              <Link
+                href="/boutique"
+                className={cn(
+                  buttonVariants(),
+                  "group transition-transform duration-200 hover:scale-105 active:scale-95",
+                )}
+              >
                 Acheter
                 <ArrowRight
                   className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
                   aria-hidden="true"
                 />
-              </Button>
+              </Link>
               <a
                 href="/boutique"
                 className="inline-flex cursor-pointer items-center rounded-full border border-ink/20 px-8 py-4 text-xs tracking-wider text-ink uppercase transition-all duration-200 hover:scale-105 hover:border-ink active:scale-95"
