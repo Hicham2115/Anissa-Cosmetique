@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -22,6 +23,13 @@ const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
   Éclat: makiageImage,
   "Nettoyants & Exfoliants": parfumImage,
   "Soins Ciblés": cadeauxImage,
+};
+
+const CATEGORY_LINKS: Record<string, string> = {
+  "Anti-Âge": "/produits/masque-anti-age",
+  Éclat: "/produits/creme-eclaircissante",
+  "Nettoyants & Exfoliants": "/produits/gel-nettoyant-purifiant",
+  "Soins Ciblés": "/produits/creme-anti-rides",
 };
 
 async function fetchCategories() {
@@ -114,13 +122,14 @@ export function Categories() {
                   <span className="text-xs text-gold transition-colors duration-300">
                     {c.num}
                   </span>
-                  <span
-                    className={`font-serif text-xl transition-colors duration-300 group-hover:text-brown sm:text-[22px] ${
+                  <Link
+                    href={CATEGORY_LINKS[c.name] ?? "/boutique"}
+                    className={`font-serif text-xl transition-colors duration-300 hover:text-brown group-hover:text-brown sm:text-[22px] ${
                       currentCategory === c.name ? "text-brown" : "text-ink"
                     }`}
                   >
                     {c.name}
-                  </span>
+                  </Link>
                 </div>
                 <span className="text-[13px] text-[#8a7c6c]">({c.count})</span>
               </div>
