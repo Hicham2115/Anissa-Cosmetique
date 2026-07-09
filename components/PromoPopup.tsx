@@ -107,7 +107,7 @@ export function PromoPopup() {
         ref={pillRef}
         type="button"
         onClick={() => setState("expanded")}
-        className="fixed bottom-19 left-5 z-50 flex cursor-pointer items-center gap-2 rounded-full bg-ink px-4 py-3 text-xs font-semibold tracking-wide text-cream shadow-[0_12px_28px_rgba(0,0,0,0.3)] transition-transform duration-200 hover:scale-105 sm:bottom-23"
+        className="fixed bottom-13 left-5 z-50 flex cursor-pointer items-center gap-2 rounded-full bg-ink px-4 py-3 text-xs font-semibold tracking-wide text-cream shadow-[0_12px_28px_rgba(0,0,0,0.3)] transition-transform duration-200 hover:scale-105 sm:bottom-17"
       >
         <Tag className="h-3.5 w-3.5 text-gold" aria-hidden="true" />
         Offre de Lancement
