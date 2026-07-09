@@ -154,7 +154,7 @@ export function Hero() {
             >
               // Soins de la peau
             </div>
-            <h1 className="font-serif text-[42px] leading-[0.98] font-semibold text-ink sm:text-[56px] md:text-[64px] lg:text-[74px] lg:leading-[0.96]">
+            <h1 className="font-serif text-[32px] leading-[0.98] font-semibold text-ink sm:text-[56px] md:text-[64px] lg:text-[74px] lg:leading-[0.96]">
               <span ref={line1Ref} className="block">
                 Là où <span className="text-brown">la peau</span>
               </span>

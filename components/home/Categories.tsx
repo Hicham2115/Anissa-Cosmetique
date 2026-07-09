@@ -12,16 +12,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import soinsImage from "@/app/assets/categories/soins.jpg";
-import makiageImage from "@/app/assets/categories/makiage.jpg";
-import parfumImage from "@/app/assets/categories/parfum.jpg";
-import cadeauxImage from "@/app/assets/categories/cadeaux.jpg";
+import soinsImage from "@/app/assets/categories/antiage.webp";
+import makiageImage from "@/app/assets/categories/eclat.webp";
+import parfumImage from "@/app/assets/categories/nettoyant.webp";
+import cadeauxImage from "@/app/assets/categories/soins.webp";
 
 const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
-  Soins: soinsImage,
-  Maquillage: makiageImage,
-  Parfums: parfumImage,
-  "Coffrets Cadeaux": cadeauxImage,
+  "Anti-Âge": soinsImage,
+  Éclat: makiageImage,
+  "Nettoyants & Exfoliants": parfumImage,
+  "Soins Ciblés": cadeauxImage,
 };
 
 async function fetchCategories() {
@@ -43,12 +43,18 @@ export function Categories() {
   useGSAP(
     () => {
       if (!imageRef.current) return;
-      gsap.fromTo(imageRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
+      gsap.fromTo(
+        imageRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: "power2.out" },
+      );
     },
-    { dependencies: [currentCategory] }
+    { dependencies: [currentCategory] },
   );
 
-  const activeImage = currentCategory ? CATEGORY_IMAGES[currentCategory] : undefined;
+  const activeImage = currentCategory
+    ? CATEGORY_IMAGES[currentCategory]
+    : undefined;
 
   return (
     <div
@@ -57,15 +63,35 @@ export function Categories() {
       className="mx-auto grid max-w-[1320px] scroll-mt-24 gap-10 px-4 pt-16 pb-5 sm:px-6 sm:pt-24 md:grid-cols-[0.85fr_1.15fr] md:items-center"
     >
       <div>
-        <div data-reveal className="mb-3.5 text-xs tracking-[0.2em] text-brown uppercase">Catégories</div>
-        <h2 data-reveal className="mb-9 font-serif text-3xl font-semibold text-ink">Acheter par catégorie</h2>
+        <div
+          data-reveal
+          className="mb-3.5 text-xs tracking-[0.2em] text-brown uppercase"
+        >
+          Catégories
+        </div>
+        <h2
+          data-reveal
+          className="mb-9 font-serif text-3xl font-semibold text-ink"
+        >
+          Acheter par catégorie
+        </h2>
 
-        {isError && <ErrorState message={(error as Error).message ?? "Impossible de charger les catégories."} />}
+        {isError && (
+          <ErrorState
+            message={
+              (error as Error).message ??
+              "Impossible de charger les catégories."
+            }
+          />
+        )}
 
         {isLoading && (
           <div className="flex flex-col gap-0">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex items-center justify-between border-t border-border-sand py-5.5">
+              <div
+                key={i}
+                className="flex items-center justify-between border-t border-border-sand py-5.5"
+              >
                 <Skeleton className="h-6 w-32" />
                 <Skeleton className="h-4 w-8" />
               </div>
@@ -85,7 +111,9 @@ export function Categories() {
                 }`}
               >
                 <div className="flex items-baseline gap-4.5">
-                  <span className="text-xs text-gold transition-colors duration-300">{c.num}</span>
+                  <span className="text-xs text-gold transition-colors duration-300">
+                    {c.num}
+                  </span>
                   <span
                     className={`font-serif text-xl transition-colors duration-300 group-hover:text-brown sm:text-[22px] ${
                       currentCategory === c.name ? "text-brown" : "text-ink"
@@ -101,14 +129,18 @@ export function Categories() {
           </>
         )}
       </div>
-      <div data-reveal ref={imageRef} className="group relative aspect-4/3 overflow-hidden rounded-xl">
+      <div
+        data-reveal
+        ref={imageRef}
+        className="group relative aspect-4/3 overflow-hidden rounded-xl"
+      >
         {activeImage ? (
           <Image
             src={activeImage}
             alt={currentCategory ?? "Catégorie Anissa Cosmetics"}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain transition-transform duration-500 "
           />
         ) : (
           <ImagePlaceholder

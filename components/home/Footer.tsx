@@ -15,7 +15,7 @@ import { FacebookIcon, InstagramIcon } from "@/components/icons/SocialIcons";
 const FOOTER_COLUMNS = [
   {
     title: "Boutique",
-    links: ["Soins", "Maquillage", "Parfums", "Coffrets Cadeaux"],
+    links: ["Anti-Âge", "Éclat", "Nettoyants & Exfoliants", "Soins Ciblés"],
   },
   {
     title: "Service Client",

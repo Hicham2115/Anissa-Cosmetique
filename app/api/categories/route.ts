@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import type { Category } from "@/lib/validations";
 
 const CATEGORIES: Category[] = [
-  { num: "01", name: "Soins", count: 24 },
-  { num: "02", name: "Maquillage", count: 18 },
-  { num: "03", name: "Parfums", count: 9 },
-  { num: "04", name: "Coffrets Cadeaux", count: 6 },
+  { num: "01", name: "Anti-Âge", count: 4 },
+  { num: "02", name: "Éclat", count: 6 },
+  { num: "03", name: "Nettoyants & Exfoliants", count: 9 },
+  { num: "04", name: "Soins Ciblés", count: 5 },
 ];
 
 export async function GET() {
