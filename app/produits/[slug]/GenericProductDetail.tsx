@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import {
+  ArrowLeft,
+  ChevronDown,
   Check,
   Heart,
   Minus,
@@ -31,7 +33,7 @@ import {
   ProductCardSkeleton,
 } from "@/components/home/ProductCard";
 import { useCartStore } from "@/store/cartStore";
-import { useWishlistStore } from "@/store/wishlistStore";
+import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { getLenisInstance } from "@/lib/lenis";
 
@@ -81,6 +83,48 @@ const INFO_CARDS = [
   },
 ];
 
+function MobileWishlistCard({ item }: { item: WishlistItem }) {
+  const removeItem = useWishlistStore((s) => s.removeItem);
+  return (
+    <Link
+      href={`/produits/${item.slug}`}
+      className="group flex w-32 shrink-0 flex-col"
+    >
+      <div className="relative aspect-square overflow-hidden rounded-xl bg-sand">
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            sizes="128px"
+            className="object-cover transition-transform duration-300 group-active:scale-95"
+          />
+        ) : (
+          <ImagePlaceholder
+            label={item.name}
+            className="absolute inset-0 h-full w-full"
+          />
+        )}
+        <button
+          type="button"
+          aria-label={`Retirer ${item.name} des favoris`}
+          onClick={(e) => {
+            e.preventDefault();
+            removeItem(item.productId);
+          }}
+          className="absolute top-1.5 right-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/90 text-brown"
+        >
+          <Heart className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true" />
+        </button>
+      </div>
+      <div className="mt-2 truncate text-xs font-medium text-ink">
+        {item.name}
+      </div>
+      <div className="text-xs font-semibold text-brown">{item.price}</div>
+    </Link>
+  );
+}
+
 async function fetchProduct(slug: string) {
   const { data } = await api.get(`/products/${slug}`);
   return productSchema.parse(data);
@@ -126,8 +170,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
   const isLiked = useWishlistStore((s) =>
     product ? s.isLiked(product.id) : false,
   );
+  const wishlistItems = useWishlistStore((s) => s.items);
   const specsRef = useScrollReveal<HTMLDivElement>([product]);
   const relatedRef = useScrollReveal<HTMLDivElement>([allProducts]);
+  const mobileGalleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // The related-products grid and skeleton→content swap both change the
@@ -198,6 +244,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
   return (
     <div>
+      <div className="hidden md:block">
       <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-8 text-xs text-[#8a7c6c]">
           <Link
@@ -518,8 +565,239 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
         </div>
       )}
+      </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border-sand bg-cream px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] sm:hidden">
+      <div className="md:hidden">
+        <div className="relative">
+          <div
+            ref={mobileGalleryRef}
+            onScroll={(e) => {
+              const el = e.currentTarget;
+              const idx = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+              if (idx !== activeImage) setActiveImage(idx);
+            }}
+            className="flex aspect-square snap-x snap-mandatory overflow-x-auto bg-sand-light [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {gallery.length > 0 ? (
+              gallery.map((src, i) => (
+                <div
+                  key={src}
+                  className="relative w-full shrink-0 snap-center"
+                >
+                  <Image
+                    src={src}
+                    alt={`${product.name} — vue ${i + 1}`}
+                    fill
+                    sizes="100vw"
+                    priority={i === 0}
+                    className="object-contain"
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="relative w-full shrink-0 snap-center">
+                <ImagePlaceholder label={product.name} className="absolute inset-0 h-full w-full" />
+              </div>
+            )}
+          </div>
+
+          {gallery.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+              {gallery.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all duration-200 ${
+                    i === activeImage ? "w-5 bg-brown" : "w-1.5 bg-white/70"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          <Link
+            href="/boutique"
+            aria-label="Retour à la boutique"
+            className="absolute top-4 left-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </Link>
+
+          <button
+            type="button"
+            aria-label={isLiked ? "Retirer des favoris" : "Ajouter aux favoris"}
+            onClick={() => {
+              toggleWishlist({
+                productId: product.id,
+                slug: product.slotId,
+                name: product.name,
+                price: product.price,
+                image: product.image ?? null,
+              });
+              toast(isLiked ? "Retiré des favoris" : "Ajouté aux favoris", {
+                description: product.name,
+              });
+            }}
+            className={`absolute top-4 right-4 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-sm transition-colors duration-200 ${
+              isLiked ? "text-brown" : "text-ink"
+            }`}
+          >
+            <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} aria-hidden="true" />
+          </button>
+
+          {product.badge && (
+            <span className="absolute top-4 left-16 rounded-full bg-brown px-2.5 py-0.5 text-[10px] tracking-wider text-cream uppercase">
+              {product.badge}
+            </span>
+          )}
+        </div>
+
+        <div className="px-4 pt-5 pb-4">
+          <div className="mb-8 text-xs text-[#8a7c6c]">
+            <Link href="/" className="transition-colors duration-200 hover:text-brown">
+              Accueil
+            </Link>
+            <span className="mx-1.5">/</span>
+            <Link href="/boutique" className="transition-colors duration-200 hover:text-brown">
+              Boutique
+            </Link>
+            <span className="mx-1.5">/</span>
+            <span className="text-ink">{product.name}</span>
+          </div>
+
+          <div className="text-xs tracking-[0.2em] text-brown uppercase">Anissa Cosmetics</div>
+          <h1 className="mt-2 font-serif text-[28px] leading-tight font-semibold text-ink">
+            {product.name}
+          </h1>
+
+          <div className="mt-4 flex items-center justify-between rounded-2xl border border-border-sand bg-sand-light px-5 py-4">
+            <div>
+              <div className="font-serif text-2xl text-ink">{product.price}</div>
+              <div className="mt-1 text-[11px] text-[#8a7c6c]">Paiement à la livraison disponible</div>
+            </div>
+            <div className="flex items-center rounded-full border border-border-sand bg-white">
+              <button
+                type="button"
+                aria-label="Diminuer la quantité"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                className="flex h-10 w-10 cursor-pointer items-center justify-center text-ink transition-colors duration-200 hover:text-brown"
+              >
+                <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <span className="w-6 text-center text-sm font-semibold text-ink">{quantity}</span>
+              <button
+                type="button"
+                aria-label="Augmenter la quantité"
+                onClick={() => setQuantity((q) => q + 1)}
+                className="flex h-10 w-10 cursor-pointer items-center justify-center text-ink transition-colors duration-200 hover:text-brown"
+              >
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <p className="mt-5 text-sm leading-relaxed text-[#5c534a]">{product.subtitle}</p>
+
+          <Button
+            onClick={handleAddToCart}
+            className="group mt-5 w-full transition-transform duration-200 active:scale-95"
+          >
+            {added ? (
+              <>
+                <Check className="h-[13px] w-[13px]" aria-hidden="true" />
+                Ajouté
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="h-[13px] w-[13px]" aria-hidden="true" />
+                Ajouter au panier
+              </>
+            )}
+          </Button>
+
+          <div className="mt-6 flex gap-2.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {TRUST_BADGES.map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className="flex shrink-0 items-center gap-2.5 rounded-full border border-border-sand px-3.5 py-2"
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0 text-brown" strokeWidth={1.5} aria-hidden="true" />
+                <div className="text-[11px] leading-tight whitespace-nowrap text-ink">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {wishlistItems.length > 0 && (
+          <div className="border-t border-border-sand px-4 py-6">
+            <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Vos favoris</div>
+            <div className="flex gap-3.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {wishlistItems.map((item) => (
+                <MobileWishlistCard key={item.productId} item={item} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="border-t border-border-sand px-4 py-6">
+          <details className="group border-b border-border-sand py-4 first:pt-0" open>
+            <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-ink">
+              Fiche technique
+              <ChevronDown className="h-4 w-4 text-brown transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+            </summary>
+            <dl className="mt-3 flex flex-col gap-3">
+              {SPECS.map(({ label, value }) => (
+                <div key={label} className="flex items-center justify-between gap-6">
+                  <dt className="text-[13px] text-ink">{label}</dt>
+                  <dd className="text-right text-[13px] text-[#8a7c6c]">{value(product)}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+
+          {INFO_CARDS.map(({ icon: Icon, title, iconBg, items }) => (
+            <details key={title} className="group border-b border-border-sand py-4 last:border-b-0">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-ink">
+                <span className="flex items-center gap-2.5">
+                  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
+                    <Icon className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                  {title}
+                </span>
+                <ChevronDown className="h-4 w-4 shrink-0 text-brown transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <ul className="mt-3 flex flex-col gap-2.5 pl-9.5">
+                {items.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-[#5c534a]">
+                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brown" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </div>
+
+        {(!allProducts || relatedProducts.length > 0) && (
+          <div className="border-t border-border-sand px-4 py-6 pb-8">
+            <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">Vous aimerez aussi</div>
+            <div className="flex gap-3.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {!allProducts
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="w-36 shrink-0">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
+                : relatedProducts.map((p) => (
+                    <div key={p.id} className="w-36 shrink-0">
+                      <ProductCard product={p} />
+                    </div>
+                  ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border-sand bg-cream px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] md:hidden">
         <div className="min-w-0">
           <div className="truncate text-xs font-medium text-ink">
             {product.name}
@@ -543,7 +821,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           )}
         </Button>
       </div>
-      <div className="h-20 sm:hidden" aria-hidden="true" />
+      <div className="h-20 md:hidden" aria-hidden="true" />
     </div>
   );
 }

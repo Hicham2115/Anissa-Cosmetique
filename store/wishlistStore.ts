@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface WishlistItem {
+export interface WishlistItem {
   productId: string;
   slug: string;
   name: string;
