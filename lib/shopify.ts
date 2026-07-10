@@ -227,6 +227,19 @@ interface ProductVariantQueryResult {
   productByHandle: { variants: { edges: { node: { id: string } }[] } } | null;
 }
 
+// Looks up a variant GID via the (already-configured, verified) Storefront
+// API. Variant GIDs are the same identifier space across Storefront and
+// Admin APIs, so this is reused by lib/shopifyAdmin.ts for order creation
+// instead of duplicating a product lookup against the Admin API.
+export async function getVariantIdByHandle(handle: string): Promise<string> {
+  const variantData = await shopifyFetch<ProductVariantQueryResult>(PRODUCT_VARIANT_QUERY, { handle });
+  const variantId = variantData.productByHandle?.variants.edges[0]?.node.id;
+  if (!variantId) {
+    throw new Error(`Aucune variante trouvée pour le produit "${handle}".`);
+  }
+  return variantId;
+}
+
 const CART_CREATE_MUTATION = /* GraphQL */ `
   mutation CartCreate($lines: [CartLineInput!]!) {
     cartCreate(input: { lines: $lines }) {
@@ -262,16 +275,7 @@ export async function createCheckoutUrlForItems(items: CheckoutLineItem[]): Prom
     throw new Error("Le panier est vide.");
   }
 
-  const variantIds = await Promise.all(
-    items.map(async ({ handle }) => {
-      const variantData = await shopifyFetch<ProductVariantQueryResult>(PRODUCT_VARIANT_QUERY, { handle });
-      const variantId = variantData.productByHandle?.variants.edges[0]?.node.id;
-      if (!variantId) {
-        throw new Error(`Aucune variante trouvée pour le produit "${handle}".`);
-      }
-      return variantId;
-    })
-  );
+  const variantIds = await Promise.all(items.map(({ handle }) => getVariantIdByHandle(handle)));
 
   const cartData = await shopifyFetch<CartCreateResult>(CART_CREATE_MUTATION, {
     lines: items.map(({ quantity }, i) => ({ merchandiseId: variantIds[i], quantity })),

@@ -1,13 +1,6 @@
 import { NextResponse } from "next/server";
 import { codOrderSchema } from "@/lib/validations";
-
-// Cash-on-delivery orders need the Shopify Admin API (`orderCreate`), which
-// is a different credential from the Storefront token already configured
-// in lib/shopify.ts — it requires a custom app in Shopify admin with
-// `write_orders` scope. Until SHOPIFY_ADMIN_ACCESS_TOKEN is set, orders are
-// accepted and logged server-side instead of failing outright, so the form
-// stays usable while that's set up.
-const adminConfigured = Boolean(process.env.SHOPIFY_ADMIN_ACCESS_TOKEN);
+import { createCodOrder, shopifyAdminConfigured } from "@/lib/shopifyAdmin";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -20,12 +13,20 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!adminConfigured) {
+  if (!shopifyAdminConfigured) {
     console.log("[COD order — Shopify Admin API not configured]", result.data);
     return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
   }
 
-  // TODO: call Shopify's Admin API `orderCreate` mutation here with
-  // result.data once SHOPIFY_ADMIN_ACCESS_TOKEN is available.
-  return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
+  try {
+    const order = await createCodOrder(result.data);
+    console.log("[COD order created in Shopify]", order.name);
+    return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
+  } catch (err) {
+    console.error("Shopify order creation failed:", err);
+    return NextResponse.json(
+      { message: "Impossible d'enregistrer la commande. Veuillez réessayer ou nous contacter." },
+      { status: 502 }
+    );
+  }
 }
