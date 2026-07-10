@@ -52,6 +52,7 @@ export const productSchema = z.object({
   badge: z.string().nullable(),
   image: z.string().nullable().optional(),
   images: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
 });
 export type Product = z.infer<typeof productSchema>;
 export const productListSchema = z.array(productSchema);

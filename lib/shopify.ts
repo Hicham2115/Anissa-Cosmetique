@@ -43,8 +43,8 @@ export async function shopifyFetch<T>(query: string, variables?: Record<string, 
 }
 
 const PRODUCTS_QUERY = /* GraphQL */ `
-  query Products($first: Int!) {
-    products(first: $first) {
+  query Products($first: Int!, $query: String) {
+    products(first: $first, query: $query) {
       edges {
         node {
           id
@@ -115,11 +115,25 @@ function toProduct(node: ShopifyProductNode) {
     badge: badgeFromTags(node.tags),
     image: node.featuredImage?.url ?? images[0] ?? null,
     images,
+    tags: node.tags,
   };
 }
 
-export async function fetchShopifyProducts(first = 50) {
-  const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first });
+// The storefront shows 4 shopping categories, each tagged in Shopify admin
+// with one of the 4 catalog-wide tags: "Anti-Âge", "Éclat", "Exfoliation"
+// (used for the "Nettoyants & Exfoliants" category), "Soins" (used for
+// "Soins Ciblés").
+const CATEGORY_TO_SHOPIFY_TAG: Record<string, string> = {
+  "Anti-Âge": "Anti-Âge",
+  Éclat: "Éclat",
+  "Nettoyants & Exfoliants": "Exfoliation",
+  "Soins Ciblés": "Soins",
+};
+
+export async function fetchShopifyProducts(category?: string, first = 50) {
+  const tag = category ? (CATEGORY_TO_SHOPIFY_TAG[category] ?? category) : undefined;
+  const query = tag ? `tag:'${tag}'` : undefined;
+  const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first, query });
   return data.products.edges.map(({ node }) => toProduct(node));
 }
 

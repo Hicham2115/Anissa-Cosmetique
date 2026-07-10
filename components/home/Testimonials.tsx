@@ -119,8 +119,8 @@ export function Testimonials() {
                   {r.name.charAt(0)}
                 </div>
                 <div>
-                  <span className="text-sm font-semibold text-ink">{r.name}</span>{" "}
-                  <span className="text-xs text-[#8a7c6c]">{r.timeAgo}</span>
+                  <span className="text-sm font-semibold text-ink">{r.name}</span>
+                  {r.timeAgo && <span className="text-xs text-[#8a7c6c]"> {r.timeAgo}</span>}
                 </div>
               </div>
               <div className="flex items-center gap-2">
