@@ -11,7 +11,7 @@ export const FALLBACK_PRODUCTS: Product[] = [
   { id: "p4", slotId: "creme-eclaircissante", name: "Crème Éclaircissante", subtitle: "Soins, Visage, Éclat", price: "320 MAD", badge: null, image: null, images: [], tags: ["Éclat"] },
   { id: "p5", slotId: "creme-eclaircissante-mains", name: "Crème Éclaircissante Mains", subtitle: "Soins, Mains, Éclat", price: "150 MAD", badge: null, image: null, images: [], tags: ["Éclat"] },
   { id: "p6", slotId: "masque-eclaircissant", name: "Masque Éclaircissant", subtitle: "Soins, Visage, Éclat", price: "260 MAD", badge: null, image: null, images: [], tags: ["Éclat"] },
-  { id: "p7", slotId: "pack-eclaircissant", name: "Pack Éclaircissant", subtitle: "Soins, Éclat, Coffret, Promotion", price: "690 MAD", badge: "Promotion", image: null, images: [], tags: ["Éclat"] },
+  { id: "p7", slotId: "pack-eclaircissant", name: "Pack Éclaircissant", subtitle: "Soins, Éclat, Coffret, Promotion", price: "690 MAD", compareAtPrice: "890 MAD", badge: "Promotion", image: null, images: [], tags: ["Éclat"] },
   { id: "p8", slotId: "serum-eclaircissant", name: "Sérum Éclaircissant", subtitle: "Soins, Visage, Éclat", price: "390 MAD", badge: "Best-seller", image: null, images: [], tags: ["Éclat"] },
 
   { id: "p9", slotId: "gel-exfoliant-aha", name: "Gel Exfoliant AHA", subtitle: "Soins, Visage, Exfoliation", price: "220 MAD", badge: null, image: null, images: [], tags: ["Nettoyants & Exfoliants"] },

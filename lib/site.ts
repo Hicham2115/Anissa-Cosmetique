@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.anissacosmetics.com";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://anissacosmetics.com";
 export const SITE_NAME = "Anissa Cosmetics";
 export const SITE_TAGLINE = "Nature et innovation pour une jeunesse sans âge";
 export const SITE_DESCRIPTION =

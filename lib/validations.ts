@@ -43,16 +43,49 @@ export const contactSchema = z.object({
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
+export const codOrderSchema = z.object({
+  productSlug: z.string().trim().min(1),
+  productName: z.string().trim().min(1),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Le nom est requis")
+    .max(100, "Le nom est trop long"),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Le numéro de téléphone est requis")
+    .regex(/^(\+212|0)[5-7][0-9]{8}$/, "Saisissez un numéro de téléphone marocain valide"),
+  address: z
+    .string()
+    .trim()
+    .min(10, "L'adresse doit contenir au moins 10 caractères")
+    .max(500, "L'adresse est trop longue"),
+  quantity: z.number().int().positive().max(20).default(1),
+});
+
+export type CodOrderInput = z.infer<typeof codOrderSchema>;
+
+// The subset of codOrderSchema the shopper actually fills in — productSlug/
+// productName/quantity come from page context, not form fields — used to
+// validate each TanStack Form field individually.
+export const codOrderFormSchema = codOrderSchema.pick({ name: true, phone: true, address: true });
+
 export const productSchema = z.object({
   id: z.string(),
   slotId: z.string(),
   name: z.string(),
   subtitle: z.string(),
+  description: z.string().nullable().optional(),
+  descriptionHtml: z.string().nullable().optional(),
   price: z.string(),
+  compareAtPrice: z.string().nullable().optional(),
   badge: z.string().nullable(),
   image: z.string().nullable().optional(),
   images: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
+  seoTitle: z.string().nullable().optional(),
+  seoDescription: z.string().nullable().optional(),
 });
 export type Product = z.infer<typeof productSchema>;
 export const productListSchema = z.array(productSchema);

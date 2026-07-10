@@ -25,8 +25,10 @@ import {
   type Product,
 } from "@/lib/validations";
 import { ErrorState } from "@/components/ui/error-state";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { ProductDetailSkeleton } from "./ProductDetailSkeleton";
+import { OrderForm } from "./OrderForm";
+import { ProductReviews } from "./ProductReviews";
 import { Button } from "@/components/ui/button";
 import {
   ProductCard,
@@ -36,6 +38,65 @@ import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { getLenisInstance } from "@/lib/lenis";
+
+const DESCRIPTION_HTML_CLASSES =
+  "[&_p]:mb-3.5 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_strong]:text-ink [&_em]:italic " +
+  "[&_ul]:my-3.5 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5 [&_li]:leading-relaxed " +
+  "[&_a]:text-brown [&_a]:underline [&_a]:underline-offset-2";
+
+// Shopify's plain `description` field has no paragraph breaks at all, so it
+// renders as one flat wall of text. `descriptionHtml` (admin-authored, not
+// user input) keeps the real structure — lead-in, paragraphs, bullet lists
+// for benefits/usage/ingredients — so it's preferred whenever present.
+function ProductDescription({ product, className }: { product: Product; className?: string }) {
+  if (product.descriptionHtml) {
+    return (
+      <div
+        className={`${DESCRIPTION_HTML_CLASSES} ${className ?? ""}`}
+        dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+      />
+    );
+  }
+  return <p className={`whitespace-pre-line ${className ?? ""}`}>{product.description || product.subtitle}</p>;
+}
+
+// Collapsed by default to a short preview (the description can be long —
+// benefits, usage, full INCI ingredient list) with a fade-out hint, so the
+// shopper sees a taste of it immediately and expands only if they want more.
+function DescriptionAccordion({ product, className }: { product: Product; className?: string }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className={className}>
+      <div className="mb-2 text-sm font-semibold text-ink">Description</div>
+      <div className={`relative overflow-hidden transition-[max-height] duration-300 ease-out ${expanded ? "max-h-[2000px]" : "max-h-20"}`}>
+        <ProductDescription product={product} className="text-sm leading-relaxed text-[#5c534a]" />
+        {!expanded && (
+          <div className="absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-cream to-transparent" aria-hidden="true" />
+        )}
+      </div>
+      <button
+        type="button"
+        onClick={() => setExpanded((e) => !e)}
+        className="mt-2 flex cursor-pointer items-center gap-1 text-xs font-semibold text-brown"
+      >
+        {expanded ? "Voir moins" : "Voir plus"}
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+    </div>
+  );
+}
+
+function discountPercent(price: string, compareAtPrice: string): number {
+  const toNumber = (v: string) => Number(v.replace(/[^0-9.]/g, ""));
+  const current = toNumber(price);
+  const original = toNumber(compareAtPrice);
+  if (!original || original <= current) return 0;
+  return Math.round(((original - current) / original) * 100);
+}
 
 const TRUST_BADGES = [
   { icon: Truck, label: "Livraison 24–48h", sub: "Partout au Maroc" },
@@ -184,19 +245,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
   }, [product, allProducts]);
 
   if (isLoading) {
-    return (
-      <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
-        <div className="grid gap-10 md:grid-cols-2 md:gap-14">
-          <Skeleton className="aspect-square w-full rounded-2xl" />
-          <div className="flex flex-col gap-4">
-            <Skeleton className="h-4 w-1/3" />
-            <Skeleton className="h-9 w-2/3" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-12 w-1/2" />
-          </div>
-        </div>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (isError || !product) {
@@ -264,7 +313,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           <span className="text-ink">{product.name}</span>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-2 md:gap-14">
+        <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-14">
           <div className="flex gap-4">
             {gallery.length > 1 && (
               <div className="flex shrink-0 flex-col gap-3">
@@ -388,17 +437,27 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </h1>
 
             <div className="mb-6 rounded-2xl border border-border-sand bg-sand-light px-6 py-5">
-              <div className="font-serif text-3xl text-ink">
-                {product.price}
+              <div className="flex items-baseline gap-3">
+                <div className="font-serif text-3xl text-ink">
+                  {product.price}
+                </div>
+                {product.compareAtPrice && (
+                  <>
+                    <div className="text-base text-[#8a7c6c] line-through">
+                      {product.compareAtPrice}
+                    </div>
+                    <span className="rounded-full bg-brown px-2 py-0.5 text-[11px] font-semibold text-cream">
+                      -{discountPercent(product.price, product.compareAtPrice)}%
+                    </span>
+                  </>
+                )}
               </div>
               <div className="mt-2 text-xs text-[#8a7c6c]">
                 Paiement à la livraison disponible
               </div>
             </div>
 
-            <p className="text-[15px] leading-relaxed text-[#5c534a]">
-              {product.subtitle}
-            </p>
+            <DescriptionAccordion product={product} className="border-t border-b border-border-sand py-4" />
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <div className="flex items-center rounded-full border border-border-sand">
@@ -465,6 +524,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="mt-14 border-t border-border-sand pt-14">
+          <OrderForm product={product} quantity={quantity} />
         </div>
       </div>
 
@@ -540,6 +603,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
         </div>
       </div>
+
+      <ProductReviews slug={product.slotId} className="mx-auto max-w-[1320px] border-t border-border-sand px-4 py-16 sm:px-6 sm:py-20" />
 
       {(!allProducts || relatedProducts.length > 0) && (
         <div
@@ -671,7 +736,17 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
           <div className="mt-4 flex items-center justify-between rounded-2xl border border-border-sand bg-sand-light px-5 py-4">
             <div>
-              <div className="font-serif text-2xl text-ink">{product.price}</div>
+              <div className="flex items-baseline gap-2">
+                <div className="font-serif text-2xl text-ink">{product.price}</div>
+                {product.compareAtPrice && (
+                  <div className="text-xs text-[#8a7c6c] line-through">{product.compareAtPrice}</div>
+                )}
+              </div>
+              {product.compareAtPrice && (
+                <span className="mt-1 inline-block rounded-full bg-brown px-2 py-0.5 text-[10px] font-semibold text-cream">
+                  -{discountPercent(product.price, product.compareAtPrice)}%
+                </span>
+              )}
               <div className="mt-1 text-[11px] text-[#8a7c6c]">Paiement à la livraison disponible</div>
             </div>
             <div className="flex items-center rounded-full border border-border-sand bg-white">
@@ -695,7 +770,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <p className="mt-5 text-sm leading-relaxed text-[#5c534a]">{product.subtitle}</p>
+          <DescriptionAccordion product={product} className="mt-5 border-t border-b border-border-sand py-4" />
 
           <Button
             onClick={handleAddToCart}
@@ -724,6 +799,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 <div className="text-[11px] leading-tight whitespace-nowrap text-ink">{label}</div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <OrderForm product={product} quantity={quantity} />
           </div>
         </div>
 
@@ -776,6 +855,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </details>
           ))}
         </div>
+
+        <ProductReviews slug={product.slotId} className="border-t border-border-sand px-4 py-6" />
 
         {(!allProducts || relatedProducts.length > 0) && (
           <div className="border-t border-border-sand px-4 py-6 pb-8">

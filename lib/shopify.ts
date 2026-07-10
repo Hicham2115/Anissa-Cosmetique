@@ -51,6 +51,7 @@ const PRODUCTS_QUERY = /* GraphQL */ `
           handle
           title
           description
+          descriptionHtml
           tags
           featuredImage {
             url
@@ -70,6 +71,16 @@ const PRODUCTS_QUERY = /* GraphQL */ `
               currencyCode
             }
           }
+          compareAtPriceRange {
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          seo {
+            title
+            description
+          }
         }
       }
     }
@@ -81,10 +92,13 @@ interface ShopifyProductNode {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml: string;
   tags: string[];
   featuredImage: { url: string; altText: string | null } | null;
   images: { edges: { node: { url: string; altText: string | null } }[] };
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
+  compareAtPriceRange: { maxVariantPrice: { amount: string; currencyCode: string } } | null;
+  seo: { title: string | null; description: string | null };
 }
 
 interface ProductsQueryResult {
@@ -106,16 +120,24 @@ function formatPrice(amount: string, currencyCode: string): string {
 
 function toProduct(node: ShopifyProductNode) {
   const images = node.images.edges.map(({ node: img }) => img.url);
+  const price = node.priceRange.minVariantPrice;
+  const compareAt = node.compareAtPriceRange?.maxVariantPrice;
+  const hasDiscount = compareAt && Number(compareAt.amount) > Number(price.amount);
   return {
     id: node.id,
     slotId: node.handle,
     name: node.title,
     subtitle: node.description.slice(0, 60) || node.title,
-    price: formatPrice(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode),
+    description: node.description || null,
+    descriptionHtml: node.descriptionHtml || null,
+    price: formatPrice(price.amount, price.currencyCode),
+    compareAtPrice: hasDiscount ? formatPrice(compareAt.amount, compareAt.currencyCode) : null,
     badge: badgeFromTags(node.tags),
     image: node.featuredImage?.url ?? images[0] ?? null,
     images,
     tags: node.tags,
+    seoTitle: node.seo.title,
+    seoDescription: node.seo.description,
   };
 }
 
@@ -144,6 +166,7 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       handle
       title
       description
+      descriptionHtml
       tags
       featuredImage {
         url
@@ -162,6 +185,16 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
           amount
           currencyCode
         }
+      }
+      compareAtPriceRange {
+        maxVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      seo {
+        title
+        description
       }
     }
   }

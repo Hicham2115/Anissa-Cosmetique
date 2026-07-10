@@ -1,20 +1,11 @@
 import { NextResponse } from "next/server";
-import { FALLBACK_PRODUCTS } from "@/lib/fallbackProducts";
-import { fetchShopifyProductByHandle, shopifyConfigured } from "@/lib/shopify";
+import { getProductBySlug } from "@/lib/getProductBySlug";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ slotId: string }> }) {
   const { slotId } = await params;
 
-  if (!shopifyConfigured) {
-    const product = FALLBACK_PRODUCTS.find((p) => p.slotId === slotId);
-    if (!product) {
-      return NextResponse.json({ message: "Produit introuvable." }, { status: 404 });
-    }
-    return NextResponse.json(product);
-  }
-
   try {
-    const product = await fetchShopifyProductByHandle(slotId);
+    const product = await getProductBySlug(slotId);
     if (!product) {
       return NextResponse.json({ message: "Produit introuvable." }, { status: 404 });
     }
