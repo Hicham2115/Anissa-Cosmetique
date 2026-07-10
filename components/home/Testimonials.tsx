@@ -124,7 +124,7 @@ export function Testimonials() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-ink">{r.stars}.0</span>
+                <span className="text-sm font-semibold text-ink">{r.stars.toFixed(1)}</span>
                 <StarRow stars={r.stars} />
               </div>
             </div>
