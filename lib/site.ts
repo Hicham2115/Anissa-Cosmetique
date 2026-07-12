@@ -6,10 +6,12 @@ export const SITE_TAGLINE = "Nature et innovation pour une jeunesse sans âge";
 export const SITE_DESCRIPTION =
   "Anissa Cosmetics — soins et cosmétiques de luxe discret, formulés à Casablanca, Maroc. Formules propres, ingrédients naturels, fabriqués au Maroc.";
 export const OG_IMAGE = "/og-image.jpg";
-export const SOCIAL_PROFILES = [
-  "https://www.facebook.com/profile.php?id=61575226775162",
-  "https://www.instagram.com/anissacosmeticsofficiel/",
-];
+export const CONTACT_EMAIL = "contact@anissacosmetics.com";
+export const FACEBOOK_URL =
+  "https://web.facebook.com/profile.php?id=61575226775162&mibextid=wwXIfr&rdid=5emcaU6QQzwmetwy&share_url=https%3A%2F%2Fweb.facebook.com%2Fshare%2F18eXHcKg81%2F%3Fmibextid%3DwwXIfr%26_rdc%3D1%26_rdr";
+export const INSTAGRAM_URL =
+  "https://www.instagram.com/anissacosmeticsofficiel?utm_source=qr";
+export const SOCIAL_PROFILES = [FACEBOOK_URL, INSTAGRAM_URL];
 
 // Next.js does not deep-merge `openGraph`/`twitter` between layout and page
 // metadata — a page-level object replaces the parent's entirely. Spread

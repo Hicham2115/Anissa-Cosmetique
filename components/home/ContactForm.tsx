@@ -9,6 +9,7 @@ import { api } from "@/lib/axios";
 import { contactSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 interface FormState {
   name: string;
@@ -19,7 +20,7 @@ interface FormState {
 const INITIAL_STATE: FormState = { name: "", email: "", message: "" };
 
 const CONTACT_INFO = [
-  { icon: Mail, label: "bonjour@anissacosmetics.ma", href: "mailto:bonjour@anissacosmetics.ma" },
+  { icon: Mail, label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
   { icon: Phone, label: "+212 6 61 93 34 16", href: "tel:+212661933416" },
   { icon: MapPin, label: "Casablanca, Maroc", href: "https://maps.google.com/?q=Casablanca,Maroc" },
 ];

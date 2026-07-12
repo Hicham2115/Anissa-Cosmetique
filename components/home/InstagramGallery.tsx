@@ -2,6 +2,7 @@
 
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import { INSTAGRAM_URL } from "@/lib/site";
 
 export function InstagramGallery() {
   const scopeRef = useScrollReveal<HTMLDivElement>();
@@ -9,7 +10,7 @@ export function InstagramGallery() {
   return (
     <div ref={scopeRef} className="mx-auto max-w-[1320px] px-4 pb-16 sm:px-6 sm:pb-24">
       <a
-        href="https://www.instagram.com/anissacosmeticsofficiel/"
+        href={INSTAGRAM_URL}
         target="_blank"
         rel="noopener noreferrer"
         data-reveal

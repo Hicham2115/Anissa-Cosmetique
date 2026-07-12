@@ -11,6 +11,7 @@ import { api } from "@/lib/axios";
 import { newsletterSchema } from "@/lib/validations";
 import logo from "@/app/assets/logo.png";
 import { FacebookIcon, InstagramIcon } from "@/components/icons/SocialIcons";
+import { FACEBOOK_URL, INSTAGRAM_URL } from "@/lib/site";
 
 const FOOTER_COLUMNS = [
   {
@@ -32,12 +33,12 @@ const SOCIAL_LINKS = [
   {
     icon: FacebookIcon,
     label: "Facebook",
-    href: "https://www.facebook.com/profile.php?id=61575226775162",
+    href: FACEBOOK_URL,
   },
   {
     icon: InstagramIcon,
     label: "Instagram",
-    href: "https://www.instagram.com/anissacosmeticsofficiel/",
+    href: INSTAGRAM_URL,
   },
 ];
 
