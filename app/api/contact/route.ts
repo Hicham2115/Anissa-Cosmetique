@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { contactSchema } from "@/lib/validations";
-import { resend, resendConfigured } from "@/lib/resend";
+import { getResend, resendConfigured } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/site";
 
 export async function POST(request: Request) {
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: `Anissa Cosmetics <${CONTACT_EMAIL}>`,
       to: CONTACT_EMAIL,
       replyTo: email,
