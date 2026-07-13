@@ -3,14 +3,13 @@
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { Heart, ShoppingBag, X } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Button } from "@/components/ui/button";
+import { useDrawerAnimation } from "@/lib/useDrawerAnimation";
 
 export function WishlistDrawer() {
   const isOpen = useUiStore((s) => s.isWishlistOpen);
@@ -22,18 +21,7 @@ export function WishlistDrawer() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      if (isOpen) {
-        gsap.to(overlayRef.current, { opacity: 1, duration: 0.3, ease: "power2.out" });
-        gsap.to(panelRef.current, { x: 0, duration: 0.4, ease: "power3.out" });
-      } else {
-        gsap.to(overlayRef.current, { opacity: 0, duration: 0.25, ease: "power2.in" });
-        gsap.to(panelRef.current, { x: "100%", duration: 0.35, ease: "power3.in" });
-      }
-    },
-    { dependencies: [isOpen] }
-  );
+  useDrawerAnimation(isOpen, overlayRef, panelRef);
 
   return (
     <div className={isOpen ? "fixed inset-0 z-[60]" : "pointer-events-none fixed inset-0 z-[60]"}>

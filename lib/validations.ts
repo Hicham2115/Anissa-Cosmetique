@@ -1,4 +1,9 @@
 import { z } from "zod";
+import { NextResponse } from "next/server";
+
+export function zodErrorResponse(result: z.ZodSafeParseError<unknown>, fallback: string) {
+  return NextResponse.json({ message: result.error.issues[0]?.message ?? fallback }, { status: 400 });
+}
 
 // Strips characters with no legitimate use in an email/name field but that
 // are common SQL-injection payload building blocks (quotes, semicolons,
@@ -10,30 +15,28 @@ export function sanitizeInput(value: string): string {
   return value.replace(SQL_DANGEROUS_CHARS, "").trim();
 }
 
+const nameField = z
+  .string()
+  .trim()
+  .min(1, "Le nom est requis")
+  .max(100, "Le nom est trop long");
+
+const emailField = z
+  .string()
+  .trim()
+  .min(1, "L'email est requis")
+  .max(254, "L'email est trop long")
+  .email("Saisissez une adresse email valide");
+
 export const newsletterSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, "L'email est requis")
-    .max(254, "L'email est trop long")
-    .email("Saisissez une adresse email valide")
-    .transform(sanitizeInput),
+  email: emailField.transform(sanitizeInput),
 });
 
 export type NewsletterInput = z.infer<typeof newsletterSchema>;
 
 export const contactSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Le nom est requis")
-    .max(100, "Le nom est trop long"),
-  email: z
-    .string()
-    .trim()
-    .min(1, "L'email est requis")
-    .max(254, "L'email est trop long")
-    .email("Saisissez une adresse email valide"),
+  name: nameField,
+  email: emailField,
   message: z
     .string()
     .trim()
@@ -46,11 +49,7 @@ export type ContactInput = z.infer<typeof contactSchema>;
 export const codOrderSchema = z.object({
   productSlug: z.string().trim().min(1),
   productName: z.string().trim().min(1),
-  name: z
-    .string()
-    .trim()
-    .min(1, "Le nom est requis")
-    .max(100, "Le nom est trop long"),
+  name: nameField,
   phone: z
     .string()
     .trim()

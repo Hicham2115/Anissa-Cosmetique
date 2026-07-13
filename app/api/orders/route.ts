@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { codOrderSchema } from "@/lib/validations";
+import { codOrderSchema, zodErrorResponse } from "@/lib/validations";
 import { createCodOrder, shopifyAdminConfigured } from "@/lib/shopifyAdmin";
 
 export async function POST(request: Request) {
@@ -7,10 +7,7 @@ export async function POST(request: Request) {
   const result = codOrderSchema.safeParse(body);
 
   if (!result.success) {
-    return NextResponse.json(
-      { message: result.error.issues[0]?.message ?? "Formulaire invalide." },
-      { status: 400 }
-    );
+    return zodErrorResponse(result, "Formulaire invalide.");
   }
 
   if (!shopifyAdminConfigured) {

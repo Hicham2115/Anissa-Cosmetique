@@ -1,12 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Star } from "lucide-react";
 import { api } from "@/lib/axios";
 import { queryKeys } from "@/lib/queryKeys";
 import { reviewListSchema } from "@/lib/validations";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
+import { StarRow } from "@/components/ui/star-row";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function fetchReviews() {
@@ -29,20 +29,6 @@ const CATEGORY_SCORES = [
   { label: "Texture", score: "3.5" },
   { label: "Rapport qualité-prix", score: "3.5" },
 ];
-
-function StarRow({ stars }: { stars: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={i < stars ? "h-3.5 w-3.5 fill-gold text-gold" : "h-3.5 w-3.5 text-border-sand"}
-          aria-hidden="true"
-        />
-      ))}
-    </div>
-  );
-}
 
 export function Testimonials() {
   const { data, isLoading, isError, error } = useQuery({

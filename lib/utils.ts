@@ -1,8 +1,13 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import axios from "axios";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function getErrorMessage(err: unknown, fallback: string): string {
+  return axios.isAxiosError(err) ? (err.response?.data?.message ?? fallback) : fallback;
 }
 
 // Prices are stored as display strings (e.g. "390 MAD") since that's what

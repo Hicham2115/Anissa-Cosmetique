@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { contactSchema } from "@/lib/validations";
+import { contactSchema, zodErrorResponse } from "@/lib/validations";
 import { getResend, resendConfigured } from "@/lib/resend";
 import { CONTACT_EMAIL } from "@/lib/site";
 
@@ -9,10 +9,7 @@ export async function POST(request: Request) {
     const result = contactSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json(
-        { message: result.error.issues[0]?.message ?? "Entrée invalide" },
-        { status: 400 }
-      );
+      return zodErrorResponse(result, "Entrée invalide");
     }
 
     // result.data is validated (name/email/message, length-capped) by contactSchema.

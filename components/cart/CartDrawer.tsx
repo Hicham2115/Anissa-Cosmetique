@@ -3,8 +3,6 @@
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
@@ -14,6 +12,7 @@ import { useUiStore } from "@/store/uiStore";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Button } from "@/components/ui/button";
 import { formatMad, parsePriceAmount } from "@/lib/utils";
+import { useDrawerAnimation } from "@/lib/useDrawerAnimation";
 
 async function createCheckout(items: { handle: string; quantity: number }[]) {
   const { data } = await api.post("/checkout", { items });
@@ -30,18 +29,7 @@ export function CartDrawer() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      if (isOpen) {
-        gsap.to(overlayRef.current, { opacity: 1, duration: 0.3, ease: "power2.out" });
-        gsap.to(panelRef.current, { x: 0, duration: 0.4, ease: "power3.out" });
-      } else {
-        gsap.to(overlayRef.current, { opacity: 0, duration: 0.25, ease: "power2.in" });
-        gsap.to(panelRef.current, { x: "100%", duration: 0.35, ease: "power3.in" });
-      }
-    },
-    { dependencies: [isOpen] }
-  );
+  useDrawerAnimation(isOpen, overlayRef, panelRef);
 
   const subtotal = items.reduce((sum, i) => sum + parsePriceAmount(i.price) * i.quantity, 0);
   const FREE_SHIPPING_THRESHOLD = 250;

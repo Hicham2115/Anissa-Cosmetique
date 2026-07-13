@@ -1,56 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
-import { api } from "@/lib/axios";
-import { newsletterSchema } from "@/lib/validations";
+import { useNewsletterForm } from "@/lib/useNewsletterForm";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 
-async function subscribe(email: string) {
-  const { data } = await api.post("/newsletter", { email });
-  return data as { message: string };
-}
-
 export function Newsletter() {
-  const [email, setEmail] = useState("");
-  const [fieldError, setFieldError] = useState<string | null>(null);
+  const { email, setEmail, fieldError, handleSubmit, mutation } = useNewsletterForm();
   const scopeRef = useScrollReveal<HTMLDivElement>();
-
-  const mutation = useMutation({
-    mutationFn: subscribe,
-    onError: (err) => {
-      toast.error(
-        axios.isAxiosError(err)
-          ? (err.response?.data?.message ?? "Échec de l'inscription. Veuillez réessayer.")
-          : "Échec de l'inscription. Veuillez réessayer."
-      );
-    },
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFieldError(null);
-
-    const result = newsletterSchema.safeParse({ email });
-    if (!result.success) {
-      setFieldError(result.error.issues[0]?.message ?? "Email invalide");
-      return;
-    }
-
-    try {
-      await mutation.mutateAsync(result.data.email);
-      setEmail("");
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setFieldError(err.response?.data?.message ?? "Échec de l'inscription. Veuillez réessayer.");
-      } else {
-        setFieldError("Échec de l'inscription. Veuillez réessayer.");
-      }
-    }
-  };
 
   return (
     <div id="newsletter" ref={scopeRef} className="scroll-mt-24 bg-brown px-4 py-20 text-center sm:px-6">

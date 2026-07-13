@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "sonner";
 import { CheckCircle2, MapPin, Package, Phone, ShieldCheck, ShoppingBag, Truck, User } from "lucide-react";
 import { api } from "@/lib/axios";
@@ -11,6 +10,7 @@ import { codOrderFormSchema, type Product } from "@/lib/validations";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { getErrorMessage } from "@/lib/utils";
 
 const INITIAL_VALUES = { name: "", phone: "", address: "" };
 
@@ -54,12 +54,7 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
 
   const mutation = useMutation({
     mutationFn: placeOrder,
-    onError: (err) =>
-      toast.error(
-        axios.isAxiosError(err)
-          ? (err.response?.data?.message ?? "Échec de l'envoi. Veuillez réessayer.")
-          : "Échec de l'envoi. Veuillez réessayer."
-      ),
+    onError: (err) => toast.error(getErrorMessage(err, "Échec de l'envoi. Veuillez réessayer.")),
   });
 
   const form = useForm({

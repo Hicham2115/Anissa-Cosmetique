@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { newsletterSchema } from "@/lib/validations";
+import { newsletterSchema, zodErrorResponse } from "@/lib/validations";
 
 export async function POST(request: Request) {
   try {
@@ -7,10 +7,7 @@ export async function POST(request: Request) {
     const result = newsletterSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json(
-        { message: result.error.issues[0]?.message ?? "Entrée invalide" },
-        { status: 400 }
-      );
+      return zodErrorResponse(result, "Entrée invalide");
     }
 
     // result.data.email is validated + sanitized by newsletterSchema.

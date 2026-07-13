@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { checkoutSchema } from "@/lib/validations";
+import { checkoutSchema, zodErrorResponse } from "@/lib/validations";
 import { createCheckoutUrlForItems, shopifyConfigured } from "@/lib/shopify";
 
 export async function POST(request: Request) {
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const result = checkoutSchema.safeParse(body);
   if (!result.success) {
-    return NextResponse.json({ message: result.error.issues[0]?.message ?? "Requête invalide." }, { status: 400 });
+    return zodErrorResponse(result, "Requête invalide.");
   }
 
   try {
