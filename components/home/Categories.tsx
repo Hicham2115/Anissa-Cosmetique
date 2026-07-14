@@ -17,7 +17,7 @@ import soinsImage from "@/app/assets/categories/antiage.webp";
 import makiageImage from "@/app/assets/categories/eclat.webp";
 import parfumImage from "@/app/assets/categories/nettoyant.webp";
 import cadeauxImage from "@/app/assets/categories/soins.webp";
-
+   
 const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
   "Anti-Âge": soinsImage,
   Éclat: makiageImage,
