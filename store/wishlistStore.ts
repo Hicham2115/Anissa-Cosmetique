@@ -35,6 +35,6 @@ export const useWishlistStore = create<WishlistState>()(
       isLiked: (productId) => get().items.some((i) => i.productId === productId),
       count: () => get().items.length,
     }),
-    { name: "wishlist-storage", partialize: (state) => ({ items: state.items }) }
+    { name: "wishlist-storage", partialize: (state) => ({ items: state.items }), skipHydration: true }
   )
 );

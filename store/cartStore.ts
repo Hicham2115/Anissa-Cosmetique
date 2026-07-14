@@ -47,6 +47,6 @@ export const useCartStore = create<CartState>()(
       clear: () => set({ items: [] }),
       count: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
     }),
-    { name: "panier-storage", partialize: (state) => ({ items: state.items }) }
+    { name: "panier-storage", partialize: (state) => ({ items: state.items }), skipHydration: true }
   )
 );
