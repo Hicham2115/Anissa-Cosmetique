@@ -13,23 +13,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import soinsImage from "@/app/assets/categories/antiage.webp";
-import makiageImage from "@/app/assets/categories/eclat.webp";
-import parfumImage from "@/app/assets/categories/nettoyant.webp";
-import cadeauxImage from "@/app/assets/categories/soins.webp";
-   
+import soinsImage from "@/app/assets/categories/antiage.png";
+import makiageImage from "@/app/assets/categories/eclat.png";
+import parfumImage from "@/app/assets/categories/nettoyant.png";
+
 const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
   "Anti-Âge": soinsImage,
   Éclat: makiageImage,
   "Nettoyants & Exfoliants": parfumImage,
-  "Soins Ciblés": cadeauxImage,
 };
 
 const CATEGORY_LINKS: Record<string, string> = {
   "Anti-Âge": "/produits/masque-anti-age",
   Éclat: "/produits/creme-eclaircissante",
   "Nettoyants & Exfoliants": "/produits/gel-nettoyant-purifiant",
-  "Soins Ciblés": "/produits/creme-anti-rides",
 };
 
 async function fetchCategories() {
@@ -73,7 +70,7 @@ export function Categories() {
       <div>
         <div
           data-reveal
-          className="mb-3.5 text-xs tracking-[0.2em] text-brown uppercase"
+          className="mb-3.5 text-xs tracking-[0.2em] text-black uppercase"
         >
           Catégories
         </div>
@@ -98,7 +95,7 @@ export function Categories() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between border-t border-border-sand py-5.5"
+                className="flex items-center justify-between border-t border-black/10 py-5.5"
               >
                 <Skeleton className="h-6 w-32" />
                 <Skeleton className="h-4 w-8" />
@@ -114,27 +111,26 @@ export function Categories() {
                 key={c.num}
                 data-reveal
                 onMouseEnter={() => setActiveCategory(c.name)}
-                className={`group flex cursor-pointer items-center justify-between border-t border-border-sand py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-brown ${
-                  currentCategory === c.name ? "translate-x-2 border-brown" : ""
+                className={`group flex cursor-pointer items-center justify-between border-t border-black/10 py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-black ${
+                  currentCategory === c.name ? "translate-x-2 border-black" : ""
                 }`}
               >
                 <div className="flex items-baseline gap-4.5">
-                  <span className="text-xs text-gold transition-colors duration-300">
+                  <span className="text-xs text-black/40 transition-colors duration-300">
                     {c.num}
                   </span>
                   <Link
                     href={CATEGORY_LINKS[c.name] ?? "/boutique"}
-                    className={`font-serif text-xl transition-colors duration-300 hover:text-brown group-hover:text-brown sm:text-[22px] ${
-                      currentCategory === c.name ? "text-brown" : "text-ink"
+                    className={`font-serif text-xl text-black transition-all duration-300 group-hover:font-semibold sm:text-[22px] ${
+                      currentCategory === c.name ? "font-semibold" : ""
                     }`}
                   >
                     {c.name}
                   </Link>
                 </div>
-                <span className="text-[13px] text-[#8a7c6c]">({c.count})</span>
               </div>
             ))}
-            <div className="border-t border-border-sand" />
+            <div className="border-t border-black/10" />
           </>
         )}
       </div>

@@ -19,10 +19,23 @@ export function LoadingScreen() {
 
     tl.set(glowRef.current, { opacity: 0, scale: 0.6 })
       .set(logoRef.current, { opacity: 0, scale: 0.92 })
-      .set(lineRef.current, { scaleX: 0, opacity: 0, transformOrigin: "left center" })
-      .to(glowRef.current, { opacity: 1, scale: 1, duration: 1.4, ease: "power1.out" })
+      .set(lineRef.current, {
+        scaleX: 0,
+        opacity: 0,
+        transformOrigin: "left center",
+      })
+      .to(glowRef.current, {
+        opacity: 1,
+        scale: 1,
+        duration: 1.4,
+        ease: "power1.out",
+      })
       .to(logoRef.current, { opacity: 1, scale: 1, duration: 0.9 }, "-=1.1")
-      .to(lineRef.current, { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.inOut" }, "-=0.2")
+      .to(
+        lineRef.current,
+        { scaleX: 1, opacity: 1, duration: 0.6, ease: "power2.inOut" },
+        "-=0.2",
+      )
       .to({}, { duration: 0.6 })
       .to(el.current, {
         opacity: 0,
@@ -41,20 +54,30 @@ export function LoadingScreen() {
   return (
     <div
       ref={el}
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-ink"
+      className="fixed inset-0 z-9999 flex items-center justify-center bg-black"
       role="status"
       aria-label="Chargement"
     >
       <div
         ref={glowRef}
-        className="pointer-events-none absolute h-72 w-72 rounded-full bg-gold/20 blur-3xl"
+        className="pointer-events-none absolute h-72 w-72 rounded-full bg-white/10 blur-3xl"
       />
-      <div className="relative flex flex-col items-center gap-5">
+      <div className="relative flex flex-col items-center ">
         <div ref={logoRef} className="brightness-0 invert">
-          <Image src={logo} alt="Anissa Cosmetics" priority className="h-28 w-auto sm:h-36" />
+          <Image
+            src={logo}
+            alt="Anissa Cosmetics"
+            priority
+            className="h-28 w-auto sm:h-36"
+          />
         </div>
-        <div className="h-px w-14 overflow-hidden bg-gold/20">
-          <span ref={lineRef} className="block h-px w-full bg-gold" />
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-px w-14 overflow-hidden bg-white/20">
+            <span ref={lineRef} className="block h-px w-full bg-white" />
+          </div>
+          <span className="max-w-xs text-center text-xs tracking-[0.25em] text-white/60 uppercase">
+            Préparez-vous à révéler votre beauté.
+          </span>
         </div>
       </div>
     </div>

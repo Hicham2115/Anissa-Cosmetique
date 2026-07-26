@@ -6,7 +6,7 @@ export function StarRow({ stars }: { stars: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={i < stars ? "h-3.5 w-3.5 fill-gold text-gold" : "h-3.5 w-3.5 text-border-sand"}
+          className={i < stars ? "h-3.5 w-3.5 fill-[#c9a86a] text-[#c9a86a]" : "h-3.5 w-3.5 text-border-sand"}
           aria-hidden="true"
         />
       ))}

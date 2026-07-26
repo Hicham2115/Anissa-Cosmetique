@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, ShoppingBag, X } from "lucide-react";
+import { toast } from "sonner";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
@@ -111,15 +112,19 @@ export function WishlistDrawer() {
                     <span className="mt-1 text-xs font-semibold text-brown">{item.price}</span>
                     <button
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
                         addToCart({
                           productId: item.productId,
                           slug: item.slug,
                           name: item.name,
                           price: item.price,
                           image: item.image,
-                        })
-                      }
+                        });
+                        toast("Ajouté au panier", {
+                          description: item.name,
+                          icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
+                        });
+                      }}
                       className="mt-2.5 flex w-fit cursor-pointer items-center gap-1.5 rounded-full border border-border-sand px-3 py-1.5 text-[11px] tracking-wider text-ink uppercase transition-all duration-200 hover:border-brown hover:bg-brown hover:text-cream"
                     >
                       <ShoppingBag className="h-3 w-3" aria-hidden="true" />

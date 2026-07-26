@@ -1,22 +1,24 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ArrowRight } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { ArrowRight, Droplet, Heart, Leaf } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUiStore } from "@/store/uiStore";
-import heroLifestyle from "@/app/assets/hero-lifestyle.png";
-import heroMobile from "@/app/assets/hero-mobile.png";
 
 const MARQUEE = [
   "Formules Propres",
   "Ingrédients Naturels",
   "Fabriqué au Maroc",
   "Non Testé sur les Animaux",
+];
+
+const FEATURES = [
+  { icon: Leaf, title: "Formules Propres", subtitle: "Ingrédients doux & sûrs" },
+  { icon: Droplet, title: "Efficacité Prouvée", subtitle: "Résultats visibles" },
+  { icon: Heart, title: "Conçu avec Amour", subtitle: "Pour toutes les peaux" },
 ];
 
 export function Hero() {
@@ -28,10 +30,9 @@ export function Hero() {
   const line2Ref = useRef<HTMLSpanElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
-  const mobileImageRef = useRef<HTMLDivElement>(null);
-  const mobileTextRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -43,21 +44,8 @@ export function Hero() {
         line2Ref.current,
         paragraphRef.current,
         ctaRef.current,
+        featuresRef.current,
       ];
-
-      // Absolute positions keep everything moving while the loading overlay
-      // is still fading out (0.7s), so the entrance reads as one seamless
-      // handoff rather than a pause then a second animation.
-      const mobileTl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      mobileTl
-        .set(mobileImageRef.current, { opacity: 0, scale: 1.06 })
-        .set(mobileTextRef.current, { opacity: 0, y: 20 })
-        .to(
-          mobileImageRef.current,
-          { opacity: 1, scale: 1, duration: 1.3, ease: "power2.out" },
-          0,
-        )
-        .to(mobileTextRef.current, { opacity: 1, y: 0, duration: 0.7 }, 0.2);
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
@@ -82,97 +70,49 @@ export function Hero() {
         )
         .to(paragraphRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.6)
         .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.75)
-        .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.9);
+        .to(featuresRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.9)
+        .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.0);
     },
     { dependencies: [isLoading] },
   );
 
   return (
-    <div className="relative overflow-hidden bg-[#EFE3D6]">
-      <div className="relative block h-160 sm:h-180 md:hidden">
-        <div ref={mobileImageRef} className="absolute inset-0">
-          <Image
-            src={heroMobile}
-            alt="Masque Anti-Âge et Gel Exfoliant Anissa Cosmetics"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-top"
-          />
-        </div>
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#efe3d6] via-[#efe3d6]/70 to-transparent" />
-
-        <div
-          ref={mobileTextRef}
-          className="absolute inset-x-0 bottom-0 px-4 pb-10 sm:px-6"
-        >
-          {/* <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">
-            // Soins de la peau
-          </div> */}
-          <h2 className="font-serif text-[38px] leading-[0.98] font-semibold text-ink">
-            Là où <span className="text-brown">la peau</span>
-            <br />
-            <span className="italic">rayonne</span>
-          </h2>
-          <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#5c534a]">
-            Découvrez une sélection de soins et cosmétiques à formules propres,
-            pensés pour un éclat au quotidien.
-          </p>
-          <div className="mt-7 flex flex-wrap items-center gap-4">
-            <Link
-              href="/boutique"
-              className={cn(
-                buttonVariants(),
-                "group transition-transform duration-200 hover:scale-105 active:scale-95",
-              )}
-            >
-              Acheter
-              <ArrowRight
-                className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
-                aria-hidden="true"
-              />
-            </Link>
-            <a
-              href="/boutique"
-              className="inline-flex cursor-pointer items-center rounded-full border border-ink/20 px-8 py-4 text-xs tracking-wider text-ink uppercase transition-all duration-200 hover:scale-105 hover:border-ink active:scale-95"
-            >
-              Tout Explorer
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative hidden h-165 md:block lg:h-180">
+    <div className="relative overflow-hidden bg-black">
+      <div className="relative h-160 sm:h-180 md:h-165 lg:h-180">
         <div ref={imageRef} className="absolute inset-0">
-          <Image
-            src={heroLifestyle}
-            alt="Coffret de soins Anissa Cosmetics, masque anti-âge et gel exfoliant"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[85%_center] sm:object-[75%_center] md:object-[62%_center]"
-          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="h-full w-full object-cover object-top sm:object-[85%_center] md:object-[75%_center] lg:object-[62%_center]"
+          >
+            <source src="/hero.mp4" media="(min-width: 768px)" />
+            <source src="/hero-mobile.mp4" />
+          </video>
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
         <div className="relative mx-auto flex h-full max-w-[1320px] items-center px-4 sm:px-6">
-          <div className="max-w-md">
+          <div className="max-w-xl">
             <div
               ref={eyebrowRef}
-              className="mb-5 text-xs tracking-[0.2em] text-brown uppercase"
+              className="mb-5 flex items-center gap-3 text-xs tracking-[0.25em] text-white/80 uppercase drop-shadow-[0_1px_12px_rgba(0,0,0,0.35)]"
             >
-              // Soins de la peau
+              Soins de la peau
+              <span className="h-px w-8 bg-white/50" aria-hidden="true" />
             </div>
-            <h1 className="font-serif text-[32px] leading-[0.98] font-semibold text-ink sm:text-[56px] md:text-[64px] lg:text-[74px] lg:leading-[0.96]">
-              <span ref={line1Ref} className="block">
-                Là où <span className="text-brown">la peau</span>
+            <h1 className="font-serif text-[32px] leading-[0.98] font-semibold text-white drop-shadow-[0_2px_20px_rgba(0,0,0,0.4)] sm:text-[56px] md:text-[64px] lg:text-[74px] lg:leading-[0.96] ">
+              <span ref={line1Ref} className="mb-4 whitespace-nowrap">
+                Votre Peau Mérite
               </span>
               <span ref={line2Ref} className="block italic">
-                rayonne
+                L&apos;excellence.
               </span>
             </h1>
             <p
               ref={paragraphRef}
-              className="mt-7 max-w-sm text-[15px] leading-relaxed text-[#5c534a]"
+              className="mt-7 max-w-lg text-[15px] leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.35)] sm:text-[17px]"
             >
               Découvrez une sélection de soins et cosmétiques à formules
               propres, pensés pour un éclat au quotidien.
@@ -183,12 +123,9 @@ export function Hero() {
             >
               <Link
                 href="/boutique"
-                className={cn(
-                  buttonVariants(),
-                  "group transition-transform duration-200 hover:scale-105 active:scale-95",
-                )}
+                className="group inline-flex cursor-pointer items-center gap-2 bg-white px-8 py-4 text-sm tracking-wider text-black uppercase transition-all duration-500 ease-in-out hover:bg-black hover:text-white active:scale-95"
               >
-                Acheter
+                Découvrir la Boutique
                 <ArrowRight
                   className="h-[13px] w-[13px] transition-transform duration-200 group-hover:translate-x-1"
                   aria-hidden="true"
@@ -196,10 +133,40 @@ export function Hero() {
               </Link>
               <a
                 href="/boutique"
-                className="inline-flex cursor-pointer items-center rounded-full border border-ink/20 px-8 py-4 text-xs tracking-wider text-ink uppercase transition-all duration-200 hover:scale-105 hover:border-ink active:scale-95"
+                className="inline-flex cursor-pointer items-center border border-white/50 px-8 py-4 text-sm tracking-wider text-white uppercase transition-all duration-500 ease-in-out hover:border-white active:scale-95"
               >
-                Tout Explorer
+                En savoir plus
               </a>
+            </div>
+            <div
+              ref={featuresRef}
+              className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6"
+            >
+              {FEATURES.map(({ icon: Icon, title, subtitle }, i) => (
+                <div
+                  key={title}
+                  className={cn(
+                    "flex items-start gap-3",
+                    i > 0 && "sm:border-l sm:border-white/15 sm:pl-6",
+                  )}
+                >
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25">
+                    <Icon
+                      className="h-5 w-5 text-white"
+                      strokeWidth={1.6}
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-[13px] font-semibold tracking-wide text-white uppercase whitespace-nowrap">
+                      {title}
+                    </div>
+                    <div className="mt-1 text-[12px] text-white whitespace-nowrap">
+                      {subtitle}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -207,9 +174,9 @@ export function Hero() {
 
       <div
         ref={marqueeRef}
-        className="overflow-hidden border-t border-b border-border-sand bg-cream py-4 whitespace-nowrap"
+        className="relative overflow-hidden border-t border-b border-gold/25 bg-black py-5 whitespace-nowrap mask-[linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
       >
-        <div className="animate-marquee inline-block font-serif text-lg text-ink sm:text-xl">
+        <div className="animate-marquee inline-block font-serif text-base tracking-[0.15em] text-white uppercase sm:text-lg">
           {loop.map((msg, i) => (
             <span key={i} className="mx-6">
               {msg}

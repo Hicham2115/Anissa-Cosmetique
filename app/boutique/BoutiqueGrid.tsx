@@ -8,6 +8,7 @@ import { categoryListSchema, productListSchema } from "@/lib/validations";
 import { ErrorState } from "@/components/ui/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductCard, ProductCardSkeleton } from "@/components/home/ProductCard";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function fetchCategories() {
   const { data } = await api.get("/categories");
@@ -32,11 +33,14 @@ export function BoutiqueGrid() {
     queryFn: () => fetchProducts(activeCategory),
   });
 
+  const scopeRef = useScrollReveal<HTMLDivElement>([productsQuery.data]);
+
   return (
-    <>
+    <div ref={scopeRef}>
       <div className="mb-10 flex flex-wrap gap-3">
         <button
           type="button"
+          data-reveal
           onClick={() => setActiveCategory(null)}
           className={`cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
             activeCategory === null
@@ -54,6 +58,7 @@ export function BoutiqueGrid() {
           <button
             key={c.num}
             type="button"
+            data-reveal
             onClick={() => setActiveCategory(c.name)}
             className={`cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
               activeCategory === c.name
@@ -76,6 +81,6 @@ export function BoutiqueGrid() {
       {productsQuery.data?.length === 0 && (
         <p className="py-16 text-center text-sm text-[#8a7c6c]">Aucun produit dans cette catégorie.</p>
       )}
-    </>
+    </div>
   );
 }

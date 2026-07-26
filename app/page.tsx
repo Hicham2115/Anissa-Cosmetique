@@ -4,13 +4,19 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { Hero } from "@/components/home/Hero";
 import { Categories } from "@/components/home/Categories";
+import { BonusOffer } from "@/components/home/BonusOffer";
 import { BestSellers } from "@/components/home/BestSellers";
+import { AntiAgeSpotlight } from "@/components/home/AntiAgeSpotlight";
+import { EclatSpotlight } from "@/components/home/EclatSpotlight";
+import { CleanserSpotlight } from "@/components/home/CleanserSpotlight";
 import { ValueProps } from "@/components/home/ValueProps";
 import { FeaturedBanner } from "@/components/home/FeaturedBanner";
 import { Testimonials } from "@/components/home/Testimonials";
+import { VideoTestimonials } from "@/components/home/VideoTestimonials";
 import { InstagramGallery } from "@/components/home/InstagramGallery";
 import { Newsletter } from "@/components/home/Newsletter";
 import { ContactForm } from "@/components/home/ContactForm";
+import { Commitments } from "@/components/home/Commitments";
 import { Footer } from "@/components/home/Footer";
 import { SITE_NAME, pageOpenGraph, pageTwitter } from "@/lib/site";
 
@@ -39,15 +45,22 @@ export default function Home() {
       <main>
         <Hero />
         <Categories />
+        <BonusOffer />
         <BestSellers />
+        <AntiAgeSpotlight />
+        <EclatSpotlight />
+        <CleanserSpotlight />
         <ValueProps />
-        <FeaturedBanner />
+        {/* <FeaturedBanner /> */}
         <Testimonials />
-        {/* <InstagramGallery /> */}
+        <VideoTestimonials />
+        {/* <Instagr
+        amGallery /> */}
         <Newsletter />
+        <Commitments />
         <ContactForm />
       </main>
       <Footer />
-    </ErrorBoundary> 
+    </ErrorBoundary>
   );
 }

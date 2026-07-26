@@ -39,16 +39,16 @@ export function ValueProps() {
       ref={scopeRef}
       className="mt-16 scroll-mt-24 bg-cream sm:mt-24"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-22 md:grid-cols-2 md:gap-16">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-22 md:grid-cols-[1.6fr_1fr] md:gap-16">
         <div
           data-reveal
-          className="group relative aspect-square overflow-hidden rounded-2xl bg-sand-light md:aspect-4/5"
+          className="group relative aspect-square overflow-hidden rounded-2xl bg-sand-light md:aspect-4/3"
         >
           <Image
             src={productLaitCorporel}
             alt="Lait Corporel Argan Anissa"
             fill
-            sizes="(min-width: 768px) 50vw, 100vw"
+            sizes="(min-width: 768px) 62vw, 100vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>

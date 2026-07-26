@@ -44,7 +44,7 @@ export function Testimonials() {
 
       <div data-reveal className="flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10">
         <div className="flex shrink-0 flex-col items-center gap-1 sm:border-r sm:border-border-sand sm:pr-10">
-          <div className="font-serif text-5xl text-ink">4.3</div>
+          <div className="font-serif text-5xl text-ink">4.8</div>
           <StarRow stars={4} />
           <div className="text-xs text-[#8a7c6c]">35K évaluations</div>
         </div>

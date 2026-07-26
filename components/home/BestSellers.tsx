@@ -24,13 +24,14 @@ export function BestSellers() {
   return (
     <div id="best-sellers" ref={scopeRef} className="mx-auto max-w-[1320px] scroll-mt-24 px-4 pt-16 pb-5 sm:px-6 sm:pt-24">
       <div data-reveal className="mb-10 flex items-baseline justify-between">
-        <h2 className="font-serif text-[28px] font-semibold text-ink sm:text-[34px]">Meilleures Ventes</h2>
+        <h2 className="font-serif text-[28px] font-semibold text-black sm:text-[34px]">Meilleures Ventes</h2>
         <a
           href="/boutique"
-          className="group text-[13px] tracking-wider text-ink transition-colors duration-200 hover:text-brown"
+          className="group relative text-[13px] tracking-wider text-black"
         >
           Tout Voir{" "}
           <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">&rarr;</span>
+          <span className="absolute -bottom-1 left-0 h-px max-w-0 bg-black transition-all duration-300 group-hover:max-w-17.5" />
         </a>
       </div>
 

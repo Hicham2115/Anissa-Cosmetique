@@ -17,8 +17,8 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <div data-reveal className="group flex flex-col">
-      <Link href={`/produits/${product.slotId}`} className="relative aspect-square overflow-hidden rounded-lg bg-sand transition-shadow duration-300 hover:shadow-[0_12px_28px_rgba(126,88,54,0.16)]">
-        {product.image ? (
+      <Link href={`/produits/${product.slotId}`} className="relative aspect-square overflow-hidden rounded-lg bg-sand ring-1 ring-transparent transition-all duration-300 hover:shadow-[0_16px_32px_rgba(0,0,0,0.12)] hover:ring-black/10">
+        {product.image ? (  
           <Image
             src={product.image}
             alt={product.name}
@@ -33,7 +33,7 @@ export function ProductCard({ product }: { product: Product }) {
           />
         )}
         {product.badge && (
-          <div className="absolute top-3 left-3 rounded-full bg-cream px-2.5 py-1 text-[10px] tracking-wider text-brown uppercase">
+          <div className="absolute top-3 left-3 rounded-full bg-black px-2.5 py-1 text-[10px] tracking-wider text-white uppercase">
             {product.badge}
           </div>
         )}
@@ -45,8 +45,8 @@ export function ProductCard({ product }: { product: Product }) {
             toggleWishlist({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
             toast(isLiked ? "Retiré des favoris" : "Ajouté aux favoris", { description: product.name });
           }}
-          className={`absolute top-3 right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-cream transition-transform duration-200 hover:scale-110 active:scale-95 ${
-            isLiked ? "text-brown" : "text-ink"
+          className={`absolute top-3 right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 active:scale-95 ${
+            isLiked ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
           <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} aria-hidden="true" />
@@ -62,16 +62,16 @@ export function ProductCard({ product }: { product: Product }) {
               icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
             });
           }}
-          className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-brown transition-transform duration-200 hover:scale-110 active:scale-95"
+          className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black transition-all duration-200 hover:scale-110 active:scale-95 sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
         >
-          <ShoppingBag className="h-4 w-4 text-cream" strokeWidth={1.8} aria-hidden="true" />
+          <ShoppingBag className="h-4 w-4 text-white" strokeWidth={1.8} aria-hidden="true" />
         </button>
       </Link>
-      <Link href={`/produits/${product.slotId}`} className="mt-4 font-serif text-[15px] transition-colors duration-200 group-hover:text-brown sm:text-base">
+      <Link href={`/produits/${product.slotId}`} className="mt-4 font-serif text-[15px] text-black transition-all duration-200 group-hover:font-semibold sm:text-base">
         {product.name}
       </Link>
       <div className="mt-1 text-xs text-[#8a7c6c]">{product.subtitle}</div>
-      <div className="mt-2 text-sm font-semibold text-brown">{product.price}</div>
+      <div className="mt-2 text-sm font-semibold tracking-wide text-black">{product.price}</div>
     </div>
   );
 }

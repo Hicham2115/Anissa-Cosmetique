@@ -6,6 +6,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { reviewListSchema } from "@/lib/validations";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StarRow } from "@/components/ui/star-row";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 
 async function fetchProductReviews(slug: string) {
   const { data } = await api.get(`/products/${slug}/reviews`);
@@ -18,11 +19,13 @@ export function ProductReviews({ slug, className }: { slug: string; className?: 
     queryFn: () => fetchProductReviews(slug),
   });
 
+  const scopeRef = useScrollReveal<HTMLDivElement>([data]);
+
   if (!isLoading && (!data || data.length === 0)) return null;
 
   return (
-    <div className={className}>
-      <div className="mb-9 text-xs tracking-[0.2em] text-brown uppercase">Avis clients</div>
+    <div ref={scopeRef} className={className}>
+      <div data-reveal className="mb-9 text-xs tracking-[0.2em] text-brown uppercase">Avis clients</div>
 
       <div className="grid gap-5 sm:grid-cols-3">
         {isLoading &&
@@ -38,7 +41,7 @@ export function ProductReviews({ slug, className }: { slug: string; className?: 
           ))}
 
         {data?.map((review) => (
-          <div key={review.id} className="rounded-2xl border border-border-sand bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(126,88,54,0.08)]">
+          <div key={review.id} data-reveal className="rounded-2xl border border-border-sand bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(126,88,54,0.08)]">
             <div className="mb-3 flex items-center gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sand-light font-serif text-sm text-brown">
                 {review.name.charAt(0)}

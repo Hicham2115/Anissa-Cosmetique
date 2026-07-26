@@ -232,6 +232,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     product ? s.isLiked(product.id) : false,
   );
   const wishlistItems = useWishlistStore((s) => s.items);
+  const heroDesktopRef = useScrollReveal<HTMLDivElement>([product]);
+  const heroMobileRef = useScrollReveal<HTMLDivElement>([product]);
   const specsRef = useScrollReveal<HTMLDivElement>([product]);
   const relatedRef = useScrollReveal<HTMLDivElement>([allProducts]);
   const mobileGalleryRef = useRef<HTMLDivElement>(null);
@@ -294,8 +296,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
   return (
     <div>
       <div className="hidden md:block">
-      <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
-        <div className="mb-8 text-xs text-[#8a7c6c]">
+      <div ref={heroDesktopRef} className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
+        <div data-reveal className="mb-8 text-xs text-[#8a7c6c]">
           <Link
             href="/"
             className="transition-colors duration-200 hover:text-brown"
@@ -314,7 +316,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         </div>
 
         <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-14">
-          <div className="flex gap-4">
+          <div data-reveal className="flex gap-4">
             {gallery.length > 1 && (
               <div className="flex shrink-0 flex-col gap-3">
                 {gallery.map((src, i) => (
@@ -396,7 +398,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <div>
+          <div data-reveal>
             <div className="mb-2 flex items-start justify-between gap-4">
               <div className="text-xs tracking-[0.2em] text-brown uppercase">
                 Anissa Cosmetics
@@ -526,7 +528,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-border-sand pt-14">
+        <div data-reveal className="mt-14 border-t border-border-sand pt-14">
           <OrderForm product={product} quantity={quantity} />
         </div>
       </div>
@@ -716,8 +718,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           )}
         </div>
 
-        <div className="px-4 pt-5 pb-4">
-          <div className="mb-8 text-xs text-[#8a7c6c]">
+        <div ref={heroMobileRef} className="px-4 pt-5 pb-4">
+          <div data-reveal className="mb-8 text-xs text-[#8a7c6c]">
             <Link href="/" className="transition-colors duration-200 hover:text-brown">
               Accueil
             </Link>
@@ -729,12 +731,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             <span className="text-ink">{product.name}</span>
           </div>
 
-          <div className="text-xs tracking-[0.2em] text-brown uppercase">Anissa Cosmetics</div>
-          <h1 className="mt-2 font-serif text-[28px] leading-tight font-semibold text-ink">
+          <div data-reveal className="text-xs tracking-[0.2em] text-brown uppercase">Anissa Cosmetics</div>
+          <h1 data-reveal className="mt-2 font-serif text-[28px] leading-tight font-semibold text-ink">
             {product.name}
           </h1>
 
-          <div className="mt-4 flex items-center justify-between rounded-2xl border border-border-sand bg-sand-light px-5 py-4">
+          <div data-reveal className="mt-4 flex items-center justify-between rounded-2xl border border-border-sand bg-sand-light px-5 py-4">
             <div>
               <div className="flex items-baseline gap-2">
                 <div className="font-serif text-2xl text-ink">{product.price}</div>
@@ -789,7 +791,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             )}
           </Button>
 
-          <div className="mt-6 flex gap-2.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div data-reveal className="mt-6 flex gap-2.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {TRUST_BADGES.map(({ icon: Icon, label }) => (
               <div
                 key={label}
@@ -801,7 +803,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             ))}
           </div>
 
-          <div className="mt-6">
+          <div data-reveal className="mt-6">
             <OrderForm product={product} quantity={quantity} />
           </div>
         </div>

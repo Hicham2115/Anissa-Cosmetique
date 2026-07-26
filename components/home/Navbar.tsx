@@ -9,7 +9,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useUiStore } from "@/store/uiStore";
 import { scrollToSection } from "@/lib/lenis";
-import logo from "@/app/assets/logo.png";
+import logo from "@/app/assets/logo1.png";
 
 type NavLink =
   | { label: string; type: "route"; href: string }
@@ -42,11 +42,11 @@ function NavAnchor({
     return (
       <Link
         href={link.href}
-        className={`group relative ${className}`}
+        className={`group relative w-fit transition-colors duration-300 hover:text-brown ${className}`}
         onClick={onNavigate}
       >
         {link.label}
-        <span className="absolute -bottom-1 left-0 h-px max-w-0 bg-brown transition-all duration-300 group-hover:max-w-full" />
+        <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-brown transition-transform duration-300 ease-out group-hover:scale-x-100" />
       </Link>
     );
   }
@@ -54,7 +54,7 @@ function NavAnchor({
   return (
     <Link
       href={`/${link.target}`}
-      className={`group relative ${className}`}
+      className={`group relative w-fit transition-colors duration-300 hover:text-brown ${className}`}
       onClick={(e) => {
         onNavigate?.();
         if (pathname === "/") {
@@ -64,7 +64,7 @@ function NavAnchor({
       }}
     >
       {link.label}
-      <span className="absolute -bottom-1 left-0 h-px max-w-0 bg-brown transition-all duration-300 group-hover:max-w-full" />
+      <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-brown transition-transform duration-300 ease-out group-hover:scale-x-100" />
     </Link>
   );
 }
@@ -77,14 +77,14 @@ export function Navbar() {
   const openWishlist = useUiStore((s) => s.openWishlist);
 
   return (
-    <div className="border-b border-border-sand bg-cream/92 backdrop-blur-md">
+    <div className="border-b border-black/10 bg-white/92 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-4 px-4  sm:px-6">
         <nav className="hidden flex-1 items-center gap-9 lg:flex">
           {LEFT_LINKS.map((link) => (
             <NavAnchor
               key={link.label}
               link={link}
-              className="text-[13px] tracking-wider text-ink transition-colors duration-200 hover:text-brown"
+              className="text-[13px] font-semibold tracking-wider text-black"
             />
           ))}
         </nav>
@@ -119,7 +119,7 @@ export function Navbar() {
               <NavAnchor
                 key={link.label}
                 link={link}
-                className="text-[13px] tracking-wider text-ink transition-colors duration-200 hover:text-brown"
+                className="text-[13px] font-semibold tracking-wider text-black"
               />
             ))}
           </nav>
@@ -131,12 +131,12 @@ export function Navbar() {
               className="relative inline-flex cursor-pointer transition-transform duration-200 hover:scale-110"
             >
               <Heart
-                className="h-[18px] w-[18px] text-ink"
-                strokeWidth={1.6}
+                className="h-[18px] w-[18px] text-black"
+                strokeWidth={2}
                 aria-hidden="true"
               />
               {wishlistCount > 0 && (
-                <span className="absolute -right-2 -top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full bg-brown text-[9px] text-cream">
+                <span className="absolute -right-2 -top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full bg-brown text-[9px] text-white">
                   {wishlistCount}
                 </span>
               )}
@@ -148,12 +148,12 @@ export function Navbar() {
               className="relative cursor-pointer transition-transform duration-200 hover:scale-110"
             >
               <ShoppingBag
-                className="h-[19px] w-[19px] text-ink"
-                strokeWidth={1.6}
+                className="h-[19px] w-[19px] text-black"
+                strokeWidth={2}
                 aria-hidden="true"
               />
               {cartCount > 0 && (
-                <span className="absolute -right-2 -top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full bg-brown text-[9px] text-cream">
+                <span className="absolute -right-2 -top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full bg-brown text-[9px] text-white">
                   {cartCount}
                 </span>
               )}
@@ -163,12 +163,12 @@ export function Navbar() {
       </div>
 
       {menuOpen && (
-        <nav className="flex flex-col gap-4 border-t border-border-sand px-6 py-6 lg:hidden">
+        <nav className="flex flex-col gap-4 border-t border-black/10 px-6 py-6 lg:hidden">
           {[...LEFT_LINKS, ...RIGHT_LINKS].map((link) => (
             <NavAnchor
               key={link.label}
               link={link}
-              className="text-sm tracking-wider text-ink"
+              className="text-sm font-semibold tracking-wider text-black"
               onNavigate={() => setMenuOpen(false)}
             />
           ))}

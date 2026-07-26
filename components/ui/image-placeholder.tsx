@@ -11,7 +11,7 @@ export function ImagePlaceholder({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2 bg-[#EFE6D8] text-[#8a7c6c]",
+        "flex flex-col items-center justify-center gap-2 bg-black/5 text-[#5c5c5c]",
         className
       )}
     >
