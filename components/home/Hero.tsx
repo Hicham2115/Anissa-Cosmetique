@@ -85,11 +85,17 @@ export function Hero() {
             muted
             loop
             playsInline
-            className="h-full w-full object-cover object-top sm:object-[85%_center] md:object-[75%_center] lg:object-[62%_center]"
-          >
-            <source src="/hero.mp4" media="(min-width: 768px)" />
-            <source src="/hero-mobile.mp4" />
-          </video>
+            src="/hero-mobile.mp4"
+            className="h-full w-full object-cover object-top md:hidden"
+          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            src="/hero.mp4"
+            className="hidden h-full w-full object-cover sm:object-[85%_center] md:block md:object-[75%_center] lg:object-[62%_center]"
+          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 

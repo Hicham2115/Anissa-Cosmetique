@@ -40,6 +40,7 @@ yarn-error.log*
 # and public/videos/testimonials/ for the actual optimized assets served)
 /app/assets/Testemo video/
 /app/assets/hero.mp4
+/app/assets/heromobile.mp4
 
 # typescript
 *.tsbuildinfo
