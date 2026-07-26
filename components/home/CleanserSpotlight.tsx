@@ -56,20 +56,20 @@ export function CleanserSpotlight() {
           />
           <div
             data-reveal
-            className="mt-12 flex items-center gap-5 rounded-full bg-[#30c23a]/15 p-4 pr-8 sm:p-5 sm:pr-10"
+            className="mt-12 flex items-center gap-3 rounded-full bg-[#30c23a]/15 p-3 pr-5 sm:gap-5 sm:p-5 sm:pr-10"
           >
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-black">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black sm:h-14 sm:w-14">
               <Gift
-                className="h-6 w-6 text-[#30c23a]"
+                className="h-4 w-4 text-[#30c23a] sm:h-6 sm:w-6"
                 strokeWidth={1.5}
                 aria-hidden="true"
               />
             </div>
             <div>
-              <div className="text-[15px] font-bold tracking-wide text-[#30c23a] uppercase">
+              <div className="text-[12px] font-bold tracking-wide text-[#30c23a] uppercase sm:text-[15px]">
                 Offert pour tout achat d&apos;un pack
               </div>
-              <div className="mt-1 text-[13px] text-[#5c534a]">
+              <div className="mt-1 text-[11px] text-[#5c534a] sm:text-[13px]">
                 Profitez de ce nettoyant purifiant en cadeau.
               </div>
             </div>
