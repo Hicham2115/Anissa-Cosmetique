@@ -46,6 +46,7 @@ export default function Home() {
         <Hero />
         <Categories />
         <BonusOffer />
+        <Commitments />
         <BestSellers />
         <AntiAgeSpotlight />
         <EclatSpotlight />
@@ -57,7 +58,6 @@ export default function Home() {
         {/* <Instagr
         amGallery /> */}
         <Newsletter />
-        <Commitments />
         <ContactForm />
       </main>
       <Footer />
