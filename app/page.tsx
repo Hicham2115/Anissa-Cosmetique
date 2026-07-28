@@ -10,6 +10,7 @@ import { AntiAgeSpotlight } from "@/components/home/AntiAgeSpotlight";
 import { EclatSpotlight } from "@/components/home/EclatSpotlight";
 import { CleanserSpotlight } from "@/components/home/CleanserSpotlight";
 import { ValueProps } from "@/components/home/ValueProps";
+import { PharmacyNotice } from "@/components/home/PharmacyNotice";
 import { FeaturedBanner } from "@/components/home/FeaturedBanner";
 import { Testimonials } from "@/components/home/Testimonials";
 import { VideoTestimonials } from "@/components/home/VideoTestimonials";
@@ -47,6 +48,7 @@ export default function Home() {
         <Categories />
         <BonusOffer />
         <Commitments />
+        <PharmacyNotice />
         <BestSellers />
         <AntiAgeSpotlight />
         <EclatSpotlight />
