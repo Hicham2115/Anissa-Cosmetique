@@ -8,7 +8,7 @@ export function PharmacyNotice() {
   return (
     <div
       ref={scopeRef}
-      className="bg-ink px-4 py-20 text-center sm:px-6 sm:py-18"
+      className="bg-emerald-950 px-4 py-20 text-center sm:px-6 sm:py-18"
     >
       <div className="mx-auto max-w-xl">
         <div

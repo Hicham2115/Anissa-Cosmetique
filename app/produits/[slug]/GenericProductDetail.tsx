@@ -576,7 +576,58 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <div data-reveal className="mt-14 border-t border-border-sand pt-14">
+          <div
+            data-reveal
+            className="mt-14 grid gap-10 border-t border-border-sand pt-14 md:grid-cols-[1fr_480px] md:gap-14"
+          >
+            <div>
+              <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">
+                À savoir
+              </div>
+              <h2 className="mb-8 font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
+                Infos pratiques
+              </h2>
+              <div className="flex flex-col gap-6">
+                {INFO_CARDS.map(
+                  ({ icon: Icon, title, accent, iconBg, items }) => (
+                    <div
+                      key={title}
+                      className={`rounded-2xl border border-border-sand border-l-4 ${accent} bg-white p-6`}
+                    >
+                      <div className="mb-5 flex items-center gap-3 border-b border-border-sand pb-4">
+                        <div
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBg}`}
+                        >
+                          <Icon
+                            className="h-4 w-4"
+                            strokeWidth={1.75}
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <h3 className="text-sm font-semibold text-ink">
+                          {title}
+                        </h3>
+                      </div>
+                      <ul className="flex flex-col gap-3">
+                        {items.map((item) => (
+                          <li
+                            key={item}
+                            className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a]"
+                          >
+                            <Check
+                              className="mt-0.5 h-4 w-4 shrink-0 text-brown"
+                              aria-hidden="true"
+                            />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+
             <OrderForm product={product} quantity={quantity} />
           </div>
         </div>
@@ -603,57 +654,6 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                   </dd>
                 </div>
               ))}
-            </div>
-          </div>
-
-          <div className="mx-auto max-w-[1320px] px-4 pb-16 sm:px-6 sm:pb-20">
-            <div data-reveal className="mb-9">
-              <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">
-                À savoir
-              </div>
-              <h2 className="font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
-                Infos pratiques
-              </h2>
-            </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {INFO_CARDS.map(
-                ({ icon: Icon, title, accent, iconBg, items }) => (
-                  <div
-                    key={title}
-                    data-reveal
-                    className={`rounded-2xl border border-border-sand border-l-4 ${accent} bg-white p-6`}
-                  >
-                    <div className="mb-5 flex items-center gap-3 border-b border-border-sand pb-4">
-                      <div
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBg}`}
-                      >
-                        <Icon
-                          className="h-4 w-4"
-                          strokeWidth={1.75}
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <h3 className="text-sm font-semibold text-ink">
-                        {title}
-                      </h3>
-                    </div>
-                    <ul className="flex flex-col gap-3">
-                      {items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a]"
-                        >
-                          <Check
-                            className="mt-0.5 h-4 w-4 shrink-0 text-brown"
-                            aria-hidden="true"
-                          />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ),
-              )}
             </div>
           </div>
         </div>
