@@ -13,9 +13,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import soinsImage from "@/app/assets/categories/antiage.png";
-import makiageImage from "@/app/assets/categories/eclat.png";
-import parfumImage from "@/app/assets/categories/nettoyant.png";
+import soinsImage from "@/app/assets/categories/antiage.webp";
+import makiageImage from "@/app/assets/categories/eclat.webp";
+import parfumImage from "@/app/assets/categories/nettoyant.webp";
 
 const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
   "Anti-Âge": soinsImage,
