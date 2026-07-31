@@ -39,6 +39,76 @@ import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { getLenisInstance } from "@/lib/lenis";
+import serumImperfectionsBeforeAfter from "@/app/assets/BeforeAfter/serum-anti-imperfections.webp";
+import serumAntiAgeBeforeAfter from "@/app/assets/BeforeAfter/serum-anti-age.webp";
+import serumEclaircissantBeforeAfter from "@/app/assets/BeforeAfter/serum-eclaircissant.webp";
+import nettoyantArganBeforeAfter from "@/app/assets/BeforeAfter/nettoyant-demaquillant-argan.webp";
+import masqueEclaircissantBeforeAfter from "@/app/assets/BeforeAfter/masque-eclaircissant.webp";
+import masqueDetoxBeforeAfter from "@/app/assets/BeforeAfter/masque-detox.webp";
+import masqueAntiAgeBeforeAfter from "@/app/assets/BeforeAfter/masque-anti-age.webp";
+import gelNettoyantPurifiantBeforeAfter from "@/app/assets/BeforeAfter/gel-nettoyant-purifiant.webp";
+import gelNettoyantHydratantBeforeAfter from "@/app/assets/BeforeAfter/gel-nettoyant-hydratant.webp";
+import gelNettoyantEclaircissantBeforeAfter from "@/app/assets/BeforeAfter/gel-nettoyant-eclaircissant.webp";
+import gelExfoliantAhaBeforeAfter from "@/app/assets/BeforeAfter/gel-exfoliant-aha.webp";
+import gelAloeVeraBeforeAfter from "@/app/assets/BeforeAfter/gel-aloe-vera.webp";
+import fluideSolaireBeforeAfter from "@/app/assets/BeforeAfter/fluide-solaire-spf50.webp";
+import cremeMainsBeforeAfter from "@/app/assets/BeforeAfter/creme-eclaircissante-mains.webp";
+import cremeEclaircissanteBeforeAfter from "@/app/assets/BeforeAfter/creme-eclaircissante.webp";
+import cremeAntiRidesBeforeAfter from "@/app/assets/BeforeAfter/creme-anti-rides.webp";
+import cremeAntiImperfectionsBeforeAfter from "@/app/assets/BeforeAfter/creme-anti-imperfections.webp";
+
+const BEFORE_AFTER_IMAGES: Record<
+  string,
+  { image: typeof serumImperfectionsBeforeAfter; label?: string }
+> = {
+  "serum-anti-imperfections": { image: serumImperfectionsBeforeAfter },
+  "serum-anti-age": { image: serumAntiAgeBeforeAfter },
+  // Shopify handle for the "Sérum Éclaircissant" product is "pack-eclaircissant".
+  "pack-eclaircissant": { image: serumEclaircissantBeforeAfter },
+  "nettoyant-demaquillant-argan": { image: nettoyantArganBeforeAfter },
+  "masque-detox": { image: masqueDetoxBeforeAfter },
+  "masque-anti-age": { image: masqueAntiAgeBeforeAfter },
+  "gel-nettoyant-purifiant": { image: gelNettoyantPurifiantBeforeAfter },
+  "gel-nettoyant-hydratant": { image: gelNettoyantHydratantBeforeAfter },
+  "gel-nettoyant-eclaircissant": { image: gelNettoyantEclaircissantBeforeAfter },
+  "gel-exfoliant-aha": { image: gelExfoliantAhaBeforeAfter },
+  "masque-eclaircissant": { image: masqueEclaircissantBeforeAfter },
+  // Lifestyle/application shot, not an actual before/after pair.
+  "gel-aloe-vera": { image: gelAloeVeraBeforeAfter, label: "En application" },
+  "fluide-solaire-spf50": {
+    image: fluideSolaireBeforeAfter,
+    label: "En application",
+  },
+  "creme-eclaircissante-mains": {
+    image: cremeMainsBeforeAfter,
+    label: "En application",
+  },
+  "creme-eclaircissante": { image: cremeEclaircissanteBeforeAfter },
+  "creme-anti-rides": { image: cremeAntiRidesBeforeAfter },
+  "creme-anti-imperfections": { image: cremeAntiImperfectionsBeforeAfter },
+};
+
+function BeforeAfter({ product }: { product: Product }) {
+  const entry = BEFORE_AFTER_IMAGES[product.slotId];
+  if (!entry) return null;
+  const { image, label = "Résultats" } = entry;
+
+  return (
+    <div>
+      <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">
+        {label}
+      </div>
+      <div className="overflow-hidden rounded-2xl border border-border-sand">
+        <Image
+          src={image}
+          alt={`${label} — ${product.name}`}
+          sizes="(min-width: 768px) 480px, 100vw"
+          className="h-auto w-full"
+        />
+      </div>
+    </div>
+  );
+}
 
 const DESCRIPTION_HTML_CLASSES =
   "[&_p]:mb-3.5 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_strong]:text-ink [&_em]:italic " +
@@ -628,7 +698,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               </div>
             </div>
 
-            <OrderForm product={product} quantity={quantity} />
+            <div className="flex flex-col gap-8">
+              <OrderForm product={product} quantity={quantity} />
+              <BeforeAfter product={product} />
+            </div>
           </div>
         </div>
 
@@ -901,8 +974,9 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             ))}
           </div>
 
-          <div data-reveal className="mt-6">
+          <div data-reveal className="mt-6 flex flex-col gap-6">
             <OrderForm product={product} quantity={quantity} />
+            <BeforeAfter product={product} />
           </div>
         </div>
 
