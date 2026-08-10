@@ -4,6 +4,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { Hero } from "@/components/home/Hero";
 import { Categories } from "@/components/home/Categories";
+import { CategoriesMini } from "@/components/home/CategoriesMini";
 import { BonusOffer } from "@/components/home/BonusOffer";
 import { BestSellers } from "@/components/home/BestSellers";
 import { AntiAgeSpotlight } from "@/components/home/AntiAgeSpotlight";
@@ -46,6 +47,7 @@ export default function Home() {
       <main>
         <Hero />
         <Categories />
+        <CategoriesMini />
         <BonusOffer />
         <Commitments />
         <PharmacyNotice />

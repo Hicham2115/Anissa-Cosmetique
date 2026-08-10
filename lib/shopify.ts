@@ -1,4 +1,5 @@
 import "server-only";
+import { PACKS_CATEGORY, PACK_PRODUCT_HANDLES } from "@/lib/packs";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
@@ -77,6 +78,7 @@ const PRODUCTS_QUERY = /* GraphQL */ `
               currencyCode
             }
           }
+          availableForSale
           seo {
             title
             description
@@ -98,6 +100,7 @@ interface ShopifyProductNode {
   images: { edges: { node: { url: string; altText: string | null } }[] };
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   compareAtPriceRange: { maxVariantPrice: { amount: string; currencyCode: string } } | null;
+  availableForSale: boolean;
   seo: { title: string | null; description: string | null };
 }
 
@@ -153,10 +156,17 @@ const CATEGORY_TO_SHOPIFY_TAG: Record<string, string> = {
 };
 
 export async function fetchShopifyProducts(category?: string, first = 50) {
+  if (category === PACKS_CATEGORY) {
+    const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first: 250 });
+    return data.products.edges
+      .filter(({ node }) => node.availableForSale && PACK_PRODUCT_HANDLES.includes(node.handle))
+      .map(({ node }) => toProduct(node));
+  }
+
   const tag = category ? (CATEGORY_TO_SHOPIFY_TAG[category] ?? category) : undefined;
   const query = tag ? `tag:'${tag}'` : undefined;
   const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first, query });
-  return data.products.edges.map(({ node }) => toProduct(node));
+  return data.products.edges.filter(({ node }) => node.availableForSale).map(({ node }) => toProduct(node));
 }
 
 const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `

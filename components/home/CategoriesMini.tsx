@@ -13,26 +13,27 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import soinsImage from "@/app/assets/categories/antiage.png";
-import makiageImage from "@/app/assets/categories/eclat.png";
-import parfumImage from "@/app/assets/categories/nettoyant.png";
+import antiAgeImage from "@/app/assets/categorie3/red.png";
+import eclatImage from "@/app/assets/categorie3/zre9.png";
+import nettoyantImage from "@/app/assets/categorie3/green.png";
 
-const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
-  "Anti-Âge": soinsImage,
-  Éclat: makiageImage,
-  "Nettoyants & Exfoliants": parfumImage,
+const CATEGORY_IMAGES: Record<string, typeof antiAgeImage> = {
+  "Anti-Âge": antiAgeImage,
+  Éclat: eclatImage,
+  "Nettoyants & Exfoliants": nettoyantImage,
 };
 
+// TODO: replace with the real product handles for these 399 MAD packs.
 const CATEGORY_LINKS: Record<string, string> = {
-  "Anti-Âge": "/produits/pack-anti-age-acide-hyaluronique-fleur-de-kangourou",
-  Éclat: "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide",
-  "Nettoyants & Exfoliants": "/produits/pack-purifiant-anti-imperfections-niacinamide-acide-salicylique",
+  "Anti-Âge": "/boutique",
+  Éclat: "/boutique",
+  "Nettoyants & Exfoliants": "/boutique",
 };
 
 const CATEGORY_PRICES: Record<string, string> = {
-  "Anti-Âge": "649 MAD",
-  Éclat: "649 MAD",
-  "Nettoyants & Exfoliants": "649 MAD",
+  "Anti-Âge": "399 MAD",
+  Éclat: "399 MAD",
+  "Nettoyants & Exfoliants": "399 MAD",
 };
 
 async function fetchCategories() {
@@ -40,7 +41,7 @@ async function fetchCategories() {
   return categoryListSchema.parse(data).filter((c) => c.name !== "Packs");
 }
 
-export function Categories() {
+export function CategoriesMini() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: queryKeys.categories(),
     queryFn: fetchCategories,
@@ -69,9 +70,8 @@ export function Categories() {
 
   return (
     <div
-      id="categories"
       ref={scopeRef}
-      className="mx-auto grid max-w-[1320px] scroll-mt-24 gap-10 px-4 pt-16 pb-5 sm:px-6 sm:pt-24 md:grid-cols-[0.85fr_1.15fr] md:items-center"
+      className="mx-auto grid max-w-330 scroll-mt-24 gap-10 px-4 pt-16 pb-5 sm:px-6 sm:pt-24 md:grid-cols-[0.85fr_1.15fr] md:items-center"
     >
       <div>
         <div
@@ -86,7 +86,7 @@ export function Categories() {
         >
           Acheter par catégorie
           <span className="ml-3 align-middle text-sm font-normal text-black/40">
-            (packs de 4 produits)
+            (packs de 3 produits)
           </span>
         </h2>
 
@@ -140,7 +140,7 @@ export function Categories() {
                 {CATEGORY_PRICES[c.name] && (
                   <div className="flex flex-col items-end gap-0.5 text-xs text-black/50 transition-colors duration-300">
                     <span>{CATEGORY_PRICES[c.name]}</span>
-                    <span>4 produits</span>
+                    <span>3 produits</span>
                   </div>
                 )}
               </Link>

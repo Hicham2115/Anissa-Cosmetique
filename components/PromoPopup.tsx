@@ -41,8 +41,8 @@ function splitCountdown(ms: number) {
 function CountdownSegment({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <span className="font-serif text-xl font-semibold text-cream tabular-nums">{String(value).padStart(2, "0")}</span>
-      <span className="mt-0.5 text-[9px] tracking-[0.15em] text-cream/50 uppercase">{label}</span>
+      <span className="font-serif text-base font-semibold text-cream tabular-nums">{String(value).padStart(2, "0")}</span>
+      <span className="mt-0.5 text-[8px] tracking-[0.15em] text-cream/50 uppercase">{label}</span>
     </div>
   );
 }
@@ -121,11 +121,11 @@ export function PromoPopup() {
     <div
       ref={cardRef}
       role="status"
-      className="fixed bottom-5 left-5 z-50 w-[calc(100%-2.5rem)] max-w-[380px] rounded-3xl bg-ink p-6 text-cream shadow-[0_24px_48px_rgba(0,0,0,0.35)]"
+      className="fixed bottom-5 left-5 z-50 w-[calc(100%-2.5rem)] max-w-75 rounded-2xl bg-ink p-4 text-cream shadow-[0_24px_48px_rgba(0,0,0,0.35)]"
     >
-      <div className="flex items-center justify-between border-b border-cream/15 pb-4">
-        <div className="flex items-center gap-2 text-xs font-semibold tracking-[0.2em] text-gold uppercase">
-          <Tag className="h-4 w-4" aria-hidden="true" />
+      <div className="flex items-center justify-between border-b border-cream/15 pb-3">
+        <div className="flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.2em] text-gold uppercase">
+          <Tag className="h-3.5 w-3.5" aria-hidden="true" />
           Offre de Lancement
         </div>
         <button
@@ -134,18 +134,18 @@ export function PromoPopup() {
           onClick={close}
           className="cursor-pointer text-cream/40 transition-colors duration-200 hover:text-cream"
         >
-          <X className="h-4 w-4" aria-hidden="true" />
+          <X className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
       </div>
 
-      <div className="mt-5">
-        <div className="text-xs font-semibold tracking-[0.15em] text-cream/50 uppercase">{PROMO_SAVINGS}</div>
-        <h3 className="mt-2 font-serif text-2xl leading-snug font-semibold">L&rsquo;offre se termine dans</h3>
+      <div className="mt-3">
+        <div className="text-[11px] font-semibold tracking-[0.15em] text-cream/50 uppercase">{PROMO_SAVINGS}</div>
+        <h3 className="mt-1 font-serif text-lg leading-snug font-semibold">L&rsquo;offre se termine dans</h3>
       </div>
 
       {countdown && (
-        <div className="mt-5 flex items-center gap-3 rounded-2xl bg-cream/10 px-4 py-3.5">
-          <Clock className="h-4 w-4 shrink-0 text-cream/50" aria-hidden="true" />
+        <div className="mt-3 flex items-center gap-2 rounded-xl bg-cream/10 px-3 py-2.5">
+          <Clock className="h-3.5 w-3.5 shrink-0 text-cream/50" aria-hidden="true" />
           <div className="flex flex-1 items-center justify-between">
             <CountdownSegment value={countdown.days} label="Jours" />
             <span className="text-cream/30">:</span>
@@ -158,7 +158,7 @@ export function PromoPopup() {
         </div>
       )}
 
-      <div className="mt-5 grid grid-cols-2 gap-x-3 gap-y-2.5 text-xs text-cream/70">
+      <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1.5 text-[11px] text-cream/70">
         <div className="flex items-center gap-1.5">
           <Check className="h-3 w-3 shrink-0 text-gold" aria-hidden="true" />
           {PROMO_PRICE_FROM}
@@ -174,16 +174,16 @@ export function PromoPopup() {
       <Link
         href={`/produits/${PROMO_PRODUCT_HANDLE}`}
         onClick={close}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-cream py-3.5 text-sm font-semibold text-ink transition-all duration-200 hover:scale-[1.02] hover:bg-white"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-cream py-2.5 text-xs font-semibold text-ink transition-all duration-200 hover:scale-[1.02] hover:bg-white"
       >
         Commander maintenant
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </Link>
 
       <button
         type="button"
         onClick={minimize}
-        className="mt-4 w-full cursor-pointer text-center text-[11px] tracking-[0.2em] text-cream/40 uppercase transition-colors duration-200 hover:text-cream/70"
+        className="mt-2 w-full cursor-pointer text-center text-[10px] tracking-[0.2em] text-cream/40 uppercase transition-colors duration-200 hover:text-cream/70"
       >
         Réduire
       </button>
