@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -49,6 +49,11 @@ export function CategoriesMini() {
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
   const imageRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [supportsHover, setSupportsHover] = useState(true);
+
+  useEffect(() => {
+    setSupportsHover(window.matchMedia("(hover: hover)").matches);
+  }, []);
 
   const currentCategory = activeCategory ?? data?.[0]?.name ?? null;
 
@@ -116,34 +121,48 @@ export function CategoriesMini() {
         {data && (
           <>
             {data.map((c) => (
-              <Link
-                key={c.num}
-                href={CATEGORY_LINKS[c.name] ?? "/boutique"}
-                data-reveal
-                onMouseEnter={() => setActiveCategory(c.name)}
-                className={`group flex cursor-pointer items-center justify-between border-t border-black/10 py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-black ${
-                  currentCategory === c.name ? "translate-x-2 border-black" : ""
-                }`}
-              >
-                <div className="flex items-baseline gap-4.5">
-                  <span className="text-xs text-black/40 transition-colors duration-300">
-                    {c.num}
-                  </span>
-                  <span
-                    className={`font-serif text-xl text-black transition-all duration-300 group-hover:font-semibold sm:text-[22px] ${
-                      currentCategory === c.name ? "font-semibold" : ""
-                    }`}
-                  >
-                    {c.name}
-                  </span>
-                </div>
-                {CATEGORY_PRICES[c.name] && (
-                  <div className="flex flex-col items-end gap-0.5 text-xs text-black/50 transition-colors duration-300">
-                    <span>{CATEGORY_PRICES[c.name]}</span>
-                    <span>3 produits</span>
+              <div key={c.num} data-reveal>
+                <Link
+                  href={CATEGORY_LINKS[c.name] ?? "/boutique"}
+                  onMouseEnter={() => setActiveCategory(c.name)}
+                  onClick={(e) => {
+                    if (!supportsHover) {
+                      e.preventDefault();
+                      setActiveCategory(c.name);
+                    }
+                  }}
+                  className={`group flex cursor-pointer items-center justify-between border-t border-black/10 py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-black ${
+                    currentCategory === c.name ? "translate-x-2 border-black" : ""
+                  }`}
+                >
+                  <div className="flex items-baseline gap-4.5">
+                    <span className="text-xs text-black/40 transition-colors duration-300">
+                      {c.num}
+                    </span>
+                    <span
+                      className={`font-serif text-xl text-black transition-all duration-300 group-hover:font-semibold sm:text-[22px] ${
+                        currentCategory === c.name ? "font-semibold" : ""
+                      }`}
+                    >
+                      {c.name}
+                    </span>
                   </div>
+                  {CATEGORY_PRICES[c.name] && (
+                    <div className="flex flex-col items-end gap-0.5 text-xs text-black/50 transition-colors duration-300">
+                      <span>{CATEGORY_PRICES[c.name]}</span>
+                      <span>3 produits</span>
+                    </div>
+                  )}
+                </Link>
+                {!supportsHover && currentCategory === c.name && (
+                  <Link
+                    href={CATEGORY_LINKS[c.name] ?? "/boutique"}
+                    className="block pb-4 text-xs tracking-wide text-black/60 underline underline-offset-2"
+                  >
+                    Voir le produit →
+                  </Link>
                 )}
-              </Link>
+              </div>
             ))}
             <div className="border-t border-black/10" />
           </>
