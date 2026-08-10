@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Bubbles, Droplet, Gift, Leaf, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import nettoyantImage from "@/app/assets/categories/nettoyant.webp";
+import nettoyantImage from "@/app/assets/categories/nettoyant.png";
 import nettoyant2Image from "@/app/assets/nottoyant2.png";
 
 const CLEANSER_FEATURES = [

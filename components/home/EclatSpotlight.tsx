@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Droplet, Gift, Leaf, Shield, Sparkles, Waves } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import eclatImage from "@/app/assets/categories/eclat.webp";
+import eclatImage from "@/app/assets/categories/eclat.png";
 import eclat2Image from "@/app/assets/eclat2.png";
 
 const ECLAT_FEATURES = [

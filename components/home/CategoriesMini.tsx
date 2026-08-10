@@ -23,11 +23,10 @@ const CATEGORY_IMAGES: Record<string, typeof antiAgeImage> = {
   "Nettoyants & Exfoliants": nettoyantImage,
 };
 
-// TODO: replace with the real product handles for these 399 MAD packs.
 const CATEGORY_LINKS: Record<string, string> = {
-  "Anti-Âge": "/boutique",
-  Éclat: "/boutique",
-  "Nettoyants & Exfoliants": "/boutique",
+  "Anti-Âge": "/produits/pack-anti-age-acide-hyaluronique-extrait-de-fleur-de-kangourou",
+  Éclat: "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide-1",
+  "Nettoyants & Exfoliants": "/produits/pack-eclat-amp-eclaircissant-vitamine-c-amp-niacinamide",
 };
 
 const CATEGORY_PRICES: Record<string, string> = {
@@ -38,13 +37,14 @@ const CATEGORY_PRICES: Record<string, string> = {
 
 async function fetchCategories() {
   const { data } = await api.get("/categories");
-  return categoryListSchema.parse(data).filter((c) => c.name !== "Packs");
+  return categoryListSchema.parse(data);
 }
 
 export function CategoriesMini() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: queryKeys.categories(),
     queryFn: fetchCategories,
+    select: (categories) => categories.filter((c) => c.name !== "Packs"),
   });
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
   const imageRef = useRef<HTMLDivElement>(null);

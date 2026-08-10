@@ -37,13 +37,14 @@ const CATEGORY_PRICES: Record<string, string> = {
 
 async function fetchCategories() {
   const { data } = await api.get("/categories");
-  return categoryListSchema.parse(data).filter((c) => c.name !== "Packs");
+  return categoryListSchema.parse(data);
 }
 
 export function Categories() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: queryKeys.categories(),
     queryFn: fetchCategories,
+    select: (categories) => categories.filter((c) => c.name !== "Packs"),
   });
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
   const imageRef = useRef<HTMLDivElement>(null);

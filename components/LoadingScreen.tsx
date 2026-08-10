@@ -8,13 +8,16 @@ import logo from "@/app/assets/logo.png";
 import { useUiStore } from "@/store/uiStore";
 
 export function LoadingScreen() {
-  const [mounted, setMounted] = useState(true);
+  const alreadyLoaded = useRef(!useUiStore.getState().isLoading).current;
+  const [mounted, setMounted] = useState(!alreadyLoaded);
   const el = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(() => {
+    if (alreadyLoaded) return;
+
     const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
     tl.set(glowRef.current, { opacity: 0, scale: 0.6 })
