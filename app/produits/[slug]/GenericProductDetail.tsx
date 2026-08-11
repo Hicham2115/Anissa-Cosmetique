@@ -687,10 +687,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             className="mt-14 grid gap-10 border-t border-border-sand pt-14 md:grid-cols-[1fr_480px] md:gap-14"
           >
             <div>
-              <div className="mb-3 text-xs tracking-[0.2em] text-brown uppercase">
+              <div className="mb-3 text-xs font-semibold tracking-[0.2em] text-brown uppercase">
                 À savoir
               </div>
-              <h2 className="mb-8 font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
+              <h2 className="mb-8 font-serif text-4xl leading-[1.05] font-semibold text-ink sm:text-5xl">
                 Infos pratiques
               </h2>
               <div className="flex flex-col divide-y divide-border-sand">
@@ -703,7 +703,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                       className="absolute top-7 left-0 h-4 w-0.5 rounded-full bg-gold transition-all duration-300 ease-out group-hover:top-0.5 group-hover:h-[calc(100%-0.25rem)]"
                       aria-hidden="true"
                     />
-                    <div className="font-serif text-2xl leading-none text-gold/60 italic tabular-nums transition-colors duration-300 group-hover:text-brown">
+                    <div className="font-serif text-2xl leading-none font-medium text-gold/60 italic tabular-nums transition-colors duration-300 group-hover:text-brown">
                       {String(i + 1).padStart(2, "0")}
                     </div>
                     <div className="flex-1">
@@ -713,7 +713,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                           strokeWidth={1.5}
                           aria-hidden="true"
                         />
-                        <h3 className="font-serif text-xl text-ink transition-colors duration-300 group-hover:text-brown">
+                        <h3 className="font-serif text-xl font-semibold tracking-tight text-ink transition-colors duration-300 group-hover:text-brown">
                           {title}
                         </h3>
                       </div>
@@ -721,7 +721,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                         {items.map((item) => (
                           <li
                             key={item}
-                            className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a] transition-colors duration-300 group-hover:text-ink"
+                            className="flex items-start gap-2.5 text-sm leading-relaxed font-normal text-[#5c534a] transition-colors duration-300 group-hover:text-ink"
                           >
                             <Check
                               className="mt-1 h-3 w-3 shrink-0 text-gold transition-colors duration-300 group-hover:text-brown"
@@ -1035,7 +1035,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </dl>
           </details>
 
-          <div className="mb-1 text-xs tracking-[0.2em] text-brown uppercase">
+          <div className="mb-1 text-xs font-semibold tracking-[0.2em] text-brown uppercase">
             Infos pratiques
           </div>
           <div className="flex flex-col">
@@ -1046,7 +1046,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-0.5 transition-colors duration-200 active:text-brown">
                   <span className="flex items-center gap-3">
-                    <span className="font-serif text-lg leading-none text-gold/60 italic tabular-nums transition-colors duration-200 group-open:text-brown">
+                    <span className="font-serif text-lg leading-none font-medium text-gold/60 italic tabular-nums transition-colors duration-200 group-open:text-brown">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="flex items-center gap-2">
