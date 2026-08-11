@@ -122,7 +122,7 @@ export function CategoriesMini() {
             ))}
           </div>
         )}
-
+ 
         {data && (
           <>
             {data.map((c) => (
