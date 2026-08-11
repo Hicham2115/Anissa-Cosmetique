@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -51,11 +51,6 @@ export function CategoriesMini() {
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
   const imageRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [supportsHover, setSupportsHover] = useState(true);
-
-  useEffect(() => {
-    setSupportsHover(window.matchMedia("(hover: hover)").matches);
-  }, []);
 
   const currentCategory = activeCategory ?? data?.[0]?.name ?? null;
 
@@ -127,12 +122,6 @@ export function CategoriesMini() {
                 <Link
                   href={CATEGORY_LINKS[c.name] ?? "/boutique"}
                   onMouseEnter={() => setActiveCategory(c.name)}
-                  onClick={(e) => {
-                    if (!supportsHover) {
-                      e.preventDefault();
-                      setActiveCategory(c.name);
-                    }
-                  }}
                   className={`group flex cursor-pointer items-center justify-between border-t border-black/10 py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-black ${
                     currentCategory === c.name
                       ? "translate-x-2 border-black"
@@ -158,14 +147,6 @@ export function CategoriesMini() {
                     </div>
                   )}
                 </Link>
-                {!supportsHover && currentCategory === c.name && (
-                  <Link
-                    href={CATEGORY_LINKS[c.name] ?? "/boutique"}
-                    className="block pb-4 text-xs tracking-wide text-black/60 underline underline-offset-2"
-                  >
-                    Voir le produit →
-                  </Link>
-                )}
               </div>
             ))}
             <div className="border-t border-black/10" />

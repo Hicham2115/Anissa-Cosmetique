@@ -7,6 +7,8 @@ const CATEGORIES: Category[] = [
   { num: "02", name: "Éclat", count: 5 },
   { num: "03", name: "Nettoyants & Exfoliants", count: 5 },
   { num: "04", name: PACKS_CATEGORY, count: PACK_PRODUCT_HANDLES.length },
+  { num: "05", name: "Aloe Vera", count: 2 },
+  { num: "06", name: "Corps & Soleil", count: 2 },
 ];
 
 export async function GET() {
