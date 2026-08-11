@@ -772,30 +772,6 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
         </div>
 
-        {(!allProducts || relatedProducts.length > 0) && (
-          <div
-            ref={relatedRef}
-            className="mx-auto max-w-[1320px] px-4 pb-20 sm:px-6"
-          >
-            <div
-              data-reveal
-              className="mb-9 text-xs tracking-[0.2em] text-brown uppercase"
-            >
-              {isPack ? "Les produits de ce pack" : "Vous aimerez aussi"}
-            </div>
-            <div className="grid grid-cols-2 gap-4 sm:gap-5.5 lg:grid-cols-4">
-              {!allProducts
-                ? Array.from({ length: 4 }).map((_, i) => (
-                    <ProductCardSkeleton key={i} />
-                  ))
-                : relatedProducts.map((p) => (
-                    <div key={p.id} data-reveal>
-                      <ProductCard product={p} />
-                    </div>
-                  ))}
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="md:hidden">
@@ -1105,31 +1081,57 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           ))}
         </div>
 
-        {(!allProducts || relatedProducts.length > 0) && (
-          <div className="border-t border-border-sand px-4 py-6 pb-8">
-            <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">
-              {isPack ? "Les produits de ce pack" : "Vous aimerez aussi"}
-            </div>
-            <div className="flex gap-3.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {!allProducts
-                ? Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="w-36 shrink-0">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
-                : relatedProducts.map((p) => (
-                    <div key={p.id} className="w-36 shrink-0">
-                      <ProductCard product={p} />
-                    </div>
-                  ))}
-            </div>
-          </div>
-        )}
       </div>
 
       <VideoTestimonials />
 
       <Testimonials />
+
+      {(!allProducts || relatedProducts.length > 0) && (
+        <div
+          ref={relatedRef}
+          className="hidden md:block mx-auto max-w-[1320px] px-4 pb-20 sm:px-6"
+        >
+          <div
+            data-reveal
+            className="mb-9 text-xs tracking-[0.2em] text-brown uppercase"
+          >
+            {isPack ? "Les produits de ce pack" : "Vous aimerez aussi"}
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:gap-5.5 lg:grid-cols-4">
+            {!allProducts
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))
+              : relatedProducts.map((p) => (
+                  <div key={p.id} data-reveal>
+                    <ProductCard product={p} />
+                  </div>
+                ))}
+          </div>
+        </div>
+      )}
+
+      {(!allProducts || relatedProducts.length > 0) && (
+        <div className="md:hidden border-t border-border-sand px-4 py-6 pb-8">
+          <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">
+            {isPack ? "Les produits de ce pack" : "Vous aimerez aussi"}
+          </div>
+          <div className="flex gap-3.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {!allProducts
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="w-36 shrink-0">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
+              : relatedProducts.map((p) => (
+                  <div key={p.id} className="w-36 shrink-0">
+                    <ProductCard product={p} />
+                  </div>
+                ))}
+          </div>
+        </div>
+      )}
 
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border-sand bg-cream px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] md:hidden">
         <div className="min-w-0">
