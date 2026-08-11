@@ -95,6 +95,63 @@ export function buildContactEmailText({ name, email, message }: ContactInput): s
   return `Nouveau message de contact\n\nDe: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
 }
 
+// Inline-styled, table-based layout — same rendering constraints as buildContactEmailHtml.
+export function buildNewsletterEmailHtml(email: string): string {
+  const receivedAt = new Date().toLocaleString("fr-FR", {
+    dateStyle: "long",
+    timeStyle: "short",
+    timeZone: "Africa/Casablanca",
+  });
+
+  return `<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nouvelle inscription newsletter</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#efe8dc; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#efe8dc; padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; width:100%; background-color:#faf7f2; border-radius:12px; overflow:hidden; box-shadow:0 2px 20px rgba(42,36,32,0.08);">
+            <!-- Header -->
+            <tr>
+              <td style="background-color:#2a2420; padding:32px 40px; text-align:center;">
+                <p style="margin:0; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#c9a86a;">Anissa Cosmetics</p>
+                <h1 style="margin:8px 0 0; font-size:22px; font-weight:700; color:#faf7f2;">Nouvelle inscription newsletter</h1>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:36px 40px;">
+                <p style="margin:0 0 4px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#7e5836;">Email</p>
+                <p style="margin:0; font-size:16px;">
+                  <a href="mailto:${escapeHtml(email)}" style="color:#2a2420; text-decoration:none; font-weight:600;">${escapeHtml(email)}</a>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:20px 40px; background-color:#f4efe5; border-top:1px solid #e4d9c7; text-align:center;">
+                <p style="margin:0; font-size:12px; color:#7e5836;">Reçu le ${receivedAt} via le formulaire newsletter du site</p>
+                <p style="margin:6px 0 0; font-size:12px; color:#a89a85;">Anissa Cosmetics · Casablanca, Maroc</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+export function buildNewsletterEmailText(email: string): string {
+  return `Nouvelle inscription newsletter\n\nEmail: ${email}`;
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
