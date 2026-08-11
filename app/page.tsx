@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { LoadingScreen } from "@/components/LoadingScreen";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { Hero } from "@/components/home/Hero";
 import { Categories } from "@/components/home/Categories";
@@ -42,7 +41,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <ErrorBoundary>
-      <LoadingScreen />
       <SiteHeader />
       <main>
         <Hero />

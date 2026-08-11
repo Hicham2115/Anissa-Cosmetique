@@ -6,7 +6,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ArrowRight, Droplet, Heart, Leaf } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useUiStore } from "@/store/uiStore";
 
 const MARQUEE = [
   "Formules Propres",
@@ -23,7 +22,6 @@ const FEATURES = [
 
 export function Hero() {
   const loop = [...MARQUEE, ...MARQUEE];
-  const isLoading = useUiStore((s) => s.isLoading);
 
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
@@ -34,47 +32,42 @@ export function Hero() {
   const imageRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      if (isLoading) return;
+  useGSAP(() => {
+    const textEls = [
+      eyebrowRef.current,
+      line1Ref.current,
+      line2Ref.current,
+      paragraphRef.current,
+      ctaRef.current,
+      featuresRef.current,
+    ];
 
-      const textEls = [
-        eyebrowRef.current,
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    tl.set(imageRef.current, { opacity: 0, scale: 1.06 })
+      .set(textEls, { opacity: 0, y: 20 })
+      .set(marqueeRef.current, { opacity: 0, y: 12 })
+      .to(
+        imageRef.current,
+        { opacity: 1, scale: 1, duration: 1.3, ease: "power2.out" },
+        0,
+      )
+      .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.1)
+      .to(
         line1Ref.current,
+        { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
+        0.25,
+      )
+      .to(
         line2Ref.current,
-        paragraphRef.current,
-        ctaRef.current,
-        featuresRef.current,
-      ];
-
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      tl.set(imageRef.current, { opacity: 0, scale: 1.06 })
-        .set(textEls, { opacity: 0, y: 20 })
-        .set(marqueeRef.current, { opacity: 0, y: 12 })
-        .to(
-          imageRef.current,
-          { opacity: 1, scale: 1, duration: 1.3, ease: "power2.out" },
-          0,
-        )
-        .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.1)
-        .to(
-          line1Ref.current,
-          { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
-          0.25,
-        )
-        .to(
-          line2Ref.current,
-          { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
-          0.4,
-        )
-        .to(paragraphRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.6)
-        .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.75)
-        .to(featuresRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.9)
-        .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.0);
-    },
-    { dependencies: [isLoading] },
-  );
+        { opacity: 1, y: 0, duration: 0.85, ease: "power4.out" },
+        0.4,
+      )
+      .to(paragraphRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.6)
+      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.75)
+      .to(featuresRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.9)
+      .to(marqueeRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.0);
+  });
 
   return (
     <div className="relative overflow-hidden bg-black">
@@ -85,7 +78,8 @@ export function Hero() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
+            poster="/hero-poster.jpg"
             src="/hero.mp4"
             className="h-full w-full object-cover object-top sm:object-[85%_center] md:object-[75%_center] lg:object-[62%_center]"
           />
