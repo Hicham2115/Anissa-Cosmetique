@@ -56,7 +56,10 @@ export const codOrderSchema = z.object({
     .trim()
     .min(1, "Le numéro de téléphone est requis")
     .transform((val) => val.replace(/[\s.-]/g, ""))
-    .refine((val) => /^\+?[0-9]{8,15}$/.test(val), "Saisissez un numéro de téléphone valide"),
+    .refine(
+      (val) => /^(?:\+212|0)[5-7][0-9]{8}$/.test(val),
+      "Saisissez un numéro de téléphone marocain valide (ex : 06 12 34 56 78)",
+    ),
   address: z
     .string()
     .trim()
