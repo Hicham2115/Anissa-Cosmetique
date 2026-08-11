@@ -216,8 +216,6 @@ const INFO_CARDS = [
   {
     icon: Truck,
     title: "Livraison",
-    accent: "border-l-brown",
-    iconBg: "bg-brown/10 text-brown",
     items: [
       "Livraison 24–48h partout au Maroc.",
       "Suivi de commande par SMS et email.",
@@ -226,8 +224,6 @@ const INFO_CARDS = [
   {
     icon: Undo2,
     title: "Garantie & Retours",
-    accent: "border-l-gold",
-    iconBg: "bg-gold/15 text-brown",
     items: [
       "Satisfait ou remboursé sous 14 jours.",
       "Retours gratuits, sans justificatif.",
@@ -237,8 +233,6 @@ const INFO_CARDS = [
   {
     icon: ShieldCheck,
     title: "Paiement",
-    accent: "border-l-ink",
-    iconBg: "bg-ink/10 text-ink",
     items: [
       "Paiement à la livraison disponible.",
       "Paiement par carte 100% sécurisé.",
@@ -699,35 +693,39 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               <h2 className="mb-8 font-serif text-4xl leading-[1.05] text-ink sm:text-5xl">
                 Infos pratiques
               </h2>
-              <div className="flex flex-col gap-6">
-                {INFO_CARDS.map(
-                  ({ icon: Icon, title, accent, iconBg, items }) => (
-                    <div
-                      key={title}
-                      className={`rounded-2xl border border-border-sand border-l-4 ${accent} bg-white p-6`}
-                    >
-                      <div className="mb-5 flex items-center gap-3 border-b border-border-sand pb-4">
-                        <div
-                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBg}`}
-                        >
-                          <Icon
-                            className="h-4 w-4"
-                            strokeWidth={1.75}
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <h3 className="text-sm font-semibold text-ink">
+              <div className="flex flex-col divide-y divide-border-sand">
+                {INFO_CARDS.map(({ icon: Icon, title, items }, i) => (
+                  <div
+                    key={title}
+                    className="group relative flex gap-6 py-7 pr-2 pl-5 -ml-5 first:pt-0 last:pb-0"
+                  >
+                    <span
+                      className="absolute top-7 left-0 h-4 w-0.5 rounded-full bg-gold transition-all duration-300 ease-out group-hover:top-0.5 group-hover:h-[calc(100%-0.25rem)]"
+                      aria-hidden="true"
+                    />
+                    <div className="font-serif text-2xl leading-none text-gold/60 italic tabular-nums transition-colors duration-300 group-hover:text-brown">
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <div className="flex-1">
+                      <div className="mb-3 flex items-center gap-2.5">
+                        <Icon
+                          className="h-4 w-4 shrink-0 text-brown transition-transform duration-300 group-hover:scale-110"
+                          strokeWidth={1.5}
+                          aria-hidden="true"
+                        />
+                        <h3 className="font-serif text-xl text-ink transition-colors duration-300 group-hover:text-brown">
                           {title}
                         </h3>
                       </div>
-                      <ul className="flex flex-col gap-3">
+                      <ul className="flex flex-col gap-2">
                         {items.map((item) => (
                           <li
                             key={item}
-                            className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a]"
+                            className="flex items-start gap-2.5 text-sm leading-relaxed text-[#5c534a] transition-colors duration-300 group-hover:text-ink"
                           >
                             <Check
-                              className="mt-0.5 h-4 w-4 shrink-0 text-brown"
+                              className="mt-1 h-3 w-3 shrink-0 text-gold transition-colors duration-300 group-hover:text-brown"
+                              strokeWidth={2.25}
                               aria-hidden="true"
                             />
                             {item}
@@ -735,8 +733,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                         ))}
                       </ul>
                     </div>
-                  ),
-                )}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -1014,10 +1012,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         )}
 
         <div className="border-t border-border-sand px-4 py-6">
-          <details
-            className="group border-b border-border-sand py-4 first:pt-0"
-            open
-          >
+          <details className="group py-4 first:pt-0" open>
             <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-ink">
               Fiche technique
               <ChevronDown
@@ -1025,7 +1020,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 aria-hidden="true"
               />
             </summary>
-            <dl className="mt-3 flex flex-col gap-3">
+            <dl className="mt-3 flex flex-col gap-3 border-t border-border-sand pt-3">
               {SPECS.map(({ label, value }) => (
                 <div
                   key={label}
@@ -1040,45 +1035,54 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </dl>
           </details>
 
-          {INFO_CARDS.map(({ icon: Icon, title, iconBg, items }) => (
-            <details
-              key={title}
-              className="group border-b border-border-sand py-4 last:border-b-0"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-ink">
-                <span className="flex items-center gap-2.5">
-                  <span
-                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${iconBg}`}
-                  >
-                    <Icon
-                      className="h-3.5 w-3.5"
-                      strokeWidth={1.75}
-                      aria-hidden="true"
-                    />
+          <div className="mb-1 text-xs tracking-[0.2em] text-brown uppercase">
+            Infos pratiques
+          </div>
+          <div className="flex flex-col">
+            {INFO_CARDS.map(({ icon: Icon, title, items }, i) => (
+              <details
+                key={title}
+                className="group border-b border-border-sand py-4 last:border-b-0"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-0.5 transition-colors duration-200 active:text-brown">
+                  <span className="flex items-center gap-3">
+                    <span className="font-serif text-lg leading-none text-gold/60 italic tabular-nums transition-colors duration-200 group-open:text-brown">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Icon
+                        className="h-3.5 w-3.5 text-brown"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                      />
+                      <span className="text-sm font-semibold tracking-tight text-ink">
+                        {title}
+                      </span>
+                    </span>
                   </span>
-                  {title}
-                </span>
-                <ChevronDown
-                  className="h-4 w-4 shrink-0 text-brown transition-transform duration-200 group-open:rotate-180"
-                  aria-hidden="true"
-                />
-              </summary>
-              <ul className="mt-3 flex flex-col gap-2.5 pl-9.5">
-                {items.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2 text-[13px] leading-relaxed text-[#5c534a]"
-                  >
-                    <Check
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brown"
-                      aria-hidden="true"
-                    />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </details>
-          ))}
+                  <ChevronDown
+                    className="h-4 w-4 shrink-0 text-brown transition-transform duration-200 group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <ul className="mt-3 flex flex-col gap-2 pl-9">
+                  {items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 text-[13px] leading-relaxed text-[#5c534a]"
+                    >
+                      <Check
+                        className="mt-0.5 h-3 w-3 shrink-0 text-gold"
+                        strokeWidth={2.25}
+                        aria-hidden="true"
+                      />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))}
+          </div>
         </div>
 
       </div>
