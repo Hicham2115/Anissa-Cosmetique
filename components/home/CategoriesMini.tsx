@@ -121,8 +121,8 @@ export function CategoriesMini() {
               </div>
             ))}
           </div>
-        )}.  
- 
+        )}
+
         {data && (
           <>
             {data.map((c) => (
