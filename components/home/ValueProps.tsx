@@ -88,8 +88,8 @@ export function ValueProps() {
                   data-reveal
                   className="text-[15px] leading-relaxed text-[#5c534a]"
                 >
-                  Anissa est née de la vision d&rsquo;un couple maroco-belge —
-                  une conseillère dermatologique et un chimiste — revenus au
+                  Anissa est née de la vision d&rsquo;un couple maroco-belge 
+                  une conseillère dermatologique et un chimiste revenus au
                   Maroc avec une ambition commune : mettre leur savoir
                   scientifique au service de la nature.
                 </p>
@@ -98,8 +98,8 @@ export function ValueProps() {
                   className="mt-2 text-[15px] leading-relaxed text-[#5c534a]"
                 >
                   Anissa Cosmetics, c&rsquo;est la rencontre entre nature et
-                  innovation pour une jeunesse sans âge : trois routines —
-                  anti-âge, éclat et anti-imperfections — formulées avec rigueur
+                  innovation pour une jeunesse sans âge : trois routines
+                  anti-âge, éclat et anti-imperfections formulées avec rigueur
                   et fabriquées selon la norme ISO 22716.
                 </p>
               </div>
