@@ -46,7 +46,10 @@ export function CategoriesMini() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: queryKeys.categories(),
     queryFn: fetchCategories,
-    select: (categories) => categories.filter((c) => c.name !== "Packs"),
+    select: (categories) =>
+      categories.filter(
+        (c) => !["Packs", "Aloe Vera", "Corps & Soleil"].includes(c.name),
+      ),
   });
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
   const imageRef = useRef<HTMLDivElement>(null);
