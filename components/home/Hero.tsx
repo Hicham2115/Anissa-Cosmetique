@@ -15,8 +15,16 @@ const MARQUEE = [
 ];
 
 const FEATURES = [
-  { icon: Leaf, title: "Formules Propres", subtitle: "Ingrédients doux & sûrs" },
-  { icon: Droplet, title: "Efficacité Prouvée", subtitle: "Résultats visibles" },
+  {
+    icon: Leaf,
+    title: "Formules Propres",
+    subtitle: "Ingrédients doux & sûrs",
+  },
+  {
+    icon: Droplet,
+    title: "Efficacité Prouvée",
+    subtitle: "Résultats visibles",
+  },
   { icon: Heart, title: "Conçu avec Amour", subtitle: "Pour toutes les peaux" },
 ];
 
@@ -125,7 +133,7 @@ export function Hero() {
                 />
               </Link>
               <a
-                href="/boutique"
+                href="#value-props"
                 className="inline-flex cursor-pointer items-center border border-white/50 px-8 py-4 text-sm tracking-wider text-white uppercase transition-all duration-500 ease-in-out hover:border-white active:scale-95"
               >
                 En savoir plus

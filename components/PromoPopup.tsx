@@ -7,10 +7,15 @@ import gsap from "gsap";
 import { Tag, Clock, Check, ArrowRight, X } from "lucide-react";
 
 const PROMO_PRODUCT_HANDLE = "pack-eclaircissant";
-const PROMO_SAVINGS = "-299 MAD";
-const PROMO_PRICE_FROM = "À partir de 399 DH";
+const PROMO_SAVINGS = "-199 MAD";
+const PROMO_PRICE_FROM = "À partir de 219 DH";
 
-const FEATURES = ["Certifié ISO 22716", "100% Naturel", "Livraison Offerte", "Non Testé sur Animaux"];
+const FEATURES = [
+  "Certifié ISO 22716",
+  "100% Naturel",
+  "Livraison Offerte",
+  "Non Testé sur Animaux",
+];
 
 const FIRST_DELAY = 9000;
 const MAX_DISMISSALS = 2;
@@ -41,8 +46,12 @@ function splitCountdown(ms: number) {
 function CountdownSegment({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <span className="font-serif text-sm font-semibold text-cream tabular-nums sm:text-base">{String(value).padStart(2, "0")}</span>
-      <span className="mt-0.5 text-[7px] tracking-[0.15em] text-cream/50 uppercase sm:text-[8px]">{label}</span>
+      <span className="font-serif text-sm font-semibold text-cream tabular-nums sm:text-base">
+        {String(value).padStart(2, "0")}
+      </span>
+      <span className="mt-0.5 text-[7px] tracking-[0.15em] text-cream/50 uppercase sm:text-[8px]">
+        {label}
+      </span>
     </div>
   );
 }
@@ -78,17 +87,26 @@ export function PromoPopup() {
           gsap.fromTo(
             cardRef.current,
             { opacity: 0, y: 24, scale: 0.96 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }
+            { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" },
           );
         } else {
-          gsap.to(cardRef.current, { opacity: 0, y: 16, duration: 0.3, ease: "power2.in" });
+          gsap.to(cardRef.current, {
+            opacity: 0,
+            y: 16,
+            duration: 0.3,
+            ease: "power2.in",
+          });
         }
       }
       if (pillRef.current && state === "minimized") {
-        gsap.fromTo(pillRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" });
+        gsap.fromTo(
+          pillRef.current,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+        );
       }
     },
-    { dependencies: [state] }
+    { dependencies: [state] },
   );
 
   const minimize = () => setState("minimized");
@@ -139,13 +157,20 @@ export function PromoPopup() {
       </div>
 
       <div className="mt-2 sm:mt-3">
-        <div className="text-[10px] font-semibold tracking-[0.15em] text-cream/50 uppercase sm:text-[11px]">{PROMO_SAVINGS}</div>
-        <h3 className="mt-1 font-serif text-base leading-snug font-semibold sm:text-lg">L&rsquo;offre se termine dans</h3>
+        <div className="text-[10px] font-semibold tracking-[0.15em] text-cream/50 uppercase sm:text-[11px]">
+          {PROMO_SAVINGS}
+        </div>
+        <h3 className="mt-1 font-serif text-base leading-snug font-semibold sm:text-lg">
+          L&rsquo;offre se termine dans
+        </h3>
       </div>
 
       {countdown && (
         <div className="mt-2 flex items-center gap-2 rounded-xl bg-cream/10 px-2.5 py-2 sm:mt-3 sm:px-3 sm:py-2.5">
-          <Clock className="h-3 w-3 shrink-0 text-cream/50 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
+          <Clock
+            className="h-3 w-3 shrink-0 text-cream/50 sm:h-3.5 sm:w-3.5"
+            aria-hidden="true"
+          />
           <div className="flex flex-1 items-center justify-between">
             <CountdownSegment value={countdown.days} label="Jours" />
             <span className="text-cream/30">:</span>
@@ -172,7 +197,7 @@ export function PromoPopup() {
       </div>
 
       <Link
-        href={`/produits`}
+        href={`/boutique`}
         onClick={close}
         className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-cream py-2 text-xs font-semibold text-ink transition-all duration-200 hover:scale-[1.02] hover:bg-white sm:mt-3 sm:py-2.5"
       >
