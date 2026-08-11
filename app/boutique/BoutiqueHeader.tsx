@@ -9,9 +9,10 @@ export function BoutiqueHeader() {
     <div ref={scopeRef} className="mb-12">
       <div
         data-reveal
-        className="mb-5 text-xs tracking-[0.2em] text-brown uppercase"
+        className="mb-5 flex items-center gap-3 text-xs tracking-[0.25em] text-brown uppercase"
       >
         Boutique
+        <span className="h-px w-8 bg-gold/50" aria-hidden="true" />
       </div>
       <h1
         data-reveal
@@ -19,7 +20,10 @@ export function BoutiqueHeader() {
       >
         Toute la <span className="text-brown italic">Collection</span>
       </h1>
-      <div data-reveal className="mt-8 border-b border-border-sand" />
+      <div
+        data-reveal
+        className="mt-8 h-px bg-linear-to-r from-border-sand via-border-sand to-transparent"
+      />
     </div>
   );
 }
