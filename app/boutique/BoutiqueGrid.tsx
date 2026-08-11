@@ -33,7 +33,7 @@ export function BoutiqueGrid() {
     queryFn: () => fetchProducts(activeCategory),
   });
 
-  const scopeRef = useScrollReveal<HTMLDivElement>([productsQuery.data]);
+  const scopeRef = useScrollReveal<HTMLDivElement>();
 
   return (
     <div ref={scopeRef}>
@@ -42,7 +42,7 @@ export function BoutiqueGrid() {
           type="button"
           data-reveal
           onClick={() => setActiveCategory(null)}
-          className={`cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
+          className={`cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide uppercase transition-colors duration-200 hover:shadow-sm ${
             activeCategory === null
               ? "border-brown bg-brown text-cream"
               : "border-border-sand bg-sand-light text-ink hover:border-brown"
@@ -60,7 +60,7 @@ export function BoutiqueGrid() {
             type="button"
             data-reveal
             onClick={() => setActiveCategory(c.name)}
-            className={`cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
+            className={`cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide uppercase transition-colors duration-200 hover:shadow-sm ${
               activeCategory === c.name
                 ? "border-brown bg-brown text-cream"
                 : "border-border-sand bg-sand-light text-ink hover:border-brown"
