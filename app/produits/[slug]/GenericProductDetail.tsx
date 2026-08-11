@@ -35,7 +35,11 @@ import {
 } from "@/components/home/ProductCard";
 import { VideoTestimonials } from "@/components/home/VideoTestimonials";
 import { Testimonials } from "@/components/home/Testimonials";
-import { PACK_PRODUCTS, GIFT_ELIGIBLE_PACK_HANDLES, GIFT_OPTIONS } from "@/lib/packs";
+import {
+  PACK_PRODUCTS,
+  GIFT_ELIGIBLE_PACK_HANDLES,
+  GIFT_OPTIONS,
+} from "@/lib/packs";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
@@ -71,7 +75,9 @@ const BEFORE_AFTER_IMAGES: Record<
   "masque-anti-age": { image: masqueAntiAgeBeforeAfter },
   "gel-nettoyant-purifiant": { image: gelNettoyantPurifiantBeforeAfter },
   "gel-nettoyant-hydratant": { image: gelNettoyantHydratantBeforeAfter },
-  "gel-nettoyant-eclaircissant": { image: gelNettoyantEclaircissantBeforeAfter },
+  "gel-nettoyant-eclaircissant": {
+    image: gelNettoyantEclaircissantBeforeAfter,
+  },
   "gel-exfoliant-aha": { image: gelExfoliantAhaBeforeAfter },
   "masque-eclaircissant": { image: masqueEclaircissantBeforeAfter },
   // Lifestyle/application shot, not an actual before/after pair.
