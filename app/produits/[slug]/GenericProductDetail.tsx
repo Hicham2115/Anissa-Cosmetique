@@ -35,7 +35,7 @@ import {
 } from "@/components/home/ProductCard";
 import { VideoTestimonials } from "@/components/home/VideoTestimonials";
 import { Testimonials } from "@/components/home/Testimonials";
-import { PACK_PRODUCTS } from "@/lib/packs";
+import { PACK_PRODUCTS, GIFT_ELIGIBLE_PACK_HANDLES, GIFT_OPTIONS } from "@/lib/packs";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
@@ -314,6 +314,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [giftSlugOverride, setGiftSlugOverride] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const [activeImageProductId, setActiveImageProductId] = useState(product?.id);
   const [imageRatio, setImageRatio] = useState<number | null>(null);
@@ -362,6 +363,14 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     );
   }
 
+  const isGiftEligible = GIFT_ELIGIBLE_PACK_HANDLES.includes(product.slotId);
+  const giftSlug = isGiftEligible
+    ? (giftSlugOverride ?? GIFT_OPTIONS[0].handle)
+    : null;
+  const giftProduct = giftSlug
+    ? allProducts?.find((p) => p.slotId === giftSlug)
+    : null;
+
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
       addItem({
@@ -372,10 +381,25 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         image: product.image ?? null,
       });
     }
+    // Added at its normal price so the local cart subtotal parses to 0 for
+    // it (parsePriceAmount("Offert") has no digits to match) — Shopify's
+    // Buy X Get Y automatic discount is what actually zeroes this line at
+    // checkout, this is just so the drawer doesn't overstate the subtotal.
+    if (giftProduct) {
+      addItem({
+        productId: giftProduct.id,
+        slug: giftProduct.slotId,
+        name: `🎁 ${giftProduct.name} (offert)`,
+        price: "Offert",
+        image: giftProduct.image ?? null,
+      });
+    }
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
     toast("Ajouté au panier", {
-      description: product.name,
+      description: giftProduct
+        ? `${product.name} + ${giftProduct.name} offert`
+        : product.name,
       icon: (
         <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
       ),
@@ -579,7 +603,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 </div>
               </div>
 
-              <OrderForm product={product} quantity={quantity} />
+              <OrderForm
+                product={product}
+                quantity={quantity}
+                giftSlug={giftSlug}
+                onGiftSlugChange={setGiftSlugOverride}
+              />
 
               <DescriptionAccordion
                 product={product}
@@ -933,7 +962,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
 
           <div data-reveal className="mt-5">
-            <OrderForm product={product} quantity={quantity} />
+            <OrderForm
+              product={product}
+              quantity={quantity}
+              giftSlug={giftSlug}
+              onGiftSlugChange={setGiftSlugOverride}
+            />
           </div>
 
           <DescriptionAccordion

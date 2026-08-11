@@ -50,10 +50,19 @@ function FieldLabel({ icon: Icon, children }: { icon: typeof Package; children: 
   );
 }
 
-export function OrderForm({ product, quantity = 1 }: { product: Product; quantity?: number }) {
+export function OrderForm({
+  product,
+  quantity = 1,
+  giftSlug = null,
+  onGiftSlugChange,
+}: {
+  product: Product;
+  quantity?: number;
+  giftSlug?: string | null;
+  onGiftSlugChange?: (slug: string) => void;
+}) {
   const [confirmed, setConfirmed] = useState<{ phone: string } | null>(null);
   const isGiftEligible = GIFT_ELIGIBLE_PACK_HANDLES.includes(product.slotId);
-  const [giftSlug, setGiftSlug] = useState(isGiftEligible ? GIFT_OPTIONS[0].handle : null);
 
   const mutation = useMutation({
     mutationFn: placeOrder,
@@ -154,7 +163,7 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
                       <button
                         key={gift.handle}
                         type="button"
-                        onClick={() => setGiftSlug(gift.handle)}
+                        onClick={() => onGiftSlugChange?.(gift.handle)}
                         className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-200 ${
                           isSelected
                             ? "border-brown bg-gold/10 text-ink"
