@@ -106,10 +106,24 @@ interface OrderCreateResult {
 // order time.
 export async function createCodOrder(input: CodOrderInput): Promise<{ id: string; name: string }> {
   const variantId = await getVariantIdByHandle(input.productSlug);
+  const giftVariantId = input.giftSlug ? await getVariantIdByHandle(input.giftSlug) : null;
+
+  const lineItems = [
+    { variantId, quantity: input.quantity },
+    ...(giftVariantId
+      ? [
+          {
+            variantId: giftVariantId,
+            quantity: 1,
+            priceSet: { shopMoney: { amount: "0.00", currencyCode: "MAD" } },
+          },
+        ]
+      : []),
+  ];
 
   const data = await shopifyAdminFetch<OrderCreateResult>(ORDER_CREATE_MUTATION, {
     order: {
-      lineItems: [{ variantId, quantity: input.quantity }],
+      lineItems,
       phone: input.phone,
       // Shopify's protected-customer-data policy silently drops
       // shippingAddress/customer PII fields on orderCreate for apps without
@@ -121,6 +135,7 @@ export async function createCodOrder(input: CodOrderInput): Promise<{ id: string
         `Nom : ${input.name}`,
         `Téléphone : ${input.phone}`,
         `Adresse : ${input.address}`,
+        ...(input.giftSlug ? [`Cadeau offert : ${input.giftSlug}`] : []),
       ].join("\n"),
       tags: ["COD", "Site Web"],
       financialStatus: "PENDING",

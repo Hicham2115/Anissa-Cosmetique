@@ -28,13 +28,14 @@ import { ErrorState } from "@/components/ui/error-state";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { ProductDetailSkeleton } from "./ProductDetailSkeleton";
 import { OrderForm } from "./OrderForm";
-import { ProductReviews } from "./ProductReviews";
 import { Button } from "@/components/ui/button";
 import {
   ProductCard,
   ProductCardSkeleton,
 } from "@/components/home/ProductCard";
 import { VideoTestimonials } from "@/components/home/VideoTestimonials";
+import { Testimonials } from "@/components/home/Testimonials";
+import { PACK_PRODUCTS } from "@/lib/packs";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
@@ -381,9 +382,13 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     });
   };
 
-  const relatedProducts: Product[] = (allProducts ?? [])
-    .filter((p) => p.id !== product.id)
-    .slice(0, 4);
+  const packProductSlugs = PACK_PRODUCTS[product.slotId];
+  const isPack = Boolean(packProductSlugs);
+  const relatedProducts: Product[] = packProductSlugs
+    ? packProductSlugs
+        .map((slug) => allProducts?.find((p) => p.slotId === slug))
+        .filter((p): p is Product => Boolean(p))
+    : (allProducts ?? []).filter((p) => p.id !== product.id).slice(0, 4);
 
   const gallery =
     product.images && product.images.length > 0
@@ -574,9 +579,11 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 </div>
               </div>
 
+              <OrderForm product={product} quantity={quantity} />
+
               <DescriptionAccordion
                 product={product}
-                className="border-t border-b border-border-sand py-4"
+                className="mt-8 border-t border-b border-border-sand py-4"
               />
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -699,7 +706,6 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </div>
 
             <div className="flex flex-col gap-8">
-              <OrderForm product={product} quantity={quantity} />
               <BeforeAfter product={product} />
             </div>
           </div>
@@ -731,11 +737,6 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <ProductReviews
-          slug={product.slotId}
-          className="mx-auto max-w-[1320px] border-t border-border-sand px-4 py-16 sm:px-6 sm:py-20"
-        />
-
         {(!allProducts || relatedProducts.length > 0) && (
           <div
             ref={relatedRef}
@@ -745,7 +746,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               data-reveal
               className="mb-9 text-xs tracking-[0.2em] text-brown uppercase"
             >
-              Vous aimerez aussi
+              {isPack ? "Les produits de ce pack" : "Vous aimerez aussi"}
             </div>
             <div className="grid grid-cols-2 gap-4 sm:gap-5.5 lg:grid-cols-4">
               {!allProducts
@@ -931,6 +932,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
             </div>
           </div>
 
+          <div data-reveal className="mt-5">
+            <OrderForm product={product} quantity={quantity} />
+          </div>
+
           <DescriptionAccordion
             product={product}
             className="mt-5 border-t border-b border-border-sand py-4"
@@ -975,7 +980,6 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           </div>
 
           <div data-reveal className="mt-6 flex flex-col gap-6">
-            <OrderForm product={product} quantity={quantity} />
             <BeforeAfter product={product} />
           </div>
         </div>
@@ -1061,15 +1065,10 @@ export function GenericProductDetail({ slug }: { slug: string }) {
           ))}
         </div>
 
-        <ProductReviews
-          slug={product.slotId}
-          className="border-t border-border-sand px-4 py-6"
-        />
-
         {(!allProducts || relatedProducts.length > 0) && (
           <div className="border-t border-border-sand px-4 py-6 pb-8">
             <div className="mb-4 text-xs tracking-[0.2em] text-brown uppercase">
-              Vous aimerez aussi
+              {isPack ? "Les produits de ce pack" : "Vous aimerez aussi"}
             </div>
             <div className="flex gap-3.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {!allProducts
@@ -1090,12 +1089,21 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
       <VideoTestimonials />
 
+      <Testimonials />
+
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-border-sand bg-cream px-4 py-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)] md:hidden">
         <div className="min-w-0">
           <div className="truncate text-xs font-medium text-ink">
             {product.name}
           </div>
-          <div className="font-serif text-lg text-ink">{product.price}</div>
+          <div className="flex items-baseline gap-2">
+            <div className="font-serif text-lg text-ink">{product.price}</div>
+            {product.compareAtPrice && (
+              <div className="text-xs text-[#8a7c6c] line-through">
+                {product.compareAtPrice}
+              </div>
+            )}
+          </div>
         </div>
         <Button
           onClick={handleAddToCart}

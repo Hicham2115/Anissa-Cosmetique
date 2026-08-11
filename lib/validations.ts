@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { NextResponse } from "next/server";
+import { GIFT_OPTIONS } from "@/lib/packs";
 
 export function zodErrorResponse(result: z.ZodSafeParseError<unknown>, fallback: string) {
   return NextResponse.json({ message: result.error.issues[0]?.message ?? fallback }, { status: 400 });
@@ -62,6 +63,14 @@ export const codOrderSchema = z.object({
     .min(10, "L'adresse doit contenir au moins 10 caractères")
     .max(500, "L'adresse est trop longue"),
   quantity: z.number().int().positive().max(20).default(1),
+  // Restricted to the known free-gift handles server-side (not just trusted
+  // from the client) so a crafted request can't get an arbitrary product
+  // for free — see GIFT_OPTIONS in lib/packs.ts.
+  giftSlug: z
+    .string()
+    .trim()
+    .refine((val) => GIFT_OPTIONS.some((g) => g.handle === val), "Cadeau invalide")
+    .optional(),
 });
 
 export type CodOrderInput = z.infer<typeof codOrderSchema>;

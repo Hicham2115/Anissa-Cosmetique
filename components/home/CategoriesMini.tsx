@@ -24,9 +24,11 @@ const CATEGORY_IMAGES: Record<string, typeof antiAgeImage> = {
 };
 
 const CATEGORY_LINKS: Record<string, string> = {
-  "Anti-Âge": "/produits/pack-anti-age-acide-hyaluronique-extrait-de-fleur-de-kangourou",
+  "Anti-Âge":
+    "/produits/pack-anti-age-acide-hyaluronique-extrait-de-fleur-de-kangourou",
   Éclat: "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide-1",
-  "Nettoyants & Exfoliants": "/produits/pack-eclat-amp-eclaircissant-vitamine-c-amp-niacinamide",
+  "Nettoyants & Exfoliants":
+    "/produits/pack-eclat-amp-eclaircissant-vitamine-c-amp-niacinamide",
 };
 
 const CATEGORY_PRICES: Record<string, string> = {
@@ -90,8 +92,8 @@ export function CategoriesMini() {
           className="mb-9 font-serif text-3xl font-semibold text-ink"
         >
           Acheter par catégorie
-          <span className="ml-3 align-middle text-sm font-normal text-black/40">
-            (packs de 3 produits)
+          <span className="ml-3 font-semibold text-red-400 align-middle text-sm  ">
+            (PACKS DE 3 PRODUITS)
           </span>
         </h2>
 
@@ -132,7 +134,9 @@ export function CategoriesMini() {
                     }
                   }}
                   className={`group flex cursor-pointer items-center justify-between border-t border-black/10 py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-black ${
-                    currentCategory === c.name ? "translate-x-2 border-black" : ""
+                    currentCategory === c.name
+                      ? "translate-x-2 border-black"
+                      : ""
                   }`}
                 >
                   <div className="flex items-baseline gap-4.5">

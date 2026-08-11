@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Droplet, Gift, Leaf, Shield, Sparkles, Waves } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Droplet, Gift, Leaf, Shield, Sparkles, Waves } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import eclatImage from "@/app/assets/categories/eclat.png";
@@ -54,9 +55,10 @@ export function EclatSpotlight() {
             sizes="(min-width: 898px) 90vw, 90vw"
             className="h-auto w-full rounded-2xl"
           />
-          <div
+          <Link
+            href="/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide"
             data-reveal
-            className="mt-12 flex items-center gap-3 rounded-full bg-[#3985e9]/20 p-3 pr-5 sm:gap-5 sm:p-5 sm:pr-10"
+            className="mt-12 flex items-center gap-3 rounded-full bg-[#3985e9]/20 p-3 pr-5 transition-colors duration-300 hover:bg-[#3985e9]/30 sm:gap-5 sm:p-5 sm:pr-10"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black sm:h-14 sm:w-14">
               <Gift
@@ -65,7 +67,7 @@ export function EclatSpotlight() {
                 aria-hidden="true"
               />
             </div>
-            <div>
+            <div className="flex-1">
               <div className="text-[12px] font-bold tracking-wide text-[#3985e9] uppercase sm:text-[15px]">
                 Offert pour tout achat d&apos;un pack
               </div>
@@ -73,7 +75,15 @@ export function EclatSpotlight() {
                 Profitez de ce masque éclaircissant en cadeau.
               </div>
             </div>
-          </div>
+            <span className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#3985e9] px-3 py-2 text-[11px] font-semibold tracking-wide text-white uppercase sm:px-4 sm:text-[12px]">
+              Voir le pack
+              <ArrowRight
+                className="h-3.5 w-3.5"
+                strokeWidth={1.75}
+                aria-hidden="true"
+              />
+            </span>
+          </Link>
         </div>
 
         <div>

@@ -26,7 +26,8 @@ const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
 const CATEGORY_LINKS: Record<string, string> = {
   "Anti-Âge": "/produits/pack-anti-age-acide-hyaluronique-fleur-de-kangourou",
   Éclat: "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide",
-  "Nettoyants & Exfoliants": "/produits/pack-purifiant-anti-imperfections-niacinamide-acide-salicylique",
+  "Nettoyants & Exfoliants":
+    "/produits/pack-purifiant-anti-imperfections-niacinamide-acide-salicylique",
 };
 
 const CATEGORY_PRICES: Record<string, string> = {
@@ -77,9 +78,29 @@ export function Categories() {
     <div
       id="categories"
       ref={scopeRef}
-      className="mx-auto grid max-w-[1320px] scroll-mt-24 gap-10 px-4 pt-16 pb-5 sm:px-6 sm:pt-24 md:grid-cols-[0.85fr_1.15fr] md:items-center"
+      className="mx-auto grid max-w-[1320px] scroll-mt-24 gap-10 px-4 pt-16 pb-5 sm:px-6 sm:pt-24 md:grid-cols-[1.15fr_0.85fr] md:items-center"
     >
-      <div>
+      <div
+        data-reveal
+        ref={imageRef}
+        className="group relative aspect-4/3 overflow-hidden rounded-xl md:order-1"
+      >
+        {activeImage ? (
+          <Image
+            src={activeImage}
+            alt={currentCategory ?? "Catégorie Anissa Cosmetics"}
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-contain transition-transform duration-500 "
+          />
+        ) : (
+          <ImagePlaceholder
+            label="Image éditoriale de catégorie"
+            className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+      </div>
+      <div className="md:order-2">
         <div
           data-reveal
           className="mb-3.5 text-xs tracking-[0.2em] text-black uppercase"
@@ -91,8 +112,8 @@ export function Categories() {
           className="mb-9 font-serif text-3xl font-semibold text-ink"
         >
           Acheter par catégorie
-          <span className="ml-3 align-middle text-sm font-normal text-black/40">
-            (packs de 4 produits)
+          <span className="ml-3 font-semibold text-red-400 align-middle text-sm  ">
+            (PACKS DE 4 PRODUITS)
           </span>
         </h2>
 
@@ -133,7 +154,9 @@ export function Categories() {
                     }
                   }}
                   className={`group flex cursor-pointer items-center justify-between border-t border-black/10 py-5.5 transition-all duration-300 hover:translate-x-2 hover:border-black ${
-                    currentCategory === c.name ? "translate-x-2 border-black" : ""
+                    currentCategory === c.name
+                      ? "translate-x-2 border-black"
+                      : ""
                   }`}
                 >
                   <div className="flex items-baseline gap-4.5">
@@ -167,26 +190,6 @@ export function Categories() {
             ))}
             <div className="border-t border-black/10" />
           </>
-        )}
-      </div>
-      <div
-        data-reveal
-        ref={imageRef}
-        className="group relative aspect-4/3 overflow-hidden rounded-xl"
-      >
-        {activeImage ? (
-          <Image
-            src={activeImage}
-            alt={currentCategory ?? "Catégorie Anissa Cosmetics"}
-            fill
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-contain transition-transform duration-500 "
-          />
-        ) : (
-          <ImagePlaceholder
-            label="Image éditoriale de catégorie"
-            className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
-          />
         )}
       </div>
     </div>

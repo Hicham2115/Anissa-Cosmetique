@@ -71,7 +71,12 @@ export function ProductCard({ product }: { product: Product }) {
         {product.name}
       </Link>
       <div className="mt-1 text-xs text-[#8a7c6c]">{product.subtitle}</div>
-      <div className="mt-2 text-sm font-semibold tracking-wide text-black">{product.price}</div>
+      <div className="mt-2 flex items-baseline gap-1.5">
+        <div className="text-sm font-semibold tracking-wide text-black">{product.price}</div>
+        {product.compareAtPrice && (
+          <div className="text-xs text-[#8a7c6c] line-through">{product.compareAtPrice}</div>
+        )}
+      </div>
     </div>
   );
 }

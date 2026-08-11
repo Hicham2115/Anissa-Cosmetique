@@ -50,7 +50,7 @@ export default function Home() {
         <CategoriesMini />
         <BonusOffer />
         <Commitments />
-        <PharmacyNotice />
+        {/* <PharmacyNotice /> */}
         <BestSellers />
         <AntiAgeSpotlight />
         <EclatSpotlight />

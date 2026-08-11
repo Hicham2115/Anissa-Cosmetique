@@ -36,6 +36,10 @@
   animation: marquee 24s linear infinite;
 }
 
+.animate-marquee-reverse {
+  animation: marquee 24s linear infinite reverse;
+}
+
 body {
   background: var(--color-cream);
   color: var(--color-ink);

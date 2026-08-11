@@ -172,7 +172,7 @@ export function PromoPopup() {
       </div>
 
       <Link
-        href={`/produits/${PROMO_PRODUCT_HANDLE}`}
+        href={`/produits`}
         onClick={close}
         className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-cream py-2.5 text-xs font-semibold text-ink transition-all duration-200 hover:scale-[1.02] hover:bg-white"
       >

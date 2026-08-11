@@ -7,16 +7,17 @@ import { productListSchema } from "@/lib/validations";
 import { ErrorState } from "@/components/ui/error-state";
 import { ProductCard, ProductCardSkeleton } from "@/components/home/ProductCard";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import { PACKS_CATEGORY } from "@/lib/packs";
 
-async function fetchProducts() {
-  const { data } = await api.get("/products");
+async function fetchProducts(category?: string) {
+  const { data } = await api.get("/products", { params: { category } });
   return productListSchema.parse(data);
 }
 
 export function BestSellers() {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: queryKeys.products(),
-    queryFn: fetchProducts,
+    queryKey: queryKeys.products(PACKS_CATEGORY),
+    queryFn: () => fetchProducts(PACKS_CATEGORY),
   });
   const scopeRef = useScrollReveal<HTMLDivElement>([data]);
   const bestSellers = data?.slice(0, 4);

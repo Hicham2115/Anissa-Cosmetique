@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CheckCircle2, MapPin, Package, Phone, ShieldCheck, ShoppingBag, Truck, User } from "lucide-react";
+import { Check, CheckCircle2, Gift, MapPin, Package, Phone, ShieldCheck, ShoppingBag, Truck, User } from "lucide-react";
 import { api } from "@/lib/axios";
 import { codOrderFormSchema, type Product } from "@/lib/validations";
+import { GIFT_ELIGIBLE_PACK_HANDLES, GIFT_OPTIONS } from "@/lib/packs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,8 @@ function FieldLabel({ icon: Icon, children }: { icon: typeof Package; children: 
 
 export function OrderForm({ product, quantity = 1 }: { product: Product; quantity?: number }) {
   const [confirmed, setConfirmed] = useState<{ phone: string } | null>(null);
+  const isGiftEligible = GIFT_ELIGIBLE_PACK_HANDLES.includes(product.slotId);
+  const [giftSlug, setGiftSlug] = useState(isGiftEligible ? GIFT_OPTIONS[0].handle : null);
 
   const mutation = useMutation({
     mutationFn: placeOrder,
@@ -65,6 +68,7 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
           productSlug: product.slotId,
           productName: product.name,
           quantity,
+          ...(isGiftEligible && giftSlug ? { giftSlug } : {}),
           ...value,
         });
         setConfirmed({ phone: value.phone });
@@ -90,6 +94,11 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
             confirmer votre commande de {quantity > 1 ? `${quantity} × ` : ""}
             {product.name}.
           </p>
+          {isGiftEligible && giftSlug && (
+            <p className="mt-1 text-xs text-brown">
+              + votre cadeau offert : {GIFT_OPTIONS.find((g) => g.handle === giftSlug)?.name}
+            </p>
+          )}
           <button
             type="button"
             onClick={() => setConfirmed(null)}
@@ -135,7 +144,39 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
               </div>
             </div>
 
-            <form.Field name="name" validators={{ onChange: codOrderFormSchema.shape.name }}>
+            {isGiftEligible && (
+              <div className="sm:col-span-2">
+                <FieldLabel icon={Gift}>Choisissez votre cadeau offert</FieldLabel>
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  {GIFT_OPTIONS.map((gift) => {
+                    const isSelected = giftSlug === gift.handle;
+                    return (
+                      <button
+                        key={gift.handle}
+                        type="button"
+                        onClick={() => setGiftSlug(gift.handle)}
+                        className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-200 ${
+                          isSelected
+                            ? "border-brown bg-gold/10 text-ink"
+                            : "border-border-sand text-[#5c534a] hover:border-brown/40"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                            isSelected ? "border-brown bg-brown text-cream" : "border-border-sand"
+                          }`}
+                        >
+                          {isSelected && <Check className="h-3 w-3" aria-hidden="true" />}
+                        </span>
+                        <span className="min-w-0 truncate">{gift.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <form.Field name="name" validators={{ onSubmit: codOrderFormSchema.shape.name }}>
               {(field) => (
                 <div>
                   <FieldLabel icon={User}>Nom complet *</FieldLabel>
@@ -154,7 +195,7 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
               )}
             </form.Field>
 
-            <form.Field name="phone" validators={{ onChange: codOrderFormSchema.shape.phone }}>
+            <form.Field name="phone" validators={{ onSubmit: codOrderFormSchema.shape.phone }}>
               {(field) => (
                 <div>
                   <FieldLabel icon={Phone}>Numéro de téléphone *</FieldLabel>
@@ -174,7 +215,7 @@ export function OrderForm({ product, quantity = 1 }: { product: Product; quantit
               )}
             </form.Field>
 
-            <form.Field name="address" validators={{ onChange: codOrderFormSchema.shape.address }}>
+            <form.Field name="address" validators={{ onSubmit: codOrderFormSchema.shape.address }}>
               {(field) => (
                 <div className="sm:col-span-2">
                   <FieldLabel icon={MapPin}>Adresse de livraison *</FieldLabel>

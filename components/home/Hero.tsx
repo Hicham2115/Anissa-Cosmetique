@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -24,15 +24,6 @@ const FEATURES = [
 export function Hero() {
   const loop = [...MARQUEE, ...MARQUEE];
   const isLoading = useUiStore((s) => s.isLoading);
-  const [viewport, setViewport] = useState<"mobile" | "desktop" | null>(null);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const update = () => setViewport(mq.matches ? "desktop" : "mobile");
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
 
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
@@ -94,18 +85,9 @@ export function Hero() {
             muted
             loop
             playsInline
-            preload={viewport === "mobile" ? "auto" : "none"}
-            src={viewport === "mobile" ? "/hero-mobile.mp4" : undefined}
-            className="h-full w-full object-cover object-top md:hidden"
-          />
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload={viewport === "desktop" ? "auto" : "none"}
-            src={viewport === "desktop" ? "/hero.mp4" : undefined}
-            className="hidden h-full w-full object-cover sm:object-[85%_center] md:block md:object-[75%_center] lg:object-[62%_center]"
+            preload="auto"
+            src="/hero.mp4"
+            className="h-full w-full object-cover object-top sm:object-[85%_center] md:object-[75%_center] lg:object-[62%_center]"
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
