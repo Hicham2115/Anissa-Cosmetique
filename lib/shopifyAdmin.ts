@@ -23,15 +23,24 @@ async function getAdminAccessToken(): Promise<string> {
     return cachedToken.value;
   }
 
-  const res = await fetch(`https://${domain}/admin/oauth/access_token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      client_id: clientId!,
-      client_secret: clientSecret!,
-    }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`https://${domain}/admin/oauth/access_token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: clientId!,
+        client_secret: clientSecret!,
+      }),
+      signal: AbortSignal.timeout(8000),
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "TimeoutError") {
+      throw new Error("Shopify Admin token exchange timed out");
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     throw new Error(`Shopify Admin token exchange failed: ${res.status}`);
@@ -55,14 +64,23 @@ async function shopifyAdminFetch<T>(query: string, variables?: Record<string, un
 
   const adminToken = await getAdminAccessToken();
 
-  const res = await fetch(`https://${domain}/admin/api/${apiVersion}/graphql.json`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Access-Token": adminToken,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`https://${domain}/admin/api/${apiVersion}/graphql.json`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": adminToken,
+      },
+      body: JSON.stringify({ query, variables }),
+      signal: AbortSignal.timeout(8000),
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "TimeoutError") {
+      throw new Error("Shopify Admin API timed out");
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     throw new Error(`Shopify Admin API error: ${res.status}`);
@@ -105,8 +123,10 @@ interface OrderCreateResult {
 // financialStatus is PENDING since payment is collected on delivery, not at
 // order time.
 export async function createCodOrder(input: CodOrderInput): Promise<{ id: string; name: string }> {
-  const variantId = await getVariantIdByHandle(input.productSlug);
-  const giftVariantId = input.giftSlug ? await getVariantIdByHandle(input.giftSlug) : null;
+  const [variantId, giftVariantId] = await Promise.all([
+    getVariantIdByHandle(input.productSlug),
+    input.giftSlug ? getVariantIdByHandle(input.giftSlug) : Promise.resolve(null),
+  ]);
 
   const lineItems = [
     { variantId, quantity: input.quantity },

@@ -19,15 +19,24 @@ export async function shopifyFetch<T>(query: string, variables?: Record<string, 
     throw new Error("Shopify is not configured: missing SHOPIFY_STORE_DOMAIN or SHOPIFY_STOREFRONT_ACCESS_TOKEN");
   }
 
-  const res = await fetch(`https://${domain}/api/${apiVersion}/graphql.json`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token,
-    },
-    body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`https://${domain}/api/${apiVersion}/graphql.json`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": token,
+      },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: 60 },
+      signal: AbortSignal.timeout(8000),
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "TimeoutError") {
+      throw new Error("Shopify Storefront API timed out");
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     throw new Error(`Shopify Storefront API error: ${res.status}`);
