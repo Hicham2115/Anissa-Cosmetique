@@ -168,9 +168,9 @@ export function Testimonials() {
                   Avis vérifiés de nos clientes
                 </p>
               </div>
-              <div className="hidden shrink-0 items-center gap-2.5 sm:flex">
-                <CarouselPrevious className="static h-10 w-10 translate-y-0" />
-                <CarouselNext className="static h-10 w-10 translate-y-0 border-brown bg-brown text-cream hover:bg-brown/90 hover:text-cream" />
+              <div className="flex shrink-0 items-center gap-2.5">
+                <CarouselPrevious className="static h-9 w-9 translate-y-0 sm:h-10 sm:w-10" />
+                <CarouselNext className="static h-9 w-9 translate-y-0 border-brown bg-brown text-cream hover:bg-brown/90 hover:text-cream sm:h-10 sm:w-10" />
               </div>
             </div>
 

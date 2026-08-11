@@ -135,12 +135,12 @@ export function VideoTestimonials() {
           </h2>
         </div>
 
-        <div data-reveal className="hidden gap-2 sm:flex">
+        <div data-reveal className="flex gap-2">
           <button
             type="button"
             aria-label="Précédent"
             onClick={() => scrollByCard(-1)}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-border-sand text-ink transition-all duration-200 hover:border-brown hover:text-brown"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-border-sand text-ink transition-all duration-200 hover:border-brown hover:text-brown sm:h-10 sm:w-10"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -148,7 +148,7 @@ export function VideoTestimonials() {
             type="button"
             aria-label="Suivant"
             onClick={() => scrollByCard(1)}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-border-sand text-ink transition-all duration-200 hover:border-brown hover:text-brown"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-border-sand text-ink transition-all duration-200 hover:border-brown hover:text-brown sm:h-10 sm:w-10"
           >
             <ChevronRight className="h-4 w-4" aria-hidden="true" />
           </button>
