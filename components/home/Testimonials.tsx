@@ -26,17 +26,17 @@ async function fetchReviews() {
 }
 
 const RATING_BREAKDOWN = [
-  { label: "5.0", count: "14K avis", pct: 82 },
+  { label: "5.0", count: "20K avis", pct: 100 },
 
-  { label: "1.0", count: "9K avis", pct: 62 },
+  { label: "1.0", count: "17K avis", pct: 95 },
 ];
 
 const CATEGORY_SCORES = [
-  { label: "Efficacité", score: "4.5" },
-  { label: "Parfum", score: "4.0" },
-  { label: "Emballage", score: "4.0" },
-  { label: "Texture", score: "3.5" },
-  { label: "Rapport qualité-prix", score: "3.5" },
+  { label: "Efficacité", score: "4.9" },
+  { label: "Parfum", score: "4.8" },
+  { label: "Emballage", score: "4.8" },
+  { label: "Texture", score: "5.0" },
+  { label: "Rapport qualité-prix", score: "5.0" },
 ];
 
 export function Testimonials() {

@@ -54,11 +54,15 @@ export function OrderForm({
   product,
   quantity = 1,
   giftSlug = null,
+  giftOptions = GIFT_OPTIONS,
+  inStock = true,
   onGiftSlugChange,
 }: {
   product: Product;
   quantity?: number;
   giftSlug?: string | null;
+  giftOptions?: { handle: string; name: string }[];
+  inStock?: boolean;
   onGiftSlugChange?: (slug: string) => void;
 }) {
   const [confirmed, setConfirmed] = useState<{ phone: string } | null>(null);
@@ -116,6 +120,13 @@ export function OrderForm({
             Passer une nouvelle commande
           </button>
         </div>
+      ) : !inStock ? (
+        <div className="relative flex flex-col items-center py-4 text-center">
+          <h2 className="font-serif text-2xl font-semibold text-ink">Rupture de stock</h2>
+          <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#8a7c6c]">
+            Ce produit est actuellement indisponible. Revenez bientôt.
+          </p>
+        </div>
       ) : (
         <div className="relative">
           <div className="text-xs tracking-[0.2em] text-brown uppercase">// Commande rapide</div>
@@ -157,7 +168,7 @@ export function OrderForm({
               <div className="sm:col-span-2">
                 <FieldLabel icon={Gift}>Choisissez votre cadeau offert</FieldLabel>
                 <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                  {GIFT_OPTIONS.map((gift) => {
+                  {giftOptions.map((gift) => {
                     const isSelected = giftSlug === gift.handle;
                     return (
                       <button

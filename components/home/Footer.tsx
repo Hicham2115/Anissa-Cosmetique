@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useNewsletterForm } from "@/lib/useNewsletterForm";
-import { useScrollReveal } from "@/lib/useScrollReveal";
 import logo from "@/app/assets/logo.png";
 import { FacebookIcon, InstagramIcon } from "@/components/icons/SocialIcons";
 import { FACEBOOK_URL, INSTAGRAM_URL } from "@/lib/site";
@@ -12,7 +11,7 @@ import { FACEBOOK_URL, INSTAGRAM_URL } from "@/lib/site";
 const FOOTER_COLUMNS = [
   {
     title: "Boutique",
-    links: ["Anti-Âge", "Éclat", "Nettoyants & Exfoliants"],
+    links: ["Anti-Âge", "Anti Taches", "Anti Imperfections"],
   },
   {
     title: "Service Client",
@@ -41,16 +40,12 @@ const SOCIAL_LINKS = [
 export function Footer() {
   const { email, setEmail, fieldError, handleSubmit, mutation } =
     useNewsletterForm();
-  const scopeRef = useScrollReveal<HTMLDivElement>();
 
   return (
-    <div
-      ref={scopeRef}
-      className="relative overflow-hidden bg-cream px-4 pt-16 sm:px-6"
-    >
+    <div className="relative overflow-hidden bg-cream px-4 pt-16 sm:px-6">
       <div className="relative mx-auto max-w-[1320px] rounded-[32px] border border-border-sand bg-white p-8 shadow-[0_20px_60px_rgba(42,36,32,0.06)] sm:p-12">
         <div className="grid gap-12 sm:grid-cols-[1.3fr_1fr_1fr_1.1fr]">
-          <div data-reveal>
+          <div>
             <Link
               href="/"
               className="flex w-fit items-center gap-2.5 transition-transform duration-300 hover:-translate-y-0.5"
@@ -63,7 +58,7 @@ export function Footer() {
             </Link>
             <p className="mt-5 max-w-64 text-[13px] leading-relaxed text-[#8a8378]">
               Soins et cosmétiques de luxe discret, formulés avec soin à
-              Casablanca.
+              Marrakech.
             </p>
 
             <div className="mt-6 flex items-center gap-2.5">
@@ -87,7 +82,7 @@ export function Footer() {
           </div>
 
           {FOOTER_COLUMNS.map((col) => (
-            <div key={col.title} data-reveal>
+            <div key={col.title}>
               <div className="mb-5 text-sm font-semibold text-ink">
                 {col.title}
               </div>
@@ -105,7 +100,7 @@ export function Footer() {
             </div>
           ))}
 
-          <div data-reveal>
+          <div>
             <div className="mb-5 text-sm font-semibold text-ink">
               Newsletter
             </div>
@@ -155,10 +150,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div
-          data-reveal
-          className="relative mt-10 flex flex-col items-center gap-3 border-t border-border-sand pt-6 text-xs text-[#8a8378] sm:flex-row sm:justify-between"
-        >
+        <div className="relative mt-10 flex flex-col items-center gap-3 border-t border-border-sand pt-6 text-xs text-[#8a8378] sm:flex-row sm:justify-between">
           <div>
             &copy; {new Date().getFullYear()} Anissa. Tous droits réservés.
           </div>

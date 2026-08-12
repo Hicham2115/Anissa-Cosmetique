@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { checkoutSchema, zodErrorResponse } from "@/lib/validations";
 import { createCheckoutUrlForItems, shopifyConfigured } from "@/lib/shopify";
+import { getProductBySlug } from "@/lib/getProductBySlug";
 
 export async function POST(request: Request) {
   if (!shopifyConfigured) {
@@ -11,6 +12,16 @@ export async function POST(request: Request) {
   const result = checkoutSchema.safeParse(body);
   if (!result.success) {
     return zodErrorResponse(result, "Requête invalide.");
+  }
+
+  // Re-check stock server-side — the client already hides out-of-stock
+  // products, but that alone doesn't stop a direct API request.
+  const products = await Promise.all(result.data.items.map((item) => getProductBySlug(item.handle)));
+  if (products.some((p) => !p || p.availableForSale === false)) {
+    return NextResponse.json(
+      { message: "Un ou plusieurs produits de votre panier sont en rupture de stock." },
+      { status: 409 },
+    );
   }
 
   try {

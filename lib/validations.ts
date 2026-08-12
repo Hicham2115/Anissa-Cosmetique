@@ -96,6 +96,7 @@ export const productSchema = z.object({
   image: z.string().nullable().optional(),
   images: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
+  availableForSale: z.boolean().optional(),
   seoTitle: z.string().nullable().optional(),
   seoDescription: z.string().nullable().optional(),
 });

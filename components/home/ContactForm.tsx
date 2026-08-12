@@ -24,7 +24,7 @@ const CONTACT_INFO = [
   { icon: Phone, label: "+212 6 61 93 34 16", href: "tel:+212661933416" },
   {
     icon: MapPin,
-    label: "Casablanca, Maroc",
+    label: "Marrakech, Maroc",
     href: "https://maps.google.com/?q=Casablanca,Maroc",
   },
 ];

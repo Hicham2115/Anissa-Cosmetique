@@ -19,22 +19,22 @@ import nettoyantImage from "@/app/assets/categorie3/green.png";
 
 const CATEGORY_IMAGES: Record<string, typeof antiAgeImage> = {
   "Anti-Âge": antiAgeImage,
-  Éclat: eclatImage,
-  "Nettoyants & Exfoliants": nettoyantImage,
+  "Anti Taches": eclatImage,
+  "Anti Imperfections": nettoyantImage,
 };
 
 const CATEGORY_LINKS: Record<string, string> = {
   "Anti-Âge":
     "/produits/pack-anti-age-acide-hyaluronique-extrait-de-fleur-de-kangourou",
-  Éclat: "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide-1",
-  "Nettoyants & Exfoliants":
+  "Anti Taches": "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide-1",
+  "Anti Imperfections":
     "/produits/pack-eclat-amp-eclaircissant-vitamine-c-amp-niacinamide",
 };
 
 const CATEGORY_PRICES: Record<string, string> = {
   "Anti-Âge": "399 MAD",
-  Éclat: "399 MAD",
-  "Nettoyants & Exfoliants": "399 MAD",
+  "Anti Taches": "399 MAD",
+  "Anti Imperfections": "399 MAD",
 };
 
 async function fetchCategories() {

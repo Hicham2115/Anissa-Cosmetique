@@ -148,19 +148,20 @@ function toProduct(node: ShopifyProductNode) {
     image: node.featuredImage?.url ?? images[0] ?? null,
     images,
     tags: node.tags,
+    availableForSale: node.availableForSale,
     seoTitle: node.seo.title,
     seoDescription: node.seo.description,
   };
 }
 
 // The storefront shows 4 shopping categories, each tagged in Shopify admin
-// with one of the 4 catalog-wide tags: "Anti-Âge", "Éclat", "Exfoliation"
-// (used for the "Nettoyants & Exfoliants" category), "Soins" (used for
-// "Soins Ciblés").
+// with one of the 4 catalog-wide tags: "Anti-Âge", "Éclat" (displayed as
+// "Anti Taches"), "Exfoliation" (displayed as "Anti Imperfections"), "Soins"
+// (used for "Soins Ciblés").
 const CATEGORY_TO_SHOPIFY_TAG: Record<string, string> = {
   "Anti-Âge": "Anti-Âge",
-  Éclat: "Éclat",
-  "Nettoyants & Exfoliants": "Exfoliation",
+  "Anti Taches": "Éclat",
+  "Anti Imperfections": "Exfoliation",
   "Soins Ciblés": "Soins",
 };
 
@@ -168,14 +169,14 @@ export async function fetchShopifyProducts(category?: string, first = 50) {
   if (category === PACKS_CATEGORY) {
     const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first: 250 });
     return data.products.edges
-      .filter(({ node }) => node.availableForSale && PACK_PRODUCT_HANDLES.includes(node.handle))
+      .filter(({ node }) => PACK_PRODUCT_HANDLES.includes(node.handle))
       .map(({ node }) => toProduct(node));
   }
 
   const tag = category ? (CATEGORY_TO_SHOPIFY_TAG[category] ?? category) : undefined;
   const query = tag ? `tag:'${tag}'` : undefined;
   const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first, query });
-  return data.products.edges.filter(({ node }) => node.availableForSale).map(({ node }) => toProduct(node));
+  return data.products.edges.map(({ node }) => toProduct(node));
 }
 
 const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
@@ -211,6 +212,7 @@ const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
           currencyCode
         }
       }
+      availableForSale
       seo {
         title
         description

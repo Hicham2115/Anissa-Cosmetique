@@ -19,21 +19,21 @@ import parfumImage from "@/app/assets/categories/nettoyant.png";
 
 const CATEGORY_IMAGES: Record<string, typeof soinsImage> = {
   "Anti-Âge": soinsImage,
-  Éclat: makiageImage,
-  "Nettoyants & Exfoliants": parfumImage,
+  "Anti Taches": makiageImage,
+  "Anti Imperfections": parfumImage,
 };
 
 const CATEGORY_LINKS: Record<string, string> = {
   "Anti-Âge": "/produits/pack-anti-age-acide-hyaluronique-fleur-de-kangourou",
-  Éclat: "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide",
-  "Nettoyants & Exfoliants":
+  "Anti Taches": "/produits/pack-eclat-eclaircissant-vitamine-c-niacinamide",
+  "Anti Imperfections":
     "/produits/pack-purifiant-anti-imperfections-niacinamide-acide-salicylique",
 };
 
 const CATEGORY_PRICES: Record<string, string> = {
   "Anti-Âge": "649 MAD",
-  Éclat: "649 MAD",
-  "Nettoyants & Exfoliants": "649 MAD",
+  "Anti Taches": "649 MAD",
+  "Anti Imperfections": "649 MAD",
 };
 
 async function fetchCategories() {

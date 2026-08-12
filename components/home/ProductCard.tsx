@@ -14,28 +14,35 @@ export function ProductCard({ product }: { product: Product }) {
   const addItem = useCartStore((s) => s.addItem);
   const toggleWishlist = useWishlistStore((s) => s.toggleItem);
   const isLiked = useWishlistStore((s) => s.isLiked(product.id));
+  const inStock = product.availableForSale !== false;
 
   return (
     <div data-reveal className="group flex flex-col">
       <Link href={`/produits/${product.slotId}`} className="relative aspect-square overflow-hidden rounded-lg bg-sand ring-1 ring-transparent transition-all duration-300 hover:shadow-[0_16px_32px_rgba(0,0,0,0.12)] hover:ring-black/10">
-        {product.image ? (  
+        {product.image ? (
           <Image
             src={product.image}
             alt={product.name}
             fill
             sizes="(min-width: 1024px) 25vw, 50vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${inStock ? "" : "opacity-60 grayscale"}`}
           />
         ) : (
           <ImagePlaceholder
             label={product.name}
-            className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
+            className={`absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105 ${inStock ? "" : "opacity-60 grayscale"}`}
           />
         )}
-        {product.badge && (
+        {!inStock ? (
           <div className="absolute top-3 left-3 rounded-full bg-black px-2.5 py-1 text-[10px] tracking-wider text-white uppercase">
-            {product.badge}
+            En rupture de stock
           </div>
+        ) : (
+          product.badge && (
+            <div className="absolute top-3 left-3 rounded-full bg-black px-2.5 py-1 text-[10px] tracking-wider text-white uppercase">
+              {product.badge}
+            </div>
+          )
         )}
         <button
           type="button"
@@ -51,21 +58,23 @@ export function ProductCard({ product }: { product: Product }) {
         >
           <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} aria-hidden="true" />
         </button>
-        <button
-          type="button"
-          aria-label={`Ajouter ${product.name} au panier`}
-          onClick={(e) => {
-            e.preventDefault();
-            addItem({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
-            toast("Ajouté au panier", {
-              description: product.name,
-              icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
-            });
-          }}
-          className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black transition-all duration-200 hover:scale-110 active:scale-95 sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
-        >
-          <ShoppingBag className="h-4 w-4 text-white" strokeWidth={1.8} aria-hidden="true" />
-        </button>
+        {inStock && (
+          <button
+            type="button"
+            aria-label={`Ajouter ${product.name} au panier`}
+            onClick={(e) => {
+              e.preventDefault();
+              addItem({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
+              toast("Ajouté au panier", {
+                description: product.name,
+                icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
+              });
+            }}
+            className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black transition-all duration-200 hover:scale-110 active:scale-95 sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
+          >
+            <ShoppingBag className="h-4 w-4 text-white" strokeWidth={1.8} aria-hidden="true" />
+          </button>
+        )}
       </Link>
       <Link href={`/produits/${product.slotId}`} className="mt-4 font-serif text-[15px] text-black transition-all duration-200 group-hover:font-semibold sm:text-base">
         {product.name}

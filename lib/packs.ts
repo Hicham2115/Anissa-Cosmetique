@@ -66,4 +66,6 @@ export const GIFT_ELIGIBLE_PACK_HANDLES = [
 export const GIFT_OPTIONS: { handle: string; name: string }[] = [
   { handle: "fluide-solaire-spf50", name: "Fluide Solaire SPF 50+" },
   { handle: "creme-eclaircissante-mains", name: "Crème Éclaircissante Mains" },
+  { handle: "gel-aloe-vera", name: "Gel d'Aloe Vera" },
+  { handle: "gel-exfoliant-aha", name: "Gel Exfoliant AHA" },
 ];

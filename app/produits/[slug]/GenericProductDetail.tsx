@@ -363,15 +363,24 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     );
   }
 
+  const inStock = product.availableForSale !== false;
   const isGiftEligible = GIFT_ELIGIBLE_PACK_HANDLES.includes(product.slotId);
+  // Only offer gifts that are still in stock — falls back to keeping an
+  // option while allProducts hasn't loaded yet, rather than showing none.
+  const giftOptions = isGiftEligible
+    ? GIFT_OPTIONS.filter(
+        (g) => allProducts?.find((p) => p.slotId === g.handle)?.availableForSale !== false,
+      )
+    : GIFT_OPTIONS;
   const giftSlug = isGiftEligible
-    ? (giftSlugOverride ?? GIFT_OPTIONS[0].handle)
+    ? (giftSlugOverride ?? giftOptions[0]?.handle ?? null)
     : null;
   const giftProduct = giftSlug
     ? allProducts?.find((p) => p.slotId === giftSlug)
     : null;
 
   const handleAddToCart = () => {
+    if (!inStock) return;
     for (let i = 0; i < quantity; i++) {
       addItem({
         productId: product.id,
@@ -607,6 +616,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
                 product={product}
                 quantity={quantity}
                 giftSlug={giftSlug}
+                giftOptions={giftOptions}
+                inStock={inStock}
                 onGiftSlugChange={setGiftSlugOverride}
               />
 
@@ -640,9 +651,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
                 <Button
                   onClick={handleAddToCart}
+                  disabled={!inStock}
                   className="group flex-1 transition-transform duration-200 hover:scale-105 active:scale-95 sm:flex-none"
                 >
-                  {added ? (
+                  {!inStock ? (
+                    "Rupture de stock"
+                  ) : added ? (
                     <>
                       <Check className="h-[13px] w-[13px]" aria-hidden="true" />
                       Ajouté
@@ -946,6 +960,8 @@ export function GenericProductDetail({ slug }: { slug: string }) {
               product={product}
               quantity={quantity}
               giftSlug={giftSlug}
+              giftOptions={giftOptions}
+              inStock={inStock}
               onGiftSlugChange={setGiftSlugOverride}
             />
           </div>
@@ -957,9 +973,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
 
           <Button
             onClick={handleAddToCart}
+            disabled={!inStock}
             className="group mt-5 w-full transition-transform duration-200 active:scale-95"
           >
-            {added ? (
+            {!inStock ? (
+              "Rupture de stock"
+            ) : added ? (
               <>
                 <Check className="h-[13px] w-[13px]" aria-hidden="true" />
                 Ajouté
@@ -1153,9 +1172,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         </div>
         <Button
           onClick={handleAddToCart}
+          disabled={!inStock}
           className="group shrink-0 transition-transform duration-200 active:scale-95"
         >
-          {added ? (
+          {!inStock ? (
+            "Rupture de stock"
+          ) : added ? (
             <>
               <Check className="h-[13px] w-[13px]" aria-hidden="true" />
               Ajouté
