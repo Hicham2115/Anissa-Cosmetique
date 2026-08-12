@@ -1,6 +1,6 @@
 import "server-only";
 import { getVariantIdByHandle } from "@/lib/shopify";
-import type { CodOrderInput } from "@/lib/validations";
+import type { CartOrderInput, CodOrderInput } from "@/lib/validations";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const clientId = process.env.SHOPIFY_ADMIN_CLIENT_ID;
@@ -118,33 +118,34 @@ interface OrderCreateResult {
   };
 }
 
-// Creates a real Shopify order directly (no hosted checkout, no online
-// payment) for cash-on-delivery — the standard pattern for COD storefronts.
-// financialStatus is PENDING since payment is collected on delivery, not at
-// order time.
-export async function createCodOrder(input: CodOrderInput): Promise<{ id: string; name: string }> {
-  const [variantId, giftVariantId] = await Promise.all([
-    getVariantIdByHandle(input.productSlug),
-    input.giftSlug ? getVariantIdByHandle(input.giftSlug) : Promise.resolve(null),
-  ]);
+interface MoneyBag {
+  shopMoney: { amount: string; currencyCode: string };
+}
 
-  const lineItems = [
-    { variantId, quantity: input.quantity },
-    ...(giftVariantId
-      ? [
-          {
-            variantId: giftVariantId,
-            quantity: 1,
-            priceSet: { shopMoney: { amount: "0.00", currencyCode: "MAD" } },
-          },
-        ]
-      : []),
-  ];
+interface CodLineItem {
+  variantId: string;
+  quantity: number;
+  priceSet?: MoneyBag;
+}
 
+interface CodContact {
+  name: string;
+  phone: string;
+  address: string;
+}
+
+// Shared by createCodOrder (single product) and createCodCartOrder (full
+// cart from the checkout page) — both are the same COD order shape, just
+// built from different line items.
+async function submitCodOrder(
+  lineItems: CodLineItem[],
+  contact: CodContact,
+  extra: { noteLines?: string[]; shippingLines?: { title: string; priceSet: MoneyBag }[] } = {},
+): Promise<{ id: string; name: string }> {
   const data = await shopifyAdminFetch<OrderCreateResult>(ORDER_CREATE_MUTATION, {
     order: {
       lineItems,
-      phone: input.phone,
+      phone: contact.phone,
       // Shopify's protected-customer-data policy silently drops
       // shippingAddress/customer PII fields on orderCreate for apps without
       // separate compliance approval — the note is the one channel proven
@@ -152,19 +153,20 @@ export async function createCodOrder(input: CodOrderInput): Promise<{ id: string
       // shopper entered until that approval is requested.
       note: [
         "Commande passée depuis le site — paiement à la livraison.",
-        `Nom : ${input.name}`,
-        `Téléphone : ${input.phone}`,
-        `Adresse : ${input.address}`,
-        ...(input.giftSlug ? [`Cadeau offert : ${input.giftSlug}`] : []),
+        `Nom : ${contact.name}`,
+        `Téléphone : ${contact.phone}`,
+        `Adresse : ${contact.address}`,
+        ...(extra.noteLines ?? []),
       ].join("\n"),
       tags: ["COD", "Site Web"],
       financialStatus: "PENDING",
       shippingAddress: {
-        firstName: input.name,
-        address1: input.address,
-        phone: input.phone,
+        firstName: contact.name,
+        address1: contact.address,
+        phone: contact.phone,
         country: "Morocco",
       },
+      ...(extra.shippingLines ? { shippingLines: extra.shippingLines } : {}),
     },
     options: {
       inventoryBehaviour: "DECREMENT_IGNORING_POLICY",
@@ -179,4 +181,62 @@ export async function createCodOrder(input: CodOrderInput): Promise<{ id: string
   }
 
   return data.orderCreate.order;
+}
+
+// Creates a real Shopify order directly (no hosted checkout, no online
+// payment) for cash-on-delivery — the standard pattern for COD storefronts.
+// financialStatus is PENDING since payment is collected on delivery, not at
+// order time.
+export async function createCodOrder(input: CodOrderInput): Promise<{ id: string; name: string }> {
+  const [variantId, giftVariantId] = await Promise.all([
+    getVariantIdByHandle(input.productSlug),
+    input.giftSlug ? getVariantIdByHandle(input.giftSlug) : Promise.resolve(null),
+  ]);
+
+  const lineItems: CodLineItem[] = [
+    { variantId, quantity: input.quantity },
+    ...(giftVariantId
+      ? [
+          {
+            variantId: giftVariantId,
+            quantity: 1,
+            priceSet: { shopMoney: { amount: "0.00", currencyCode: "MAD" } },
+          },
+        ]
+      : []),
+  ];
+
+  return submitCodOrder(lineItems, input, {
+    noteLines: input.giftSlug ? [`Cadeau offert : ${input.giftSlug}`] : [],
+  });
+}
+
+// Same as createCodOrder but for the full cart (checkout page) — one order
+// with every cart line, plus a shipping line for the delivery fee (already
+// computed server-side from the cart total, see lib/shipping.ts).
+export async function createCodCartOrder(
+  input: CartOrderInput,
+  shippingFee: number,
+): Promise<{ id: string; name: string }> {
+  const variantIds = await Promise.all(input.items.map((item) => getVariantIdByHandle(item.slug)));
+
+  const lineItems: CodLineItem[] = input.items.map((item, i) => ({
+    variantId: variantIds[i],
+    quantity: item.quantity,
+    // Free-gift line items are added to the cart at their normal price
+    // (price "Offert") so the checkout order still records what was given —
+    // the priceSet override is what actually zeroes it on the order.
+    ...(item.price.trim().toLowerCase() === "offert"
+      ? { priceSet: { shopMoney: { amount: "0.00", currencyCode: "MAD" } } }
+      : {}),
+  }));
+
+  return submitCodOrder(lineItems, input, {
+    shippingLines: [
+      {
+        title: shippingFee > 0 ? "Livraison" : "Livraison gratuite",
+        priceSet: { shopMoney: { amount: shippingFee.toFixed(2), currencyCode: "MAD" } },
+      },
+    ],
+  });
 }

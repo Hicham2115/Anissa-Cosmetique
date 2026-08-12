@@ -47,24 +47,28 @@ export const contactSchema = z.object({
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
+const phoneField = z
+  .string()
+  .trim()
+  .min(1, "Le numéro de téléphone est requis")
+  .transform((val) => val.replace(/[\s.-]/g, ""))
+  .refine(
+    (val) => /^(?:\+212|0)[5-7][0-9]{8}$/.test(val),
+    "Saisissez un numéro de téléphone marocain valide (ex : 06 12 34 56 78)",
+  );
+
+const addressField = z
+  .string()
+  .trim()
+  .min(10, "L'adresse doit contenir au moins 10 caractères")
+  .max(500, "L'adresse est trop longue");
+
 export const codOrderSchema = z.object({
   productSlug: z.string().trim().min(1),
   productName: z.string().trim().min(1),
   name: nameField,
-  phone: z
-    .string()
-    .trim()
-    .min(1, "Le numéro de téléphone est requis")
-    .transform((val) => val.replace(/[\s.-]/g, ""))
-    .refine(
-      (val) => /^(?:\+212|0)[5-7][0-9]{8}$/.test(val),
-      "Saisissez un numéro de téléphone marocain valide (ex : 06 12 34 56 78)",
-    ),
-  address: z
-    .string()
-    .trim()
-    .min(10, "L'adresse doit contenir au moins 10 caractères")
-    .max(500, "L'adresse est trop longue"),
+  phone: phoneField,
+  address: addressField,
   quantity: z.number().int().positive().max(20).default(1),
   // Restricted to the known free-gift handles server-side (not just trusted
   // from the client) so a crafted request can't get an arbitrary product
@@ -82,6 +86,28 @@ export type CodOrderInput = z.infer<typeof codOrderSchema>;
 // productName/quantity come from page context, not form fields — used to
 // validate each TanStack Form field individually.
 export const codOrderFormSchema = codOrderSchema.pick({ name: true, phone: true, address: true });
+
+// Same contact fields as codOrderSchema, but for a full cart (checkout page)
+// instead of a single product — see app/checkout.
+export const cartOrderSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        slug: z.string().trim().min(1),
+        name: z.string().trim().min(1),
+        price: z.string().trim().min(1),
+        quantity: z.number().int().positive().max(20),
+      })
+    )
+    .min(1, "Le panier est vide"),
+  name: nameField,
+  phone: phoneField,
+  address: addressField,
+});
+
+export type CartOrderInput = z.infer<typeof cartOrderSchema>;
+
+export const cartOrderFormSchema = cartOrderSchema.pick({ name: true, phone: true, address: true });
 
 export const productSchema = z.object({
   id: z.string(),
