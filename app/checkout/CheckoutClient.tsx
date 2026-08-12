@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
+  Check,
   CheckCircle2,
+  Gift,
   MapPin,
   Minus,
   Package,
@@ -20,10 +22,13 @@ import {
   X,
 } from "lucide-react";
 import { api } from "@/lib/axios";
-import { cartOrderFormSchema } from "@/lib/validations";
+import { queryKeys } from "@/lib/queryKeys";
+import { cartOrderFormSchema, productListSchema } from "@/lib/validations";
+import { GIFT_ELIGIBLE_PACK_HANDLES, GIFT_OPTIONS } from "@/lib/packs";
 import { useCartStore } from "@/store/cartStore";
 import { formatMad, getErrorMessage, parsePriceAmount } from "@/lib/utils";
 import { computeShippingFee, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
+import { scrollToTop } from "@/lib/lenis";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -66,6 +71,11 @@ async function placeCartOrder(payload: Record<string, unknown>) {
   return data as { message: string };
 }
 
+async function fetchProducts() {
+  const { data } = await api.get("/products");
+  return productListSchema.parse(data);
+}
+
 export function CheckoutClient() {
   const items = useCartStore((s) => s.items);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
@@ -73,6 +83,38 @@ export function CheckoutClient() {
   const clearCart = useCartStore((s) => s.clear);
 
   const [confirmed, setConfirmed] = useState<{ phone: string } | null>(null);
+  const [giftSelections, setGiftSelections] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (confirmed) scrollToTop();
+  }, [confirmed]);
+
+  const { data: allProducts } = useQuery({
+    queryKey: queryKeys.products(),
+    queryFn: fetchProducts,
+  });
+
+  // Packs added straight from a product card (boutique grid, related
+  // products, etc.) skip the gift picker that lives on the product page —
+  // this is where that choice gets collected before the order is placed.
+  const eligiblePackLines = items.filter((i) => GIFT_ELIGIBLE_PACK_HANDLES.includes(i.slug));
+  const giftOptions = GIFT_OPTIONS.filter(
+    (g) => allProducts?.find((p) => p.slotId === g.handle)?.availableForSale !== false,
+  );
+
+  // No default gift is pre-selected — the shopper must actively pick one
+  // per eligible pack before the order can be submitted (see canSubmitGifts).
+  function giftHandleForPack(packId: string): string | null {
+    return giftSelections[packId] ?? null;
+  }
+
+  function giftNameForPack(packId: string): string | null {
+    const handle = giftHandleForPack(packId);
+    return handle ? (giftOptions.find((g) => g.handle === handle)?.name ?? null) : null;
+  }
+
+  const missingGiftSelection =
+    giftOptions.length > 0 && eligiblePackLines.some((pack) => !giftSelections[pack.productId]);
 
   const subtotal = items.reduce(
     (sum, i) => sum + parsePriceAmount(i.price) * i.quantity,
@@ -93,13 +135,24 @@ export function CheckoutClient() {
     defaultValues: INITIAL_VALUES,
     onSubmit: async ({ value }) => {
       try {
+        const giftItems = eligiblePackLines
+          .map((pack) => {
+            const handle = giftHandleForPack(pack.productId);
+            const gift = handle ? giftOptions.find((g) => g.handle === handle) : null;
+            return gift ? { slug: gift.handle, name: `🎁 ${gift.name} (offert)`, price: "Offert", quantity: 1 } : null;
+          })
+          .filter((g): g is NonNullable<typeof g> => Boolean(g));
+
         await mutation.mutateAsync({
-          items: items.map((i) => ({
-            slug: i.slug,
-            name: i.name,
-            price: i.price,
-            quantity: i.quantity,
-          })),
+          items: [
+            ...items.map((i) => ({
+              slug: i.slug,
+              name: i.name,
+              price: i.price,
+              quantity: i.quantity,
+            })),
+            ...giftItems,
+          ],
           ...value,
         });
         setConfirmed({ phone: value.phone });
@@ -198,6 +251,47 @@ export function CheckoutClient() {
             className="grid grid-cols-1 gap-5 sm:grid-cols-2"
             noValidate
           >
+            {eligiblePackLines.length > 0 && giftOptions.length > 0 && (
+              <div className="flex flex-col gap-5 sm:col-span-2">
+                {eligiblePackLines.map((pack) => {
+                  const selected = giftHandleForPack(pack.productId);
+                  return (
+                    <div key={pack.productId}>
+                      <FieldLabel icon={Gift}>Cadeau offert — {pack.name}</FieldLabel>
+                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                        {giftOptions.map((gift) => {
+                          const isSelected = selected === gift.handle;
+                          return (
+                            <button
+                              key={gift.handle}
+                              type="button"
+                              onClick={() =>
+                                setGiftSelections((prev) => ({ ...prev, [pack.productId]: gift.handle }))
+                              }
+                              className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-200 ${
+                                isSelected
+                                  ? "border-brown bg-gold/10 text-ink"
+                                  : "border-border-sand text-[#5c534a] hover:border-brown/40"
+                              }`}
+                            >
+                              <span
+                                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                                  isSelected ? "border-brown bg-brown text-cream" : "border-border-sand"
+                                }`}
+                              >
+                                {isSelected && <Check className="h-3 w-3" aria-hidden="true" />}
+                              </span>
+                              <span className="min-w-0 truncate">{gift.name}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
             <form.Field
               name="name"
               validators={{ onSubmit: cartOrderFormSchema.shape.name }}
@@ -279,7 +373,7 @@ export function CheckoutClient() {
                 {([canSubmit, isSubmitting]) => (
                   <Button
                     type="submit"
-                    disabled={!canSubmit || isSubmitting || mutation.isPending}
+                    disabled={!canSubmit || isSubmitting || mutation.isPending || missingGiftSelection}
                     className="w-full py-4 text-[13px] transition-all duration-200 hover:scale-[1.02] hover:bg-brown active:scale-95"
                   >
                     <ShoppingBag
@@ -292,6 +386,11 @@ export function CheckoutClient() {
                   </Button>
                 )}
               </form.Subscribe>
+              {missingGiftSelection && (
+                <p className="mt-2 text-center text-xs text-red-600">
+                  Choisissez un cadeau offert ci-dessus pour continuer.
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 border-t border-border-sand pt-4 sm:col-span-2">
@@ -379,6 +478,12 @@ export function CheckoutClient() {
                         {item.price}
                       </span>
                     </div>
+                    {GIFT_ELIGIBLE_PACK_HANDLES.includes(item.slug) && giftNameForPack(item.productId) && (
+                      <div className="mt-1.5 flex items-center gap-1 text-[11px] text-brown">
+                        <Gift className="h-3 w-3" aria-hidden="true" />
+                        Cadeau : {giftNameForPack(item.productId)}
+                      </div>
+                    )}
                   </div>
                 </li>
               ))}

@@ -375,9 +375,6 @@ export function GenericProductDetail({ slug }: { slug: string }) {
   const giftSlug = isGiftEligible
     ? (giftSlugOverride ?? giftOptions[0]?.handle ?? null)
     : null;
-  const giftProduct = giftSlug
-    ? allProducts?.find((p) => p.slotId === giftSlug)
-    : null;
 
   const handleAddToCart = () => {
     if (!inStock) return;
@@ -390,25 +387,12 @@ export function GenericProductDetail({ slug }: { slug: string }) {
         image: product.image ?? null,
       });
     }
-    // Added at its normal price so the local cart subtotal parses to 0 for
-    // it (parsePriceAmount("Offert") has no digits to match) — Shopify's
-    // Buy X Get Y automatic discount is what actually zeroes this line at
-    // checkout, this is just so the drawer doesn't overstate the subtotal.
-    if (giftProduct) {
-      addItem({
-        productId: giftProduct.id,
-        slug: giftProduct.slotId,
-        name: `🎁 ${giftProduct.name} (offert)`,
-        price: "Offert",
-        image: giftProduct.image ?? null,
-      });
-    }
+    // The free-gift choice isn't added here — it's collected on the
+    // checkout page so it's never silently attached to the cart.
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
     toast("Ajouté au panier", {
-      description: giftProduct
-        ? `${product.name} + ${giftProduct.name} offert`
-        : product.name,
+      description: product.name,
       icon: (
         <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
       ),
