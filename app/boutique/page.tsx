@@ -10,6 +10,11 @@ const TITLE = "Boutique";
 const DESCRIPTION = "Découvrez toute la gamme Anissa Cosmetics : soins, maquillage, parfums et coffrets cadeaux.";
 const OG_TITLE = `${TITLE} | ${SITE_NAME}`;
 
+// Force dynamic rendering: static generation of this route gets corrupted
+// with the /_not-found page's output when built together with other routes
+// (Next 16.2.10 Turbopack parallel-worker prerender bug).
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,

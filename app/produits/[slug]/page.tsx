@@ -6,6 +6,12 @@ import { SITE_NAME, pageOpenGraph, pageTwitter } from "@/lib/site";
 import { getProductBySlug } from "@/lib/getProductBySlug";
 import { GenericProductDetail } from "./GenericProductDetail";
 
+// Force dynamic rendering: this route's build output gets corrupted with
+// the /_not-found page's output when built together with other routes
+// (Next 16.2.10 Turbopack parallel-worker prerender bug) — see the same
+// fix on app/boutique/page.tsx.
+export const dynamic = "force-dynamic";
+
 function titleFromSlug(slug: string): string {
   return slug
     .split("-")
