@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Droplet, Gift, Leaf, Sparkles, Waves } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import antirideImage from "@/app/assets/categories/antiage.png";
+import antirideImage from "@/app/assets/categories/antiage.webp";
 import antiride2Image from "@/app/assets/antiride2.png";
 
 const RESULT_FEATURES = [

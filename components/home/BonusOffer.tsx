@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Gift } from "lucide-react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import bonusImage from "@/app/assets/categories/bonus.png";
+import bonusImage from "@/app/assets/categories/bonus.webp";
 
 export function BonusOffer() {
   const scopeRef = useScrollReveal<HTMLDivElement>();
