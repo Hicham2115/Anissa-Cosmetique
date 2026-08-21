@@ -16,9 +16,9 @@ export function sanitizeInput(value: string): string {
   return value.replace(SQL_DANGEROUS_CHARS, "").trim();
 }
 
-const nameField = z.string().trim();
+const nameField = z.string().trim().min(1, "Le nom est requis");
 
-const emailField = z.string().trim();
+const emailField = z.string().trim().min(1, "L'email est requis");
 
 export const newsletterSchema = z.object({
   email: emailField.transform(sanitizeInput),
@@ -29,14 +29,14 @@ export type NewsletterInput = z.infer<typeof newsletterSchema>;
 export const contactSchema = z.object({
   name: nameField,
   email: emailField,
-  message: z.string().trim(),
+  message: z.string().trim().min(1, "Le message est requis"),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
-const phoneField = z.string().trim();
+const phoneField = z.string().trim().min(1, "Le numéro de téléphone est requis");
 
-const addressField = z.string().trim();
+const addressField = z.string().trim().min(1, "L'adresse est requise");
 
 export const codOrderSchema = z.object({
   productSlug: z.string().trim().min(1),
