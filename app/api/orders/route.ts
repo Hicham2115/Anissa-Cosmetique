@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { codOrderSchema, zodErrorResponse } from "@/lib/validations";
 import { createCodOrder, shopifyAdminConfigured } from "@/lib/shopifyAdmin";
 import { getProductBySlug } from "@/lib/getProductBySlug";
+import { computeShippingFee } from "@/lib/shipping";
+import { parsePriceAmount } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -24,13 +26,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Le cadeau sélectionné est en rupture de stock." }, { status: 409 });
   }
 
+  // Same free-shipping-over-499-MAD rule as the cart checkout (lib/shipping.ts)
+  // — the gift line is free so it doesn't count toward the subtotal.
+  const subtotal = parsePriceAmount(product.price) * result.data.quantity;
+  const shippingFee = computeShippingFee(subtotal);
+
   if (!shopifyAdminConfigured) {
-    console.log("[COD order — Shopify Admin API not configured]", result.data);
+    console.log("[COD order — Shopify Admin API not configured]", result.data, { shippingFee });
     return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
   }
 
   try {
-    const order = await createCodOrder(result.data);
+    const order = await createCodOrder(result.data, shippingFee);
     console.log("[COD order created in Shopify]", order.name);
     return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
   } catch (err) {

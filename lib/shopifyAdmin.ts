@@ -192,7 +192,10 @@ async function submitCodOrder(
 // payment) for cash-on-delivery — the standard pattern for COD storefronts.
 // financialStatus is PENDING since payment is collected on delivery, not at
 // order time.
-export async function createCodOrder(input: CodOrderInput): Promise<{ id: string; name: string }> {
+export async function createCodOrder(
+  input: CodOrderInput,
+  shippingFee: number,
+): Promise<{ id: string; name: string }> {
   const [variantId, giftVariantId] = await Promise.all([
     getVariantIdByHandle(input.productSlug),
     input.giftSlug ? getVariantIdByHandle(input.giftSlug) : Promise.resolve(null),
@@ -213,6 +216,12 @@ export async function createCodOrder(input: CodOrderInput): Promise<{ id: string
 
   return submitCodOrder(lineItems, input, {
     noteLines: input.giftSlug ? [`Cadeau offert : ${input.giftSlug}`] : [],
+    shippingLines: [
+      {
+        title: shippingFee > 0 ? "Livraison" : "Livraison gratuite",
+        priceSet: { shopMoney: { amount: shippingFee.toFixed(2), currencyCode: "MAD" } },
+      },
+    ],
   });
 }
 

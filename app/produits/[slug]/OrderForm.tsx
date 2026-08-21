@@ -11,7 +11,8 @@ import { GIFT_ELIGIBLE_PACK_HANDLES, GIFT_OPTIONS } from "@/lib/packs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, formatMad, parsePriceAmount } from "@/lib/utils";
+import { computeShippingFee, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 
 const INITIAL_VALUES = { name: "", phone: "", address: "" };
 
@@ -24,14 +25,6 @@ function fieldClasses(hasError: boolean) {
   return `w-full rounded-xl border bg-white px-4 py-3 font-sans text-sm text-ink outline-none transition-all duration-200 placeholder:text-[#b3a897] focus:ring-4 ${
     hasError ? "border-red-300 focus:border-red-400 focus:ring-red-100" : "border-border-sand focus:border-brown focus:ring-brown/10"
   }`;
-}
-
-function totalPrice(price: string, quantity: number): string {
-  const match = price.match(/^([\d.,]+)\s*(.*)$/);
-  if (!match) return price;
-  const [, numStr, suffix] = match;
-  const total = Number(numStr.replace(/,/g, "")) * quantity;
-  return `${Math.round(total)} ${suffix}`.trim();
 }
 
 async function placeOrder(payload: Record<string, unknown>) {
@@ -67,6 +60,12 @@ export function OrderForm({
 }) {
   const [confirmed, setConfirmed] = useState<{ phone: string } | null>(null);
   const isGiftEligible = GIFT_ELIGIBLE_PACK_HANDLES.includes(product.slotId);
+
+  // Same free-shipping-over-499-MAD rule as the cart checkout — shown here
+  // too so the total matches what actually gets charged in the order.
+  const subtotal = parsePriceAmount(product.price) * quantity;
+  const shippingFee = computeShippingFee(subtotal);
+  const total = subtotal + shippingFee;
 
   const mutation = useMutation({
     mutationFn: placeOrder,
@@ -159,8 +158,23 @@ export function OrderForm({
                   Quantité : <span className="font-semibold text-ink">{quantity}</span>
                 </span>
                 <span>
-                  Total : <span className="font-semibold text-brown">{totalPrice(product.price, quantity)}</span>
+                  Sous-total : <span className="font-semibold text-ink">{formatMad(subtotal)}</span>
                 </span>
+              </div>
+              <div className="mt-1 flex items-center justify-between text-xs text-[#8a7c6c]">
+                <span>
+                  Livraison
+                  {shippingFee === 0 && (
+                    <span className="ml-1 text-brown">(gratuite dès {FREE_SHIPPING_THRESHOLD} MAD)</span>
+                  )}
+                </span>
+                <span className="font-semibold text-ink">
+                  {shippingFee === 0 ? "Offerte" : formatMad(shippingFee)}
+                </span>
+              </div>
+              <div className="mt-1.5 flex items-center justify-between border-t border-border-sand pt-1.5 text-xs">
+                <span className="text-ink">Total</span>
+                <span className="font-semibold text-brown">{formatMad(total)}</span>
               </div>
             </div>
 
