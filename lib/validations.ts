@@ -16,18 +16,9 @@ export function sanitizeInput(value: string): string {
   return value.replace(SQL_DANGEROUS_CHARS, "").trim();
 }
 
-const nameField = z
-  .string()
-  .trim()
-  .min(1, "Le nom est requis")
-  .max(100, "Le nom est trop long");
+const nameField = z.string().trim();
 
-const emailField = z
-  .string()
-  .trim()
-  .min(1, "L'email est requis")
-  .max(254, "L'email est trop long")
-  .email("Saisissez une adresse email valide");
+const emailField = z.string().trim();
 
 export const newsletterSchema = z.object({
   email: emailField.transform(sanitizeInput),
@@ -38,30 +29,14 @@ export type NewsletterInput = z.infer<typeof newsletterSchema>;
 export const contactSchema = z.object({
   name: nameField,
   email: emailField,
-  message: z
-    .string()
-    .trim()
-    .min(10, "Le message doit contenir au moins 10 caractères")
-    .max(2000, "Le message est trop long (2000 caractères maximum)"),
+  message: z.string().trim(),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
-const phoneField = z
-  .string()
-  .trim()
-  .min(1, "Le numéro de téléphone est requis")
-  .transform((val) => val.replace(/[\s.-]/g, ""))
-  .refine(
-    (val) => /^(?:\+212|0)[5-7][0-9]{8}$/.test(val),
-    "Saisissez un numéro de téléphone marocain valide (ex : 06 12 34 56 78)",
-  );
+const phoneField = z.string().trim();
 
-const addressField = z
-  .string()
-  .trim()
-  .min(10, "L'adresse doit contenir au moins 10 caractères")
-  .max(500, "L'adresse est trop longue");
+const addressField = z.string().trim();
 
 export const codOrderSchema = z.object({
   productSlug: z.string().trim().min(1),

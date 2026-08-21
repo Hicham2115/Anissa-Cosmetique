@@ -145,7 +145,13 @@ async function submitCodOrder(
   const data = await shopifyAdminFetch<OrderCreateResult>(ORDER_CREATE_MUTATION, {
     order: {
       lineItems,
-      phone: contact.phone,
+      // Not setting order.phone / shippingAddress.phone on purpose: Shopify
+      // validates those against a real per-country numbering plan and
+      // rejects legitimate Moroccan numbers it doesn't recognize (e.g. real
+      // 068-prefix numbers) — which silently killed orders for shoppers who
+      // typed a perfectly valid phone number. The note below is unvalidated
+      // free text and is what's actually relied on to contact the customer.
+      //
       // Shopify's protected-customer-data policy silently drops
       // shippingAddress/customer PII fields on orderCreate for apps without
       // separate compliance approval — the note is the one channel proven
@@ -163,7 +169,6 @@ async function submitCodOrder(
       shippingAddress: {
         firstName: contact.name,
         address1: contact.address,
-        phone: contact.phone,
         country: "Morocco",
       },
       ...(extra.shippingLines ? { shippingLines: extra.shippingLines } : {}),
