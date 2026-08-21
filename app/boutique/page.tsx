@@ -7,7 +7,8 @@ import { BoutiqueHeader } from "./BoutiqueHeader";
 import { SITE_NAME, pageOpenGraph, pageTwitter } from "@/lib/site";
 
 const TITLE = "Boutique";
-const DESCRIPTION = "Découvrez toute la gamme Anissa Cosmetics : soins, maquillage, parfums et coffrets cadeaux.";
+const DESCRIPTION =
+  "Découvrez toute la gamme Anissa Cosmetics : soins, maquillage, parfums et coffrets cadeaux.";
 const OG_TITLE = `${TITLE} | ${SITE_NAME}`;
 
 // Force dynamic rendering: static generation of this route gets corrupted
@@ -19,7 +20,11 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/boutique" },
-  openGraph: pageOpenGraph({ title: OG_TITLE, description: DESCRIPTION, url: "/boutique" }),
+  openGraph: pageOpenGraph({
+    title: OG_TITLE,
+    description: DESCRIPTION,
+    url: "/boutique",
+  }),
   twitter: pageTwitter({ title: OG_TITLE, description: DESCRIPTION }),
 };
 
@@ -34,4 +39,5 @@ export default function BoutiquePage() {
       <Footer />
     </ErrorBoundary>
   );
+  
 }
