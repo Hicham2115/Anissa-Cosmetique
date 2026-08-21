@@ -125,7 +125,7 @@ export function PromoPopup() {
         ref={pillRef}
         type="button"
         onClick={() => setState("expanded")}
-        className="fixed bottom-13 left-5 z-50 flex cursor-pointer items-center gap-2 rounded-full bg-ink px-4 py-3 text-xs font-semibold tracking-wide text-cream shadow-[0_12px_28px_rgba(0,0,0,0.3)] transition-transform duration-200 hover:scale-105 sm:bottom-17"
+        className="fixed bottom-13 left-5 z-50 hidden cursor-pointer items-center gap-2 rounded-full bg-ink px-4 py-3 text-xs font-semibold tracking-wide text-cream shadow-[0_12px_28px_rgba(0,0,0,0.3)] transition-transform duration-200 hover:scale-105 sm:bottom-17 sm:flex"
       >
         <Tag className="h-3.5 w-3.5 text-gold" aria-hidden="true" />
         Offre de Lancement
@@ -139,7 +139,7 @@ export function PromoPopup() {
     <div
       ref={cardRef}
       role="status"
-      className="fixed bottom-4 left-4 z-50 w-[calc(100%-2rem)] max-w-64 rounded-2xl bg-ink p-3 text-cream shadow-[0_24px_48px_rgba(0,0,0,0.35)] sm:bottom-5 sm:left-5 sm:w-[calc(100%-2.5rem)] sm:max-w-75 sm:p-4"
+      className="fixed bottom-4 left-4 z-50 hidden w-[calc(100%-2rem)] max-w-64 rounded-2xl bg-ink p-3 text-cream shadow-[0_24px_48px_rgba(0,0,0,0.35)] sm:bottom-5 sm:left-5 sm:block sm:w-[calc(100%-2.5rem)] sm:max-w-75 sm:p-4"
     >
       <div className="flex items-center justify-between border-b border-cream/15 pb-2 sm:pb-3">
         <div className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.2em] text-gold uppercase sm:text-[11px]">
