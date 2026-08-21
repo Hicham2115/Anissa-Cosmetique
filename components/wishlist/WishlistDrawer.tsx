@@ -123,6 +123,7 @@ export function WishlistDrawer() {
                         toast("Ajouté au panier", {
                           description: item.name,
                           icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
+                          className: "max-sm:hidden",
                         });
                       }}
                       className="mt-2.5 flex w-fit cursor-pointer items-center gap-1.5 rounded-full border border-border-sand px-3 py-1.5 text-[11px] tracking-wider text-ink uppercase transition-all duration-200 hover:border-brown hover:bg-brown hover:text-cream"

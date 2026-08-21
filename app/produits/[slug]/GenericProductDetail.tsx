@@ -396,6 +396,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
       icon: (
         <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
       ),
+      className: "max-sm:hidden",
     });
   };
 

@@ -68,6 +68,7 @@ export function ProductCard({ product }: { product: Product }) {
               toast("Ajouté au panier", {
                 description: product.name,
                 icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,
+                className: "max-sm:hidden",
               });
             }}
             className="absolute right-3 bottom-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black transition-all duration-200 hover:scale-110 active:scale-95 sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
