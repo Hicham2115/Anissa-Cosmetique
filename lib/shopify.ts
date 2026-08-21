@@ -179,6 +179,25 @@ export async function fetchShopifyProducts(category?: string, first = 50) {
   return data.products.edges.map(({ node }) => toProduct(node));
 }
 
+// One fetch of every product, counted per category client-side — avoids
+// issuing a separate tag-filtered request per category just to get counts.
+export async function fetchCategoryCounts(
+  categoryNames: string[],
+): Promise<Record<string, number>> {
+  const data = await shopifyFetch<ProductsQueryResult>(PRODUCTS_QUERY, { first: 250 });
+  const nodes = data.products.edges.map(({ node }) => node);
+
+  return Object.fromEntries(
+    categoryNames.map((name) => {
+      if (name === PACKS_CATEGORY) {
+        return [name, nodes.filter((n) => PACK_PRODUCT_HANDLES.includes(n.handle)).length];
+      }
+      const tag = CATEGORY_TO_SHOPIFY_TAG[name] ?? name;
+      return [name, nodes.filter((n) => n.tags.includes(tag)).length];
+    }),
+  );
+}
+
 const PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
   query ProductByHandle($handle: String!) {
     productByHandle(handle: $handle) {
