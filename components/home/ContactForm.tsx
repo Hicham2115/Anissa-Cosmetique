@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { CONTACT_EMAIL } from "@/lib/site";
 import { getErrorMessage } from "@/lib/utils";
+import { trackLead } from "@/lib/metaPixel";
 
 interface FormState {
   name: string;
@@ -62,6 +63,7 @@ export function ContactForm() {
 
     try {
       await mutation.mutateAsync(result.data);
+      trackLead();
       setForm(INITIAL_STATE);
     } catch (err) {
       setFieldError(

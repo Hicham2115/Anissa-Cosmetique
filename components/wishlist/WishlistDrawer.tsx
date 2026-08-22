@@ -11,6 +11,8 @@ import { useUiStore } from "@/store/uiStore";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Button } from "@/components/ui/button";
 import { useDrawerAnimation } from "@/lib/useDrawerAnimation";
+import { trackAddToCart } from "@/lib/metaPixel";
+import { parsePriceAmount } from "@/lib/utils";
 
 export function WishlistDrawer() {
   const isOpen = useUiStore((s) => s.isWishlistOpen);
@@ -120,6 +122,7 @@ export function WishlistDrawer() {
                           price: item.price,
                           image: item.image,
                         });
+                        trackAddToCart({ slug: item.slug, name: item.name, price: parsePriceAmount(item.price) });
                         toast("Ajouté au panier", {
                           description: item.name,
                           icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,

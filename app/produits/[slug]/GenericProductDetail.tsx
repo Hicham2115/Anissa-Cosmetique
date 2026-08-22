@@ -43,6 +43,8 @@ import {
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore, type WishlistItem } from "@/store/wishlistStore";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import { trackViewContent, trackAddToCart } from "@/lib/metaPixel";
+import { parsePriceAmount } from "@/lib/utils";
 import { getLenisInstance } from "@/lib/lenis";
 import serumImperfectionsBeforeAfter from "@/app/assets/BeforeAfter/serum-anti-imperfections.webp";
 import serumAntiAgeBeforeAfter from "@/app/assets/BeforeAfter/serum-anti-age.webp";
@@ -347,6 +349,13 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     return () => cancelAnimationFrame(raf);
   }, [product, allProducts]);
 
+  // Placed before the early returns below so hook order stays stable across
+  // the loading → loaded transition (see Rules of Hooks).
+  useEffect(() => {
+    if (!product) return;
+    trackViewContent({ slug: product.slotId, name: product.name, price: parsePriceAmount(product.price) });
+  }, [product]);
+
   if (isLoading) {
     return <ProductDetailSkeleton />;
   }
@@ -389,6 +398,7 @@ export function GenericProductDetail({ slug }: { slug: string }) {
     }
     // The free-gift choice isn't added here — it's collected on the
     // checkout page so it's never silently attached to the cart.
+    trackAddToCart({ slug: product.slotId, name: product.name, price: parsePriceAmount(product.price), quantity });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
     toast("Ajouté au panier", {

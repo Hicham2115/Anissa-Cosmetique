@@ -9,6 +9,8 @@ import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
+import { trackAddToCart } from "@/lib/metaPixel";
+import { parsePriceAmount } from "@/lib/utils";
 
 export function ProductCard({ product }: { product: Product }) {
   const addItem = useCartStore((s) => s.addItem);
@@ -65,6 +67,7 @@ export function ProductCard({ product }: { product: Product }) {
             onClick={(e) => {
               e.preventDefault();
               addItem({ productId: product.id, slug: product.slotId, name: product.name, price: product.price, image: product.image ?? null });
+              trackAddToCart({ slug: product.slotId, name: product.name, price: parsePriceAmount(product.price) });
               toast("Ajouté au panier", {
                 description: product.name,
                 icon: <ShoppingBag className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />,

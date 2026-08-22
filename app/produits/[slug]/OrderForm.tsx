@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage, formatMad, parsePriceAmount } from "@/lib/utils";
 import { computeShippingFee, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/metaPixel";
 
 const INITIAL_VALUES = { name: "", phone: "", address: "" };
 
@@ -67,6 +68,14 @@ export function OrderForm({
   const shippingFee = computeShippingFee(subtotal);
   const total = subtotal + shippingFee;
 
+  useEffect(() => {
+    if (!inStock) return;
+    trackInitiateCheckout([{ slug: product.slotId, name: product.name, price: parsePriceAmount(product.price), quantity }], total);
+    // Only re-fire if the shopper switches to a genuinely different product
+    // or quantity — not on every unrelated re-render of this form.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.slotId, quantity, inStock]);
+
   const mutation = useMutation({
     mutationFn: placeOrder,
     onError: (err) => toast.error(getErrorMessage(err, "Échec de l'envoi. Veuillez réessayer.")),
@@ -83,6 +92,10 @@ export function OrderForm({
           ...(isGiftEligible && giftSlug ? { giftSlug } : {}),
           ...value,
         });
+        trackPurchase(
+          [{ slug: product.slotId, name: product.name, price: parsePriceAmount(product.price), quantity }],
+          total,
+        );
         setConfirmed({ phone: value.phone });
         form.reset();
       } catch {

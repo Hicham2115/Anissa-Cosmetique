@@ -28,6 +28,7 @@ import { GIFT_ELIGIBLE_PACK_HANDLES, GIFT_OPTIONS } from "@/lib/packs";
 import { useCartStore } from "@/store/cartStore";
 import { formatMad, getErrorMessage, parsePriceAmount } from "@/lib/utils";
 import { computeShippingFee, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/metaPixel";
 import { scrollToTop } from "@/lib/lenis";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -123,6 +124,17 @@ export function CheckoutClient() {
   const shippingFee = computeShippingFee(subtotal);
   const total = subtotal + shippingFee;
 
+  useEffect(() => {
+    if (items.length === 0) return;
+    trackInitiateCheckout(
+      items.map((i) => ({ slug: i.slug, name: i.name, price: parsePriceAmount(i.price), quantity: i.quantity })),
+      total,
+    );
+    // Fires once per distinct cart snapshot reaching checkout, not on every
+    // unrelated re-render (e.g. typing in the form fields).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length, total]);
+
   const mutation = useMutation({
     mutationFn: placeCartOrder,
     onError: (err) =>
@@ -155,6 +167,10 @@ export function CheckoutClient() {
           ],
           ...value,
         });
+        trackPurchase(
+          items.map((i) => ({ slug: i.slug, name: i.name, price: parsePriceAmount(i.price), quantity: i.quantity })),
+          total,
+        );
         setConfirmed({ phone: value.phone });
         clearCart();
         form.reset();
