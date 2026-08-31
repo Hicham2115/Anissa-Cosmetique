@@ -69,7 +69,7 @@ function FieldLabel({
 
 async function placeCartOrder(payload: Record<string, unknown>) {
   const { data } = await api.post("/orders/cart", payload);
-  return data as { message: string };
+  return data as { message: string; eventId?: string };
 }
 
 async function fetchProducts() {
@@ -155,7 +155,7 @@ export function CheckoutClient() {
           })
           .filter((g): g is NonNullable<typeof g> => Boolean(g));
 
-        await mutation.mutateAsync({
+        const response = await mutation.mutateAsync({
           items: [
             ...items.map((i) => ({
               slug: i.slug,
@@ -170,6 +170,7 @@ export function CheckoutClient() {
         trackPurchase(
           items.map((i) => ({ slug: i.slug, name: i.name, price: parsePriceAmount(i.price), quantity: i.quantity })),
           total,
+          response.eventId,
         );
         setConfirmed({ phone: value.phone });
         clearCart();

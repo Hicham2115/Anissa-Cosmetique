@@ -45,13 +45,23 @@ export function trackInitiateCheckout(items: PixelItem[], value: number) {
   });
 }
 
-export function trackPurchase(items: PixelItem[], value: number) {
-  fire("Purchase", {
-    content_ids: items.map((i) => i.slug),
-    content_type: "product",
-    value,
-    currency: "MAD",
-  });
+// eventId, when passed, must match the eventId the order API sent to Meta's
+// Conversions API (lib/metaCapi.ts) for the same order — that's how Meta
+// dedupes the browser and server copies of the same Purchase instead of
+// double-counting it.
+export function trackPurchase(items: PixelItem[], value: number, eventId?: string) {
+  if (typeof window === "undefined" || !window.fbq) return;
+  window.fbq(
+    "track",
+    "Purchase",
+    {
+      content_ids: items.map((i) => i.slug),
+      content_type: "product",
+      value,
+      currency: "MAD",
+    },
+    eventId ? { eventID: eventId } : undefined
+  );
 }
 
 export function trackLead() {

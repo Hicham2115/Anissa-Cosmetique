@@ -30,7 +30,7 @@ function fieldClasses(hasError: boolean) {
 
 async function placeOrder(payload: Record<string, unknown>) {
   const { data } = await api.post("/orders", payload);
-  return data as { message: string };
+  return data as { message: string; eventId?: string };
 }
 
 function FieldLabel({ icon: Icon, children }: { icon: typeof Package; children: React.ReactNode }) {
@@ -85,7 +85,7 @@ export function OrderForm({
     defaultValues: INITIAL_VALUES,
     onSubmit: async ({ value }) => {
       try {
-        await mutation.mutateAsync({
+        const response = await mutation.mutateAsync({
           productSlug: product.slotId,
           productName: product.name,
           quantity,
@@ -95,6 +95,7 @@ export function OrderForm({
         trackPurchase(
           [{ slug: product.slotId, name: product.name, price: parsePriceAmount(product.price), quantity }],
           total,
+          response.eventId,
         );
         setConfirmed({ phone: value.phone });
         form.reset();

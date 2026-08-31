@@ -4,6 +4,7 @@ import { createCodCartOrder, shopifyAdminConfigured } from "@/lib/shopifyAdmin";
 import { getProductBySlug } from "@/lib/getProductBySlug";
 import { computeShippingFee } from "@/lib/shipping";
 import { parsePriceAmount } from "@/lib/utils";
+import { sendMetaCapiEvent } from "@/lib/metaCapi";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -28,15 +29,38 @@ export async function POST(request: Request) {
   const subtotal = result.data.items.reduce((sum, item) => sum + parsePriceAmount(item.price) * item.quantity, 0);
   const shippingFee = computeShippingFee(subtotal);
 
+  // Shared with the client's fbq('track', 'Purchase', ..., { eventID }) call
+  // so Meta dedupes the pixel and CAPI copies of the same order instead of
+  // counting it twice.
+  const eventId = crypto.randomUUID();
+  const total = subtotal + shippingFee;
+  const contentIds = result.data.items.map((item) => item.slug);
+
   if (!shopifyAdminConfigured) {
     console.log("[COD cart order — Shopify Admin API not configured]", result.data, { shippingFee });
-    return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
+    sendMetaCapiEvent({
+      eventName: "Purchase",
+      eventId,
+      value: total,
+      contentIds,
+      phone: result.data.phone,
+      request,
+    }).catch(() => {});
+    return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer.", eventId });
   }
 
   try {
     const order = await createCodCartOrder(result.data, shippingFee);
     console.log("[COD cart order created in Shopify]", order.name);
-    return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer." });
+    sendMetaCapiEvent({
+      eventName: "Purchase",
+      eventId,
+      value: total,
+      contentIds,
+      phone: result.data.phone,
+      request,
+    }).catch(() => {});
+    return NextResponse.json({ message: "Commande reçue. Nous vous contacterons pour confirmer.", eventId });
   } catch (err) {
     console.error("Shopify cart order creation failed:", err);
     return NextResponse.json(

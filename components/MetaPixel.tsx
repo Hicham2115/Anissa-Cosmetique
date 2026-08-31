@@ -31,7 +31,12 @@ export function MetaPixel() {
 
   return (
     <>
-      <Script id="meta-pixel" strategy="afterInteractive">
+      {/* beforeInteractive: fires while the page is still parsing, ahead of
+          hydration, so a visitor who bounces before the JS bundle finishes
+          loading still gets counted as a PageView. afterInteractive was
+          waiting on full hydration, which is exactly the window ad-click
+          traffic (slow mobile, in-app browsers) is most likely to bounce in. */}
+      <Script id="meta-pixel" strategy="beforeInteractive">
         {`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

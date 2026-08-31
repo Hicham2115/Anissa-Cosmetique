@@ -19,19 +19,19 @@ export function useScrollReveal<T extends HTMLElement>(deps: unknown[] = []) {
       const targets = gsap.utils.toArray<HTMLElement>("[data-reveal]", scopeRef.current);
       if (!targets.length) return;
 
-      gsap.set(targets, { opacity: 0, y: 28 });
+      gsap.set(targets, { opacity: 0, y: 14 });
       gsap.to(targets, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.1,
+        duration: 0.4,
+        ease: "power2.out",
+        stagger: 0.05,
         // Drop the inline transform once revealed so it stops overriding
         // any CSS-driven hover transforms (e.g. hover:translate-x-2).
         clearProps: "transform",
         scrollTrigger: {
           trigger: scopeRef.current,
-          start: "top 85%",
+          start: "top 95%",
           once: true,
         },
       });
