@@ -6,7 +6,7 @@ import { PromoPopup } from "@/components/PromoPopup";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WishlistDrawer } from "@/components/wishlist/WishlistDrawer";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { WhatsappButton } from "@/components/WhatsappButton";
+// import { WhatsappButton } from "@/components/WhatsappButton";
 import { MetaPixel } from "@/components/MetaPixel";
 import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, OG_IMAGE, SOCIAL_PROFILES } from "@/lib/site";
 
@@ -105,7 +105,7 @@ export default function RootLayout({
           <PromoPopup />
           <CartDrawer />
           <WishlistDrawer />
-          <WhatsappButton />
+          {/* <WhatsappButton /> */}
           <ScrollToTop />
         </Providers>
       </body>

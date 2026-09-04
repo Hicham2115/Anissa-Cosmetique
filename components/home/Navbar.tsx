@@ -15,11 +15,18 @@ type NavLink =
   | { label: string; type: "route"; href: string }
   | { label: string; type: "scroll"; target: string };
 
+const CERTIFICATIONS_LINK: NavLink = {
+  label: "Certifications",
+  type: "route",
+  href: "/certifications",
+};
+
 const LEFT_LINKS: NavLink[] = [
   { label: "Boutique", type: "route", href: "/boutique" },
   { label: "Catégories", type: "scroll", target: "#categories" },
   { label: "Meilleures Ventes", type: "scroll", target: "#best-sellers" },
   { label: "Avis", type: "scroll", target: "#avis" },
+  CERTIFICATIONS_LINK,
 ];
 
 const RIGHT_LINKS: NavLink[] = [
@@ -101,17 +108,23 @@ export function Navbar() {
           )}
         </button>
 
-        <Link
-          href="/"
-          className="shrink-0 transition-transform duration-300 hover:scale-105"
-        >
-          <Image
-            src={logo}
-            alt="Anissa Cosmetics"
-            priority
-            className="h-16 w-auto sm:h-20"
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="shrink-0 transition-transform duration-300 hover:scale-105"
+          >
+            <Image
+              src={logo}
+              alt="Anissa Cosmetics"
+              priority
+              className="h-16 w-auto sm:h-20"
+            />
+          </Link>
+          <NavAnchor
+            link={CERTIFICATIONS_LINK}
+            className="pt-3 text-[11px] font-semibold tracking-wider text-black lg:hidden"
           />
-        </Link>
+        </div>
 
         <div className="flex flex-1 items-center justify-end gap-3 sm:gap-5">
           <nav className="hidden items-center gap-5 lg:flex">
