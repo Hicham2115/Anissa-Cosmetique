@@ -88,10 +88,10 @@ export function ValueProps() {
                   data-reveal
                   className="text-[15px] leading-relaxed text-[#5c534a]"
                 >
-                  Anissa est née de la vision d&rsquo;un couple maroco-belge 
-                  une conseillère dermatologique et un chimiste revenus au
-                  Maroc avec une ambition commune : mettre leur savoir
-                  scientifique au service de la nature.
+                  Anissa est née de la vision d&rsquo;un couple maroco-belge une
+                  conseillère dermatologique et un chimiste revenus au Maroc
+                  avec une ambition commune : mettre leur savoir scientifique au
+                  service de la nature.
                 </p>
                 <p
                   data-reveal
@@ -105,18 +105,18 @@ export function ValueProps() {
               </div>
             </div>
 
-            <Link href="/boutique">
+            <Link href="/certifications">
               <Button
                 data-reveal
                 className="mt-5 px-6 text-[11px] tracking-[0.18em] transition-transform duration-200 hover:scale-105 active:scale-95"
                 size="sm"
               >
-                <Leaf
-                  className="mr-2 h-3.5 w-3.5 text-gold"
-                  strokeWidth={1.5}
+                <FileText
+                  className="h-3 w-3"
+                  strokeWidth={1.75}
                   aria-hidden="true"
                 />
-                Découvrir nos soins
+                Voir le certificat
               </Button>
             </Link>
           </div>
@@ -142,7 +142,7 @@ export function ValueProps() {
                   <div className="mt-1 text-sm leading-snug text-[#000000]">
                     {description}
                   </div>
-                  {href && (
+                  {/* {href && (
                     <a
                       href={href}
                       target="_blank"
@@ -156,7 +156,7 @@ export function ValueProps() {
                       />
                       {linkLabel}
                     </a>
-                  )}
+                  )} */}
                 </div>
               ),
             )}
