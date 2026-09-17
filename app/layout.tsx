@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Urbanist, Mukta_Mahee, Josefin_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { PromoPopup } from "@/components/PromoPopup";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WishlistDrawer } from "@/components/wishlist/WishlistDrawer";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -102,7 +101,6 @@ export default function RootLayout({
         <MetaPixel />
         <Providers>
           {children}
-          <PromoPopup />
           <CartDrawer />
           <WishlistDrawer />
           {/* <WhatsappButton /> */}
